@@ -1,5 +1,5 @@
 import pandas as pd
-
+# 
 selfUnitEight = pd.read_excel(r'D:\MyPFile\BigDataPythonFile\self-testUnitEight.xlsx')
 dummy = pd.get_dummies(selfUnitEight[['年龄段', '是否有工作', '有自己的房子', '信贷情况', '类别']])
 selfUnitEight = pd.concat([selfUnitEight, dummy], axis=1)
