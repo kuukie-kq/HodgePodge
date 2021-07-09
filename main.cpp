@@ -791,7 +791,7 @@
 //指针
 //#include <stdio.h>
 //int main() {
-//    short a[4] = { 0x6162, 0x6364, 0x6566, 0 };
+//    short a[4] = { 0x6261, 0x6463, 0x6665, 0 };
 //    char* b = (char*)a;
 //    printf("%s", b);
 //}
