@@ -1,6 +1,6 @@
 
 
-//解释器（暂）
+//解释器
 //#include <iostream>
 //#include <string>
 //#include <vector>
