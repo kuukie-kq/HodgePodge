@@ -1,0 +1,117 @@
+/*kokoui.css*/
+/*-全局- 外边距+内填充+边框 */
+* {
+	margin: 0px auto;
+	padding: 0px;
+	border: 0px;
+}
+/*-- 解决高度自适应 The start*/
+html {
+	width: 100%;
+	height: 100%;
+}
+body {
+	width: 100%;
+	height: 100%;
+}
+/*-- The end*/
+/*-class- 清除浮动 */
+.koko-clear-float {
+	clear: both;
+}
+/*-class- 定义画布 */
+.koko-div {
+	min-width: 1000px;
+	min-height: 600px;
+	width: 100%;
+	height: 100%;
+}
+/*-class- 画布的头部 */
+.koko-div-header {
+	min-width: 1000px;
+	min-height: 60px;
+	width: 100%;
+	height: 10%;
+	background-color: coral;
+}
+/*-class 画布的导航栏 */
+.koko-div-aside {
+	min-width: 200px;
+	min-height: 480px;
+	width: 20%;
+	height: 80%;
+	float: left;
+	background-color: aqua;
+	overflow: auto;
+}
+/*-class- 画布的主体内容 */
+.koko-div-article {
+	min-width: 800px;
+	min-height: 480px;
+	width: 80%;
+	height: 80%;
+	float: right;
+	background-color: aquamarine;
+}
+/*-class- 画布的尾部 */
+.koko-div-footer {
+	min-width: 1000px;
+	min-height: 60px;
+	width: 100%;
+	height: 10%;
+	background-color: chartreuse;
+}
+/*-class- 头部的图标 */
+.koko-header-logo {
+	min-width: 200px;
+	min-height: 60px;
+	width: 20%;
+	height: 100%;
+	float: left;
+}
+/*-class- 头部的用户信息 */
+.koko-header-user {
+	margin: auto;
+	min-width: 200px;
+	min-height: 60px;
+	width: 20%;
+	height: 100%;
+	float: right;
+	overflow: auto;
+}
+/*-class- 头部的图片 */
+.koko-header-user img {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	float: left;
+}
+/*-class- 头部的文字 */
+.koko-header-user p {
+	text-align: center;
+	line-height: 60px;
+}
+
+.koko-ul-li-hr {
+	border-top: solid #34495E;
+}
+/*-class- 导航的列表 */
+.koko-aside-ul {
+	min-width: 160px;
+	width: 80%;
+	font-size: x-large;
+	background: #D76C9C;
+}
+/*-class- 列表 */
+.koko-ul {
+	text-align: center;
+}
+/*-class- 列表项 */
+.koko-ul-li {
+	text-align: center;
+	display: none;
+}
+/*-class- 列表获取焦点列表项显示 */
+.koko-ul:hover .koko-ul-li {
+	display: block;
+}
