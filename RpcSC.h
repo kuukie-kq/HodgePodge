@@ -158,6 +158,8 @@ public:
     }
 };
 
+//rpc工具自动生成//^
+
 void server() {
     RpcService* rpcService = new RpcService();
     for(int i=0;i<3;i++)
