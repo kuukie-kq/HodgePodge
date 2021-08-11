@@ -158,7 +158,7 @@ public:
     }
 };
 
-//rpc工具自动生成//^
+//rpc工具自动生成//^//基本固定写法，区别在于自定义业务部分//
 
 void server() {
     RpcService* rpcService = new RpcService();
