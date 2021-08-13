@@ -8,7 +8,7 @@
 #include <iostream>
 using namespace std;
 
-int mains() {
+int main() {
     pid_t pid = fork();
     if(pid < 0) {
         cerr << "fork apply error\n";
