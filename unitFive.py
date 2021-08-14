@@ -35,11 +35,11 @@ orders.send_time = orders.send_time.apply(func=lambda x: toMinute(x))
 print(orders.describe(include=['float64']))
 
 # 计算偏度和峰度
-# def skew_kurt(x):
-#     return pd.Series([x.skew(), x.kurt()], index=['skew', 'kurt'])
-#
-#
-# orders.send_time.apply(func=skew_kurt)
+def skew_kurt(x):
+    return pd.Series([x.skew(), x.kurt()], index=['skew', 'kurt'])
+
+
+orders.send_time.apply(func=skew_kurt)
 # 筛选出补贴额在8元以上的订单
 print(orders.loc[orders.subsidy >= 8])
 
