@@ -11,9 +11,10 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
 
+//IOCï¼ŒAOP
 public class Proxy {
 	public static Object newProxyInstance(String str) throws Exception {
-        //Éú³ÉJavaÔ´ÎÄ¼ş  
+        //ç”ŸæˆJavaæºæ–‡ä»¶  
         String srcCode = "package com.java.main.proxy;\n\n"
             + "public class $ProxyTest implements ProxyInter {\n"
             + "\tpublic void run() {\n\t\t"
@@ -27,7 +28,7 @@ public class Proxy {
         fw.flush();
         fw.close();
         
-        //½«JavaÎÄ¼ş±àÒë³ÉclassÎÄ¼ş
+        //å°†Javaæ–‡ä»¶ç¼–è¯‘æˆclassæ–‡ä»¶
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileMgr = compiler.getStandardFileManager(null, null, null);
         Iterable units = fileMgr.getJavaFileObjects(fileName);
@@ -35,7 +36,7 @@ public class Proxy {
         t.call();
         fileMgr.close();
         
-        //¼ÓÔØµ½ÄÚ´æ£¬²¢ÊµÀı»¯
+        //åŠ è½½åˆ°å†…å­˜ï¼Œå¹¶å®ä¾‹åŒ–
         URL[] urls = new URL[] {new URL("file:/" + "D:/MyProgram/workspace/KuukieNOWorld/src/")};
         URLClassLoader ul = new URLClassLoader(urls);
         Class c = ul.loadClass("com.java.main.proxy.$ProxyTest");
