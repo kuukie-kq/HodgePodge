@@ -11,6 +11,7 @@
 #include "CustomMessage.h"
 
 class CustomBlock {
+    //使用说明
     //start定位边框开始的位置
     //size控制中间可加信息的大小length的数值实际有效的是1~length-1，height的数值有效为1~height
     /*
