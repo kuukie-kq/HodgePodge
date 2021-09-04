@@ -2,8 +2,6 @@
 // Created by kuukie on 2021/7/24.
 //
 
-//RPC框架自动生成如下代码，分成客户端服务端两个
-
 #ifndef XTEST_RPCSC_H
 #define XTEST_RPCSC_H
 
