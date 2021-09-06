@@ -2,8 +2,6 @@
 // Created by kuukie on 2021/7/24.
 //
 
-//
-
 #ifndef XTEST_RPCSC_H
 #define XTEST_RPCSC_H
 
