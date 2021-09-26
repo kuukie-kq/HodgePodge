@@ -1,4 +1,4 @@
-##ubuntu20.04.2系统使用
+##ubuntu20.04.2系统使用 本次软甲安装环境 2021.08.24
 
 #!安装vmware-tools-distrib（仅vmware虚拟机）
   sudo ./vmware-install.pl
