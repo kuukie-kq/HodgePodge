@@ -1,0 +1,31 @@
+linux系统启动
+                                  电源开启 on
+                               /              \
+                            uefi            legance
+                          uefishell               BIOS
+                         fs: gdt_uefi            0盘0道1扇区
+                              |                   512B
+                              |                  --2B 0x55,0xAA
+                            /boot              mbr
+                 --------------------------------------------------
+                                       |
+                                     grab2    -kernel  ->vm
+                                              -mdisk   ->initrdimg
+                                                  ramdiskfs  ----init_
+                                       |
+                                  start_kernal
+                                       |
+                                    schedule  -task_struct
+                                              R0 -> init_
+                                       |
+                                    mont /    -挂载
+                                       |
+                                   init_main  R3 -> push $0x**,(ip)
+                                                 -> ret
+                                       |
+                                      etc
+                                       |
+                                     profil   -环境变量
+                                       |
+                                     login    -登录界面
+
