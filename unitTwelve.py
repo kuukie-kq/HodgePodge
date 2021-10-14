@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
 from sklearn import metrics
-# 三种算法比较
+# 三种算法比较 失败
 
 
 def transformKMeans(string):
