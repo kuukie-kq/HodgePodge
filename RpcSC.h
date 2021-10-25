@@ -20,6 +20,7 @@ using namespace std;
 #define PORT 8558
 
 //字符串分割函数
+
 vector<string> split(string str,string pattern) {
     string::size_type pos;
     vector<string> result;
