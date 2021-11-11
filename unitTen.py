@@ -1,5 +1,4 @@
 import pandas as pd
-# 未完成 数据特征分析
 
 skin = pd.read_excel(r'D:\MyPFile\BigDataPythonFile\Skin_Segment.xlsx')
 skin.y = skin.y.map({2: 0, 1: 1})
