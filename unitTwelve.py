@@ -60,4 +60,3 @@ if __name__ == '__main__':
     print("KMeans准确率", metrics.accuracy_score(seeds.kmeans_zl, seed.kmeans))
     print("DBSCAN准确率", metrics.accuracy_score(seeds.dbscan_zl, seed.dbscan))
     print("Agglo准确率", metrics.accuracy_score(seeds.agglo_zl, seed.agglo)
-
