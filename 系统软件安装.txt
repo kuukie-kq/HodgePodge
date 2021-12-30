@@ -108,6 +108,14 @@
   ----使用在bin目录下运行goland.sh即可
   
 
+##安装rust
+  https://www.rust-lang.org/zh-CN/
+  --官方网站
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  --下载rust的安装器和版本管理工具
+  ----安装好提示应用环境变量，也可重启，之后在jetbrains的产品下下载一个新组件（plugins）rust即可使用
+  
+
 ##安装MySQL数据库
   sudo apt install mysql-server
   sudo apt install mysql-client
@@ -545,6 +553,59 @@
     --# This is kafka installing
     --export KAFKA_HOME=/opt/kafka_2.12-3.0.0
     --export PATH=$PATH:$KAFKA_HOME/bin
+    source /etc/profile
+    exit
+  Second step
+    -#配置配置信息各节点的x对应
+    cd /opt/
+    tar -zcvf ~/kafka_2.12-3.0.0.tar.gz kafka_2.12-3.0.0
+    cd ~
+    scp kafka_2.12-3.0.0.tar.gz kuunode2:/home/hadoop/
+    scp kafka_2.12-3.0.0.tar.gz kuunode3:/home/hadoop/
+    scp kafka_2.12-3.0.0.tar.gz kuunode4:/home/hadoop/
+    -#其他机子的操作,开始
+    su kuukie
+    sudo mv kafka_2.12-3.0.0.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf kafka_2.12-3.0.0.tar.gz
+    sudo rm kafka_2.12-3.0.0.tar.gz
+    exit
+    -#结束
+    cd /opt/kafka_2.12-3.0.0/config/kraft/
+    gedit server.properties
+    --修改内容为
+    --node.id=x
+    --controller.quorum.voters=1@kuunode1:9093,2@kuunode2:9093,3@kuunode3:9093,4@kuunode4:9093
+    --listeners=PLAINTEXT://x的主机名:9092,CONTROLLER://x的主机名:9093
+    --advertised.listeners=PLAINTEXT://x的主机名:9092
+  Third step
+    -#配置集群及启动测试
+    kafka-storage.sh random-uuid
+    --得到yqDUDN7GRDCE1TdP1VpUOw
+    kafka-storage.sh format -t yqDUDN7GRDCE1TdP1VpUOw -c server.properties
+    --将集群ID写进配置文件中
+    kafka-server-start.sh -daemon /opt/kafka/config/kraft/server.properties
+    --启动
+    kafka-topics.sh --create --bootstrap-server slave1:9092,slave2:9092,slave3:9092 --topic topicName --partitions 3 --replication-factor 2
+    --测试创建topic
+    kafka-topics.sh --list --bootstrap-server slave1:9092,slave2:9092,slave3:9092
+    --列出topic
+  End
+  ##elasticsearch安装
+  First step
+    -#解压并配置环境变量
+    su kuukie
+    sudo cp elasticsearch-7.11.2-linux-x86_64.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf elasticsearch-7.11.2-linux-x86_64.tar.gz
+    sudo rm elasticsearch-7.11.2-linux-x86_64.tar.gz
+    sudo chown -R hadoop elasticsearch-7.11.2
+    sudo chgrp -R hadoop elasticsearch-7.11.2
+    sudo gedit /etc/profile
+    --在文件末尾添加如下内容
+    --# This is elasticsearch installing
+    --export ELASTIC_HOME=/opt/elasticsearch-7.11.2
+    --export PATH=$PATH:$ELASTIC_HOME/bin
     source /etc/profile
     exit
   Second step
