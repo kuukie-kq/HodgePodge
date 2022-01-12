@@ -1,4 +1,4 @@
-//解释器
+//解释器 与 CPU连用
 //#include <iostream>
 //#include <string>
 //#include <vector>
