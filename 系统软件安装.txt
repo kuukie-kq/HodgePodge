@@ -1,0 +1,674 @@
+##ubuntu20.04.2系统使用
+
+#!安装vmware-tools-distrib（仅vmware虚拟机）
+  sudo ./vmware-install.pl
+  
+
+##系统更新
+  sudo apt update
+  sudo apt upgrade
+  sudo apt install -f
+  --更新
+  sudo apt-get update
+  sudo apt-get upgrade
+  sudo apt-get install -f
+  --不更新可能导致一些软件无法正常安装--不要跳过
+  
+
+##安装搜狗拼音输入法
+  https://pinyin.sogou.com/linux/
+  --下载.deb文件
+  sudo dpkg -i sogoupinyin_2.3.1.0112_amd64.deb
+  --安装
+  sudo apt -f install
+  --缺少依赖解决方案再重回上步
+  sudo apt-get install -f
+  sudo apt install fcitx
+  sudo apt --fix-broken install
+  --根据提示安装所需的组件
+  ----安装了太多次有点乱--成功方式(半成功皮肤使用不了)----失败的可能原因--版本冲突导致
+  sudo apt remove sogoupinyin
+  sudo apt remove fcitx
+  sudo apt install fcitx
+  sudo dpkg -i sogoupinyin_2.4.0.3469_amd64.deb
+  sudo apt -f install
+  sudo dpkg -i sogoupinyin_2.4.0.3469_amd64.deb
+  
+
+##安装WPS
+  https://linux.wps.cn/
+  --下载.deb文件
+  sudo dpkg -i wps-office_11.1.0.10161_amd64.deb
+  --安装
+  
+
+##安装JDK
+  https://www.oracle.com/java/technologies/javase-downloads.html
+  --下载jdk压缩包
+  cd /opt
+  sudo cp ~/下载/jdk-8u11-linux-x64.tar.gz ./
+  sudo tar -zxvf jdk-8u11-linux-x64.tar.gz
+  sudo rm -rf jdk-8u11-linux-x64.tar.gz
+  --解压jdk压缩包并放在/opt目录下
+  sudo gedit /etc/profile
+  $$# java path
+    export JAVA_HOME=/opt/jdk1.8.0_11
+    export JRE_HOME=${JAVA_HOME}/jre
+    export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib:$CLASSPATH
+    export JAVA_PATH=${JAVA_HOME}/bin:${JRE_HOME}/bin
+    export PATH=${JAVA_PATH}:$PATH
+  $${The End}$$文件末尾添加的内容
+  source /etc/profile
+  --使环境变量生效
+  
+
+##安装IDEA开发工具
+  https://www.jetbrains.com/idea/
+  --下载idea压缩包
+  cd /opt
+  sudo cp ~/下载/ideaIU-2020.1.3.tar.gz ./
+  sudo tar -zxvf ideaIU-2020.1.3.tar.gz
+  sudo rm -rf ideaIU-2020.1.3.tar.gz
+  sudo mv ./idea-IU-201.8538.31 ./idea-2020.1.3
+  --解压idea压缩包并放在/opt下
+  ----使用在bin目录下运行idea.sh即可
+  
+
+##安装CLion开发工具
+  https://www.jetbrains.com/clion/
+  --下载clion压缩包
+  cd /opt
+  sudo cp ~/下载/CLion-2020.2.tar.gz ./
+  sudo tar -zxvf CLion-2020.2.tar.gz
+  sudo rm -rf CLion-2020.2.tar.gz
+  --解压clion压缩包并放在/opt下
+  ----使用在bin目录下运行clion.sh即可
+  
+
+##安装PyCharm开发工具
+  https://www.jetbrains.com/pycharm/
+  --下载pycharm压缩包
+  cd /opt
+  sudo cp ~/下载/pycharm-professional-anaconda-2020.3.tar.gz ./
+  sudo tar -zxvf pycharm-professional-anaconda-2020.3.tar.gz
+  sudo rm -rf pycharm-professional-anaconda-2020.3.tar.gz
+  sudo mv pycharm-anaconda-2020.3 pycharm-2020.3
+  --解压pycharm压缩包并放在/opt下
+  ----使用在bin目录下运行pycharm.sh即可
+  
+
+##安装GoLand开发工具
+  https://www.jetbrains.com/go/
+  --下载goland压缩包
+  cd /opt
+  sudo cp ~/下载/goland-2020.1.3.tar.gz ./
+  sudo tar -zxvf goland-2020.1.3.tar.gz
+  sudo rm -rf goland-2020.1.3.tar.gz
+  --解压goland压缩包并放在/opt下
+  ----使用在bin目录下运行goland.sh即可
+  
+
+##安装rust
+  https://www.rust-lang.org/zh-CN/
+  --官方网站
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  --下载rust的安装器和版本管理工具
+  ----安装好提示应用环境变量，也可重启，之后在jetbrains的产品下下载一个新组件（plugins）rust即可使用
+  
+
+##安装MySQL数据库
+  sudo apt install mysql-server
+  sudo apt install mysql-client
+  sudo mysql -u root -p
+  --由于刚下载下来是没有密码的所以需要root权限无密登录然后修改密码
+  mysql> update mysql.user set authentication_string=password('root') where User='root' and Host='localhost';
+  mysql> alter user 'root'@'localhost' identified with mysql_native_password by 'root';
+  --更改密码
+  
+
+##安装vim(查看内核代码)
+  sudo apt install vim
+  sudo apt install ctags
+  sudo apt install ctags cscope
+  --目前不会用
+  
+
+##安装C语言编译器
+  sudo apt install gcc g++
+  --安装gcc,g++编译器
+  sudo apt install make
+  --安装make编译器
+  
+
+##安装go语言编译器
+  https://golang.google.cn/dl/
+  --下载完整包
+  cd /opt
+  sudo cp ~/下载/go1.16.9.linux-amd64.tar.gz ./
+  sudo tar -zxvf go1.16.9.linux-amd64.tar.gz
+  sudo rm -rf go1.16.9.linux-amd64.tar.gz
+  --安装go编译器
+  
+
+##JetBrains(CLion,Idea,PyCharm,GoLand)连接GitHub
+  JetBrains:File->Settings->Version Control->GitHub->Add(+)
+  --添加连接GitHub的Token
+  GitHub:My->Settings->Developer settings->Personal access tokens->Generate new token(选择repo/*,admin:org/read:org,gist)
+  --在GitHub上新建Token(过期更改有效时间,选项之前的默认,具体干什么不清楚)
+  复制GitHub的Token到JetBrains上->Log in
+  sudo apt install git
+  --安装git工具,使Pull(下载),Push(上传)可用
+  
+  -#git使用与一些问题的解决
+  Q#出现no changes detected
+  1#在项目目录中
+  tail -n 10 ./.git/logs/refs/heads/master
+  --查看日志
+  git fsck --full
+  --文件校验检查
+  git update-ref HEAD f05d9b274c9e81ee455893c80d00ed2192655fdd
+  --修改头位置
+  find ./.git/ -type f -empty -delete -print
+  --删除错误文件
+  2#删除项目变成空目录
+  VCS->Git->Clone手动填写URL和Directory
+  --重新拉取项目，如果https协议太慢拉取失败，改用git协议
+  2#Q#You can't push to git://github.com/kuukie-kq/Battle.git	Use https://github.com/kuukie-kq/Battle.git
+  2#A#将git协议再改回https协议
+    cd ./.git/
+    --在项目目录下进入git的隐藏目录
+    git remote rm origin
+    git remote add origin https://github.com/kuukie-kq/Battle.git
+  --解决
+  
+
+##DNS服务配置
+  sudo apt install net-tools
+  --ifconfig下载
+  sudo apt install rpm
+  sudo apt install python
+  sudo apt-get install gettext
+  --yum的准备
+  cd /opt
+  sudo cp ~/下载/yum-3.4.3.tar.gz ./
+  sudo tar -zxvf yum-3.4.3.tar.gz
+  sudo rm -rf yum-3.4.3.tar.gz
+  --解压源码包
+  cd yum-3.4.3/
+  sudo make
+  sudo make install
+  --安装yum(可能会缺少一些东西)
+  
+
+##redis安装
+  cd /opt
+  sudo cp ~/下载/redis-6.2.5.tar.gz ./
+  sudo tar -zxvf redis-6.2.5.tar.gz
+  sudo rm -rf redis-6.2.5.tar.gz
+  --解压源码包
+  cd redis-6.2.5/
+  sudo make
+  sudo make install
+  --安装
+  
+
+##VMware安装
+  sudo chmod +x VMware-Workstation-Full-16.1.2-17966106.x86_64.bundle
+  sudo ./VMware-Workstation-Full-16.1.2-17966106.x86_64.bundle
+  --安装程序
+  ZF3R0-FHED2-M80TY-8QYGC-NPKYF||YF390-0HF8P-M81RQ-2DXQE-M2UT6||ZF71R-DMX85-08DQY-8YMNC-PPHV8
+  --填写密钥
+  sudo vmware-installer -u vmware-workstation
+  --卸载
+  
+
+##docker安装
+  sudo apt install docker.io
+  --安装程序
+  systemctl start docker
+  systemctl status docker
+  --启动
+  systemctl stop docker
+  --关闭
+  
+##qt安装
+  https://download.qt.io/archive/qt/
+  --下载
+  sudo chmod -R 777 qtopensource-linux-x64-5.7.0.run
+  sudo ./qt-opensource-linux-x64-5.7.0.run
+  --安装
+  --设置编译环境
+  
+##drawio安装
+  https://github.com/jgraph/drawio-desktop/releases
+  --下载deb安装包
+  sudo dpkg -i draw.io-amd64-12.2.2.deb
+  --安装
+  drawio
+  --启动
+  
+
+##分布式集群搭建
+  sudo apt update
+  sudo apt upgrade
+  sudo apt autoremove
+  sudo apt install -f
+  --将系统组件安装至最新
+  sudo apt install net-tools
+  --支持使用ifconfig命令
+  ##hadoop安装
+  First step
+    -#hadoop用户创建
+    sudo adduser hadoop
+    sudo usermod -c 'hadoop' hadoop
+    more /etc/passwd
+    --添加hadoop用户并密码设置为hadoop其余默认,看到的结果为hadoop:x:1001:1001:hadoop:/home/hadoop:/bin/bash
+    sudo gedit /etc/hostname
+    sudo gedit /etc/hosts
+    --更改主机名"??@??:~$"中的名字,并且把所要搭建集群的机器的ip写在hosts中用以解析
+  Second step
+    -#免密登录本机
+    su kuukie
+    --切换用户用以安装hadoop普通用户不允许的行为,kuukie用户为装系统的默认用户
+    sudo apt-get install openssh-server
+    --安装,启动sshd
+    --ps -e | grep ssh查看是否启动
+    exit
+    ssh localhost
+    ssh-keygen -t rsa
+    cd ~/.ssh
+    cat id_rsa.pub >> authorized_keys
+    ssh localhost
+    exit
+    --判断是否能登录本机,确保每台机子都能够登录到自己的本地
+  Third step
+    -#免密登录其他主机
+    scp id_rsa.pub hadoop@kuunode2:/home/hadoop/
+    scp id_rsa.pub hadoop@kuunode3:/home/hadoop/
+    scp id_rsa.pub hadoop@kuunode4:/home/hadoop/
+    --将公钥发送给其他主机
+    cat id_rsa.pub >> ./.ssh/authorized_keys
+    --其他主机将公钥记录到文件中
+  Fourth step
+    -#安装jdk
+    su kuukie
+    sudo cp jdk-8u11-linux-x64.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf jdk-8u11-linux-x64.tar.gz
+    sudo rm jdk-8u11-linux-x64.tar.gz
+    sudo gedit /etc/profile
+    --在文件末尾添加如下内容
+    --# Starting with this line is a custom environment variable.(path)
+    --# This is java installing
+    --export JAVA_HOME=/opt/jdk1.8.0_11
+    --export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+    --export PATH=$PATH:$JAVA_HOME/bin
+    source /etc/profile
+    java -version
+    exit
+    --显示java版本号即为成功
+  Fifth step
+    -#主节点安装hadoop
+    su kuukie
+    sudo cp hadoop-2.7.1.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf hadoop-2.7.1.tar.gz
+    sudo rm hadoop-2.7.1.tar.gz
+    sudo chown -R hadoop hadoop-2.7.1
+    sudo chgrp -R hadoop hadoop-2.7.1
+    sudo gedit /etc/profile
+    --在文件末尾添加如下内容
+    --# This is hadoop installing
+    --export HADOOP_HOME=/opt/hadoop-2.7.1
+    --export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+    source /etc/profile
+  Sixth step
+    -#配置hadoop为分布式模式
+    --在hadoop目录下创建tmp,name,data,logs文件夹,并进入etc/hadoop文件夹下修改配置文件
+    sudo gedit slaves
+    --将其他机器的名字写上一行一个
+    sudo gedit hadoop-env.sh
+    --内容为
+    --# The java implementation to use.
+    --# export JAVA_HOME=${JAVA_HOME}
+    --export JAVA_HOME=/opt/jdk1.8.0_11
+    sudo gedit core-site.xml
+    --开始内容为
+<configuration>
+	<property>
+		<name>fs.defaultFS</name>
+		<value>hdfs://kuunode1:9000</value>
+	</property>
+</configuration>
+    --结束
+    sudo gedit hdfs-site.xml
+    --开始内容为
+<configuration>
+	<property>
+		<name>dfs.replication</name>
+		<value>3</value>
+	</property>
+	<property>
+		<name>dfs.namenode.name.dir</name>
+		<value>/opt/hadoop-2.7.1/name</value>
+	</property>
+	<property>
+		<name>dfs.datanode.data.dir</name>
+		<value>/opt/hadoop-2.7.1/data</value>
+	</property>
+	<property>
+		<name>hadoop.tmp.dir</name>
+		<value>/opt/hadoop-2.7.1/tmp</value>
+	</property>
+	<property>
+		<name>dfs.permissions</name>
+		<value>false</value>
+	</property>
+	<property>
+		<name>dfs.webhdfs.enabled</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>dfs.support.append</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>hadoop.proxyuser.hadoop.hosts</name>
+		<value>*</value>
+	</property> 
+	<property>
+		<name>hadoop.proxyuser.hadoop.groups</name>
+		<value>*</value>
+	</property>
+	<property>
+		<name>dfs.ha.fencing.methods</name>
+		<value>sshfence</value>
+	</property>
+	<property>
+		<name>dfs.ha.fencing.ssh.private-key-files</name>
+		<value>/home/hadoop/.ssh/id_rsa</value>
+	</property>
+</configuration>
+    --结束
+    sudo cp mapred-site.xml.template mapred-site.xml
+    sudo gedit mapred-site.xml
+    --开始内容为
+<configuration>
+	<property>
+		<name>mapreduce.framework.name</name>
+		<value>yarn</value>
+	</property>
+</configuration>
+    --结束
+    sudo gedit yarn-site.xml
+    --开始内容为
+<configuration>
+<!-- Site specific YARN configuration properties -->
+	<property>
+		<name>yarn.nodemanager.aux-services</name>
+		<value>mapreduce_shuffle</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.hostname</name>
+		<value>kuunode1</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.webapp.address</name>
+		<value>kuunode1:8088</value>
+	</property>
+</configuration>
+    --结束
+    exit
+    cd /opt/
+    tar -zcvf ~/hadoop-2.7.1.tar.gz hadoop-2.7.1
+    scp hadoop-2.7.1.tar.gz kuunode2:/home/hadoop/
+    scp hadoop-2.7.1.tar.gz kuunode3:/home/hadoop/
+    scp hadoop-2.7.1.tar.gz kuunode4:/home/hadoop/
+    -#其他机子的操作,开始
+    su kuukie
+    sudo mv hadoop-2.7.1.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf hadoop-2.7.1.tar.gz
+    sudo rm hadoop-2.7.1.tar.gz
+    exit
+    -#结束,然后进行启动测试
+    cd /opt/hadoop-2.7.1/
+    bin/hdfs namenode -format
+    sbin/start-all.sh
+  End
+  ##zookeeper安装
+  First step
+    -#解压并配置环境变量
+    su kuukie
+    sudo cp apache-zookeeper-3.6.3-bin.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf apache-zookeeper-3.6.3-bin.tar.gz
+    sudo rm apache-zookeeper-3.6.3-bin.tar.gz
+    sudo chown -R hadoop apache-zookeeper-3.6.3-bin
+    sudo chgrp -R hadoop apache-zookeeper-3.6.3-bin
+    sudo gedit /etc/profile
+    --在文件末尾添加如下内容
+    --# This is zookeeper installing
+    --export ZK_HOME=/opt/apache-zookeeper-3.6.3-bin
+    --export PATH=$PATH:$ZK_HOME/bin
+    source /etc/profile
+    exit
+  Second step
+    -#配置配置信息，在conf目录下
+    cp zoo_sample.cfg zoo.cfg
+    gedit zoo.cfg
+    --在文件中修改
+    --dataDir=/opt/apache-zookeeper-3.6.3-bin/tmp
+    --在clientPort=2181之后添加zookeeper集群server.x为后面配置的数字
+    --server.0=192.168.253.138:2888:3888
+    --server.1=192.168.253.139:2888:3888
+    --server.2=192.168.253.140:2888:3888
+    cd /opt/apache-zookeeper-3.6.3-bin/tmp
+    echo 0 >> myid
+    --没有myid文件会自动创建,并且往文件里写个数字
+  Third step
+    cd /opt
+    tar -zcvf ~/apache-zookeeper-3.6.3.tar.gz apache-zookeeper-3.6.3
+    cd ~
+    scp apache-zookeeper-3.6.3-bin.tar.gz kuunode2:/home/hadoop/
+    scp apache-zookeeper-3.6.3-bin.tar.gz kuunode3:/home/hadoop/
+    -#其他机子的操作,开始
+    su kuukie
+    sudo mv apache-zookeeper-3.6.3-bin.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf apache-zookeeper-3.6.3-bin.tar.gz
+    sudo rm apache-zookeeper-3.6.3-bin.tar.gz
+    exit
+    cd /opt/apache-zookeeper-3.6.3/tmp/
+    echo x >> myid
+    --x为服务ID号,与配置文件中的service.x对应
+    -#结束,然后进行启动测试
+    zkServer.sh start
+    zkServer.sh status
+    --各集群中的机器分别启动
+  End
+  ##HBase安装
+  First step
+    -#解压并配置环境变量
+    su kuukie
+    sudo cp hbase-1.1.5-bin.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf hbase-1.1.5-bin.tar.gz
+    sudo rm hbase-1.1.5-bin.tar.gz
+    sudo gedit /etc/profile
+    --在文件末尾添加如下内容
+    --# This is hbase installing
+    --export HBASE_HOME=/opt/hbase-1.1.5
+    --export PATH=$PATH:$HBASE_HOME/bin
+    source /etc/profile
+    sudo chown -R hadoop hbase-1.1.5
+    sudo chgrp -R hadoop hbase-1.1.5
+    exit
+  Second step
+    -#配置配置信息在conf目录下
+    gedit hbase-env.sh
+    --内容为
+    --export JAVA_HOME=/opt/jdk1.8.0_11
+    --export HBASE_MANAGES_ZK=false
+    --版本问题暂时不加export HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP="true"
+    --由于使用了JDK1.8所以需要注释掉相关信息
+    --# Configure PermSize. Only needed in JDK7. You can safely remove it for JDK8+
+    --# export HBASE_MASTER_OPTS="$HBASE_MASTER_OPTS -XX:PermSize=128m -XX:MaxPermSize=128m"
+    --# export HBASE_REGIONSERVER_OPTS="$HBASE_REGIONSERVER_OPTS -XX:PermSize=128m -XX:MaxPermSize=128m"
+    gedit hbase-site.xml
+    --开始内容为
+<configuration>
+	<property>
+		<name>hbase.master</name>
+		<value>kuunode1:16000</value>
+	</property>
+	<property>
+		<name>hbase.master.maxclockskew</name>
+		<value>180000</value>
+	</property>
+	<property>
+		<name>hbase.rootdir</name>
+		<value>hdfs://kuunode1:9000/hbase</value>
+	</property>
+	<property>
+		<name>hbase.cluster.distributed</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>hbase.zookeeper.quorum</name>
+		<value>kuunode2,kuunode3,kuunode4</value>
+	</property>
+	<property>
+		<name>hbase.unsafe.stream.capability.enforce</name>
+		<value>false</value>
+	</property>
+</configuration>
+    --结束
+    gedit regionservers
+    --将作为datanode的节点的机器名写上一行一个
+  Third step
+    cd /opt
+    tar -zcvf ~/hbase-1.1.5.tar.gz hbase-1.1.5
+    cd ~
+    scp hbase-1.1.5.tar.gz kuunode2:/home/hadoop/
+    scp hbase-1.1.5.tar.gz kuunode3:/home/hadoop/
+    scp hbase-1.1.5.tar.gz kuunode4:/home/hadoop/
+    -#其他机子的操作,开始
+    su kuukie
+    sudo mv hbase-1.1.5.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf hbase-1.1.5.tar.gz
+    sudo rm hbase-1.1.5.tar.gz
+    exit
+    -#结束,然后进行启动测试
+    start-hbase.sh
+    hbase shell
+  End
+  ##kafka安装
+  First step
+    -#解压并配置环境变量
+    su kuukie
+    sudo cp kafka_2.12-3.0.0.tgz /opt/
+    cd /opt/
+    sudo tar -zxvf kafka_2.12-3.0.0.tgz
+    sudo rm kafka_2.12-3.0.0.tgz
+    sudo chown -R hadoop kafka_2.12-3.0.0
+    sudo chgrp -R hadoop kafka_2.12-3.0.0
+    sudo gedit /etc/profile
+    --在文件末尾添加如下内容
+    --# This is kafka installing
+    --export KAFKA_HOME=/opt/kafka_2.12-3.0.0
+    --export PATH=$PATH:$KAFKA_HOME/bin
+    source /etc/profile
+    exit
+  Second step
+    -#配置配置信息各节点的x对应
+    cd /opt/
+    tar -zcvf ~/kafka_2.12-3.0.0.tar.gz kafka_2.12-3.0.0
+    cd ~
+    scp kafka_2.12-3.0.0.tar.gz kuunode2:/home/hadoop/
+    scp kafka_2.12-3.0.0.tar.gz kuunode3:/home/hadoop/
+    scp kafka_2.12-3.0.0.tar.gz kuunode4:/home/hadoop/
+    -#其他机子的操作,开始
+    su kuukie
+    sudo mv kafka_2.12-3.0.0.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf kafka_2.12-3.0.0.tar.gz
+    sudo rm kafka_2.12-3.0.0.tar.gz
+    exit
+    -#结束
+    cd /opt/kafka_2.12-3.0.0/config/kraft/
+    gedit server.properties
+    --修改内容为
+    --node.id=x
+    --controller.quorum.voters=1@kuunode1:9093,2@kuunode2:9093,3@kuunode3:9093,4@kuunode4:9093
+    --listeners=PLAINTEXT://x的主机名:9092,CONTROLLER://x的主机名:9093
+    --advertised.listeners=PLAINTEXT://x的主机名:9092
+  Third step
+    -#配置集群及启动测试
+    kafka-storage.sh random-uuid
+    --得到yqDUDN7GRDCE1TdP1VpUOw
+    kafka-storage.sh format -t yqDUDN7GRDCE1TdP1VpUOw -c server.properties
+    --将集群ID写进配置文件中
+    kafka-server-start.sh -daemon /opt/kafka/config/kraft/server.properties
+    --启动
+    kafka-topics.sh --create --bootstrap-server slave1:9092,slave2:9092,slave3:9092 --topic topicName --partitions 3 --replication-factor 2
+    --测试创建topic
+    kafka-topics.sh --list --bootstrap-server slave1:9092,slave2:9092,slave3:9092
+    --列出topic
+  End
+  ##elasticsearch安装
+  First step
+    -#解压并配置环境变量
+    su kuukie
+    sudo cp elasticsearch-7.11.2-linux-x86_64.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf elasticsearch-7.11.2-linux-x86_64.tar.gz
+    sudo rm elasticsearch-7.11.2-linux-x86_64.tar.gz
+    sudo chown -R hadoop elasticsearch-7.11.2
+    sudo chgrp -R hadoop elasticsearch-7.11.2
+    sudo gedit /etc/profile
+    --在文件末尾添加如下内容
+    --# This is elasticsearch installing
+    --export ELASTIC_HOME=/opt/elasticsearch-7.11.2
+    --export PATH=$PATH:$ELASTIC_HOME/bin
+    source /etc/profile
+    exit
+  Second step
+    -#配置配置信息各节点的x对应
+    cd /opt/
+    tar -zcvf ~/kafka_2.12-3.0.0.tar.gz kafka_2.12-3.0.0
+    cd ~
+    scp kafka_2.12-3.0.0.tar.gz kuunode2:/home/hadoop/
+    scp kafka_2.12-3.0.0.tar.gz kuunode3:/home/hadoop/
+    scp kafka_2.12-3.0.0.tar.gz kuunode4:/home/hadoop/
+    -#其他机子的操作,开始
+    su kuukie
+    sudo mv kafka_2.12-3.0.0.tar.gz /opt/
+    cd /opt/
+    sudo tar -zxvf kafka_2.12-3.0.0.tar.gz
+    sudo rm kafka_2.12-3.0.0.tar.gz
+    exit
+    -#结束
+    cd /opt/kafka_2.12-3.0.0/config/kraft/
+    gedit server.properties
+    --修改内容为
+    --node.id=x
+    --controller.quorum.voters=1@kuunode1:9093,2@kuunode2:9093,3@kuunode3:9093,4@kuunode4:9093
+    --listeners=PLAINTEXT://x的主机名:9092,CONTROLLER://x的主机名:9093
+    --advertised.listeners=PLAINTEXT://x的主机名:9092
+  Third step
+    -#配置集群及启动测试
+    kafka-storage.sh random-uuid
+    --得到yqDUDN7GRDCE1TdP1VpUOw
+    kafka-storage.sh format -t yqDUDN7GRDCE1TdP1VpUOw -c server.properties
+    --将集群ID写进配置文件中
+    kafka-server-start.sh -daemon /opt/kafka/config/kraft/server.properties
+    --启动
+    kafka-topics.sh --create --bootstrap-server slave1:9092,slave2:9092,slave3:9092 --topic topicName --partitions 3 --replication-factor 2
+    --测试创建topic
+    kafka-topics.sh --list --bootstrap-server slave1:9092,slave2:9092,slave3:9092
+    --列出topic
+  End
+  
+
