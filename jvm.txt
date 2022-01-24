@@ -46,4 +46,3 @@ region eden 复制算法
        mix old g1 标记清除法,三色标记法(remark--snapshot表记录反向指针)
        huge 巨大对象()
        
-by kuukie
