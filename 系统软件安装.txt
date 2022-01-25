@@ -1,4 +1,4 @@
-##ubuntu20.04.2系统使用 kuukie
+##ubuntu20.04.2系统使用 kuukie 20220105
 
 #!安装vmware-tools-distrib（仅vmware虚拟机）
   sudo ./vmware-install.pl
