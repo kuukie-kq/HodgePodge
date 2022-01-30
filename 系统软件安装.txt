@@ -670,5 +670,6 @@
     kafka-topics.sh --list --bootstrap-server slave1:9092,slave2:9092,slave3:9092
     --列出topic
   End
+  
   --未完全成功，jdk问题
 
