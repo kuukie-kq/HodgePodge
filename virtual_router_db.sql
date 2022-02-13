@@ -19,7 +19,7 @@
 -- Table structure for table `db_host`
 --
 
-/*The start*/
+/*The start kuukie*/
 /*This is added manually.*/
 /*It is used to ensure the consistency of the library name.*/
 DROP DATABASE IF EXISTS `virtual_router_db`;
