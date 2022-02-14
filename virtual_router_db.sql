@@ -19,6 +19,7 @@
 -- Table structure for table `db_host`
 --
 
+/*仿照建表操作实现一个自动建库的操作*/
 /*The start kuukie*/
 /*This is added manually.*/
 /*It is used to ensure the consistency of the library name.*/
