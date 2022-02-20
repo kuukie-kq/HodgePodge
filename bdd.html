@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>冰敦敦</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			.out {
+				width: 210px;
+				height: 230px;
+				margin: 50px auto;
+				position: relative;
+			}
+
+			.main-box {
+				width: 210px;
+				height: 230px;
+				background: #FFFFFF;
+				border: 2px solid #333333;
+				border-radius: 50% 50% 44% 44%/50%;
+			}
+
+			.ear {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				background: #000000;
+				position: absolute;
+				left: 19px;
+				top: 0;
+				z-index: -1;
+			}
+
+			.ear.right {
+				left: unset;
+				right: 19px;
+				top: 0;
+			}
+
+			.hand {
+				width: 100px;
+				height: 43px;
+				background: #000000;
+				border-radius: 50%;
+				position: absolute;
+				top: 44%;
+				left: -20%;
+				z-index: -1;
+				transform: rotate(306deg);
+			}
+
+			.hand-r {
+				width: 100px;
+				height: 46px;
+				background: #000000;
+				position: absolute;
+				border-radius: 50%;
+				top: 29%;
+				right: -20%;
+				transform: rotate(300deg);
+				z-index: -1;
+			}
+			
+			.foot {
+				width: 50px;
+				height: 80px;
+				background: #000000;
+				position: absolute;
+				bottom: -8%;
+				left: 21%;
+				border-radius: 17px;
+				z-index: -1;
+			}
+			
+			.foot.right {
+				left: unset;
+				right: 21%;
+				bottom: -7%;
+			}
+			
+			.face {
+				width: 73%;
+				height: 120px;
+				border: 3px solid #000000;
+				border-radius: 50%;
+				position: relative;
+				margin: 24px auto;
+				box-shadow: 0 0 0 2px #B7F2FF,0 0 0 4px #F52DD6,0 0 0 7px #F4DF74,0 0 0 8px #000000;
+			}
+			
+			.eye {
+				width: 43px;
+				height: 57px;
+				background: #000000;
+				border-radius: 50%;
+				position: absolute;
+				top: 18%;
+				left: 10%;
+				transform: rotate(44deg);
+			}
+			
+			.eye.right {
+				left: unset;
+				right: 10%;
+				transform: rotate(-44deg);
+			}
+			
+			.eye-in {
+				width: 30px;
+				height: 30px;
+				background: #000000;
+				border: 2px solid #FFFFFF;
+				border-radius: 50%;
+				margin: 6px;
+				position: relative;
+			}
+			
+			.eye.right .eye-in {
+				transform: rotate(73deg);
+			}
+			
+			.eye-in::before,.eye-in::after {
+				content: '';
+				position: absolute;
+				background: #FFFFFF;
+				border-radius: 50%;
+			}
+			
+			.eye-in::before {
+				width: 10px;
+				height: 10px;
+				top: 2px;
+				left: 10px;
+			}
+			
+			.eye-in::after {
+				width: 5px;
+				height: 5px;
+				top: 15px;
+				left: 15px;
+			}
+			
+			.nose {
+				width: 18px;
+				height: 16px;
+				background: #000000;
+				border-radius: 6px 6px 50% 50%/6px 6px 50% 50%;
+				position: absolute;
+				left: 50%;
+				transform: translateX(-50%);
+				top: 44%;
+			}
+			
+			.mouth {
+				width: 30px;
+				height: 20px;
+				background: #000000;
+				position: absolute;
+				left: 50%;
+				transform: translateX(-50%);
+				bottom: 17%;
+				border-radius: 0 0 15px 15px/0 0 15px 15px;
+			}
+			
+			.mouth-in {
+				width: 30px;
+				height: 20px;
+				overflow: hidden;
+				position: absolute;
+				border-radius: 0 0 15px 15px/0 0 15px 15px;
+			}
+			
+			.mouth::before {
+				content: '';
+				width: 5px;
+				height: 1px;
+				left: -3px;
+				top: -1px;
+				position: absolute;
+				background: #000000;
+				transform: rotate(325deg);
+			}
+			
+			.mouth::after {
+				content: '';
+				width: 8px;
+				height: 1px;
+				right: -3px;
+				top: -1px;
+				position: absolute;
+				background: #000000;
+				transform: rotate(37deg);
+			}
+			
+			.tongue {
+				width: 38px;
+				height: 38px;
+				border-radius: 50%;
+				position: absolute;
+				top: 22%;
+				left: -5%;
+				background: #DF2821;
+			}
+			
+			.blush {
+				width: 0;
+				height: 0;
+				position: absolute;
+				left: 21%;
+				bottom: 30%;
+				border-radius: 50%;
+				box-shadow: 0 0 12px 12px rgba(222,40,34,0.3);
+			}
+			
+			.blush.right {
+				left: unset;
+				right: 21%;
+			}
+			
+			.logo {
+				margin: -12px auto 0 auto;
+				display: block;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="out">
+			<!-- left ear -->
+			<div class="ear"></div>
+			<!-- right ear -->
+			<div class="ear right"></div>
+			<!-- left hand -->
+			<div class="hand"></div>
+			<!-- right hand -->
+			<div class="hand-r"></div>
+			<!-- left foot -->
+			<div class="foot"></div>
+			<!-- right foot -->
+			<div class="foot right"></div>
+			<div class="main-box">
+				<!-- face -->
+				<div class="face">
+					<!-- left eye all -->
+					<div class="eye">
+						<!-- left eye real -->
+						<div class="eye-in"></div>
+					</div>
+					<!-- right eye all -->
+					<div class="eye right">
+						<!-- right eye real -->
+						<div class="eye-in"></div>
+					</div>
+					<!-- nose -->
+					<div class="nose"></div>
+					<!-- mouth all -->
+					<div class="mouth">
+						<!-- mouth real -->
+						<div class="mouth-in">
+							<!-- mouth tongue -->
+							<div class="tongue"></div>
+						</div>
+					</div>
+					<!-- left blush -->
+					<div class="blush"></div>
+					<!-- right blush -->
+					<div class="blush right"></div>
+				</div>
+				<!-- logo -->
+				<img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.puchedu.cn%2Fuploads%2F0%2F26%2F1657876213%2F3384479566.jpg&amp;refer=http%3A%2F%2Fimg.puchedu.cn&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1647945602&amp;t=1015c06e39e73e350d91b62697421a05" class="logo" height="55" />
+			</div>
+		</div>
+	</body>
+</html>
