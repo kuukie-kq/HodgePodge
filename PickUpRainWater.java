@@ -2,7 +2,7 @@ package test;
 
 public class PickUpRainWater {
     /**
-     * 42.接雨水 思路 找出所有凹槽并填充对应无凹槽数，然后相减
+     * 42.接雨水 思路 找出所有凹槽并填充对应无凹槽数，然后相减 思路二 使用栈只遍历一次
      */
     public static int trap(int[] height) {
         int sum = 0;
