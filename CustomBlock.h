@@ -1,7 +1,6 @@
 //
 // Created by End-Cookie on 2020-10-16.
 //
-//框架封装
 
 #ifndef ENTRANCE_CUSTOMBLOCK_H
 #define ENTRANCE_CUSTOMBLOCK_H
