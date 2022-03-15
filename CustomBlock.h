@@ -1,5 +1,5 @@
 //
-// Created by End-Cookie on 2020-10-16. try demo test
+// Created by End-Cookie on 2020-10-16.
 //
 
 #ifndef ENTRANCE_CUSTOMBLOCK_H
