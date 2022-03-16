@@ -1,5 +1,5 @@
 //
-// Created by end-cookie on 2020-10-19. try demo test
+// Created by end-cookie on 2020-10-19.
 //
 
 #ifndef ENTRANCE_CUSTOMMESSAGE_H
