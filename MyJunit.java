@@ -6,31 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyJunit {
-	//´«ÈëÒ»¸ö¶ÔÏóÊµÀı
+	//ä¼ å…¥ä¸€ä¸ªå¯¹è±¡å®ä¾‹ demo
     public static void run(Class c) throws InstantiationException,IllegalAccessException, IllegalArgumentException,InvocationTargetException {
-        Method[] methods = c.getDeclaredMethods();//»ñÈ¡¶ÔÏóÉùÃ÷µÄ·½·¨¼¯ºÏ
-        List<Method> testList = new ArrayList<Method>();//@Mytest×¢½âµÄ·½·¨¼¯ºÏ
-        Method afterMethod = null;//@Myafter×¢½â·½·¨
-        Method beforeMethod = null;//@MybeforeµÄ×¢½â·½·¨
-        for (Method method : methods) {//Ñ­»·¶ÔÏóÉùÃ÷µÄËùÓĞ·½·¨
-        //Èç¹ûÓĞ@Mytest×¢½â£¬Ôò½«¸Ã·½·¨¼ÓÈëµ½Mytest×¢½âµÄ·½·¨¼¯ºÏ
+        Method[] methods = c.getDeclaredMethods();//è·å–å¯¹è±¡å£°æ˜çš„æ–¹æ³•é›†åˆ
+        List<Method> testList = new ArrayList<Method>();//@Mytestæ³¨è§£çš„æ–¹æ³•é›†åˆ
+        Method afterMethod = null;//@Myafteræ³¨è§£æ–¹æ³•
+        Method beforeMethod = null;//@Mybeforeçš„æ³¨è§£æ–¹æ³•
+        for (Method method : methods) {//å¾ªç¯å¯¹è±¡å£°æ˜çš„æ‰€æœ‰æ–¹æ³•
+        //å¦‚æœæœ‰@Mytestæ³¨è§£ï¼Œåˆ™å°†è¯¥æ–¹æ³•åŠ å…¥åˆ°Mytestæ³¨è§£çš„æ–¹æ³•é›†åˆ
             if (method.isAnnotationPresent(Mytest.class)) {
                 testList.add(method);
             }
-            //Èç¹ûÓĞ@Before×¢½â£¬ÔòÒıÓÃ¸Ã·½·¨
+            //å¦‚æœæœ‰@Beforeæ³¨è§£ï¼Œåˆ™å¼•ç”¨è¯¥æ–¹æ³•
             if (method.isAnnotationPresent(Mybefore.class)) {
                 beforeMethod = method;
             }
-            //Èç¹ûÓĞ@After×¢½â£¬ÔòÒıÓÃ¸Ã·½·¨
+            //å¦‚æœæœ‰@Afteræ³¨è§£ï¼Œåˆ™å¼•ç”¨è¯¥æ–¹æ³•
             if (method.isAnnotationPresent(Myafter.class)) {
                 afterMethod = method;
 
             }
 
         }
-        //newÒ»¸ö¶ÔÏóÊµÀı
+        //newä¸€ä¸ªå¯¹è±¡å®ä¾‹
         Object obj = c.newInstance();
-        //·´Éä¼¤»î·½·¨
+        //åå°„æ¿€æ´»æ–¹æ³•
         for (Method m : testList) {
             if (beforeMethod != null) {
                 beforeMethod.invoke(obj, null);
