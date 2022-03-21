@@ -20,7 +20,7 @@ entrypoint ["java","-jar","/opt/kuukie/SpringBootWeb-1.0-SNAPSHOT.jar"]
 
 
 /** 
- *  另外一些docker常用命令
+ *  另外一些docker常用命令 20220320
  *  docker build -t *** . 执行dockerfile生成tag为***的镜像
  *  docker rm $(docker ps -a -q) 删除docker运行的记录
  *  docker rmi *** 删除镜像为***
