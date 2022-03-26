@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class SolutionSudoku {
     /**
-     * 37.解数独 思路 用三张表分别标记行列以及小块内数字的种类，然后找出可能性最少的空尝试填上数字，再迭代尝试，如果失败回退上一个尝试的数字再继续往下尝试。
+     * 37.解数独 思路 用三张表分别标记行列以及小块内数字的种类，然后找出可能性最少的空尝试填上数字，再迭代尝试，如果失败回退上一个尝试的数字再继续往下尝试。通过函数嵌套的方式实现回退。
      */
     private static final class NinePalaceGrid {
         private final char[] numbers = new char[]{'1','2','3','4','5','6','7','8','9'};
