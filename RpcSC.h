@@ -1,5 +1,5 @@
 //
-// Created by kuukie on 2021/7/24. Updated by kuukie on 2021/8/15.
+// Created by kuukie on 2021/7/24.
 //
 
 #ifndef XTEST_RPCSC_H
