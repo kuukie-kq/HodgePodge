@@ -1,4 +1,4 @@
-# Docker image for VRMspringbootweb file run
+# Docker image for VRMspringbootweb file run by kuukie
 # version 0.1.1
 
 # pull base image
