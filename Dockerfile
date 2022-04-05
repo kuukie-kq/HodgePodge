@@ -7,7 +7,7 @@ from java:8
 expose 20022
 # producer
 maintainer kuukie <3260681415@qq.com>
-# disploy project
+# disploy project 项目包
 add VRM.tar /kuukie/
 # workspace
 workdir /kuukie/VRM-VirtualRouter
