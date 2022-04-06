@@ -9,7 +9,7 @@ expose 20022
 maintainer kuukie <3260681415@qq.com>
 # disploy project 项目包
 add VRM.tar /kuukie/
-# workspace
+# workspace 项目主目录
 workdir /kuukie/VRM-VirtualRouter
 # main java jar
 # copy SpringBootWeb-1.0-SNAPSHOT.jar /opt/kuukie/
