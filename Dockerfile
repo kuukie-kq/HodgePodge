@@ -13,7 +13,7 @@ add VRM.tar /kuukie/
 workdir /kuukie/VRM-VirtualRouter
 # main java jar
 # copy SpringBootWeb-1.0-SNAPSHOT.jar /opt/kuukie/
-# main run
+# main run 镜像启动默认程序
 entrypoint ["java","-jar","/kuukie/VRM-VirtualRouter/SpringBootWeb/target/SpringBootWeb-1.0-SNAPSHOT.jar"]
 
 
