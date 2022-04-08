@@ -3,7 +3,7 @@
 
 # pull base image
 from java:8
-# listen port
+# listen port 对外开放端口
 expose 20022
 # producer
 maintainer kuukie <3260681415@qq.com>
