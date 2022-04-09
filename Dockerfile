@@ -20,7 +20,7 @@ entrypoint ["java","-jar","/kuukie/VRM-VirtualRouter/SpringBootWeb/target/Spring
 
 
 
-
+##常用命令
 #$sudo docker images
 #$sudo docker build -t vrm:v1 .
 #$sudo docker run -p 8088:20022 vrm:v1
