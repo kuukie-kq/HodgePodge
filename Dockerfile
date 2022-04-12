@@ -1,7 +1,7 @@
 # Docker image for VRMspringbootweb file run
 # version 0.1.1
 
-# pull base image
+# pull base image 根据java1.8镜像制作项目镜像
 from java:8
 # listen port 对外开放端口
 expose 20022
