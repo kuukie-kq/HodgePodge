@@ -11,7 +11,7 @@ maintainer kuukie <3260681415@qq.com>
 add VRM.tar /kuukie/
 # workspace 项目主目录
 workdir /kuukie/VRM-VirtualRouter
-# main java jar
+# main java jar test
 # copy SpringBootWeb-1.0-SNAPSHOT.jar /opt/kuukie/
 # main run 镜像启动默认程序
 entrypoint ["java","-jar","/kuukie/VRM-VirtualRouter/SpringBootWeb/target/SpringBootWeb-1.0-SNAPSHOT.jar"]
