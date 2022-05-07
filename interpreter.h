@@ -8,7 +8,7 @@
 using namespace std;
 
 namespace cip {
-    //Content 目录 (line number) ~ (+35) ~ (line number)  [[maybe_unused]] Clang-tyde
+    //Content 目录 (line number) ~ (+35) ~ (line number)  [[maybe_unused]] Clang-Tidy
     //链接  目录末尾位置
     class [[maybe_unused]] tag_one;
     //类型定义
