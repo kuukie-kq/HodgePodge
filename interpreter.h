@@ -691,6 +691,6 @@ namespace cip {
     //warring debug
     //对于位操作必须使用无符号数 既使用number+u或(u4_int)(unsigned int)
     //对于未使用的使用[[maybe_unused]]修饰 变量后 函数名前 类前
-    //对于未使用成员变量的函数提示maybe static使用一个[[maybe_unused]]的成员变量即可
+    //对于未使用成员变量的函数提示maybe static使用一个[[maybe_unused]]的成员变量即可或者使用static
 }
 
