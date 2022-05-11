@@ -2,7 +2,7 @@
 // Created by kuukie on 2021/7/16.
 //
 
-//进程与子进程 “系统调用”
+//进程与子进程 fork
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
