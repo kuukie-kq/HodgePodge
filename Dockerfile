@@ -1,5 +1,5 @@
 # Docker image for VRMspringbootweb file run
-# version 0.1.1
+# version 1.1.1
 
 # pull base image 根据java1.8镜像制作项目镜像
 from java:8
@@ -21,7 +21,7 @@ entrypoint ["java","-jar","/kuukie/VRM-VirtualRouter/SpringBootWeb/target/Spring
 
 
 
-#$sudo docker images使用
+#$sudo docker images
 #$sudo docker build -t vrm:v1 .
 #$sudo docker run -p 8088:20022 vrm:v1
 #$sudo docker ps -a
