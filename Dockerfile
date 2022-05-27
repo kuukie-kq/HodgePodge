@@ -1,5 +1,5 @@
 # Docker image for VRMspringbootweb file run
-# version 1.1.1 by 2022/03/15
+# version 1.1.1 created by kuu*kie on 2022/03/15
 
 # pull base image 根据java1.8镜像制作项目镜像
 from java:8
