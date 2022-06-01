@@ -1,4 +1,4 @@
-# Docker image for VRMspringbootweb file run
+# Docker image make file
 # created by kuu*kie on 2022/03/15
 # version 1.1.1
 
