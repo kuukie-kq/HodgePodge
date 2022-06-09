@@ -3,6 +3,7 @@ from selenium.webdriver.support.select import Select
 import time
 
 """
+Created by kuukie on 2022/06/04
 说明：
 程序依赖  Linux系统下，自带火狐浏览器
 运行环境  anaconda库，python3.8版本
