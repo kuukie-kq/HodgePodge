@@ -1,6 +1,6 @@
 # Docker image make file
 # Created by kuukie on 2022/03/15
-# version 1.1.1
+# version 1.1.0
 
 # pull base image 根据java1.8镜像制作项目镜像
 from java:8
