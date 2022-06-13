@@ -35,7 +35,7 @@ for i in range(0, 1000):
 
     el1_s.select_by_value("3")
     el2_s.select_by_value("309")
-    el3.send_keys("370125199912036629")
+    el3.send_keys("370***********6629")
     if i < 10:
         el4.send_keys("L210020100200" + "00" + str(i))
     elif i < 100:
