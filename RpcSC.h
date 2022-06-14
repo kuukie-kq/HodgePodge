@@ -4,7 +4,7 @@
 
 #ifndef XTEST_RPCSC_H
 #define XTEST_RPCSC_H
-// Windows
+
 #pragma once
 
 #include <iostream>
