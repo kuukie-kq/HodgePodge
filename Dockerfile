@@ -6,7 +6,7 @@
 from java:8
 # listen port 对外开放端口
 expose 20022
-# producer
+# producer kuukie
 maintainer kuukie <3260681415@qq.com>
 # disploy project 项目包
 add VRM.tar /kuukie/
