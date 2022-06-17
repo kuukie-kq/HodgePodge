@@ -1,4 +1,4 @@
-                                 多路复用
+                                 多路复用&Linux软硬件结构
   |-------------------------------|             解决线程维护阻塞问题
   |JVM                            |  思路       selector     poll      epoll
   |    栈   |         堆           |  1准备(清空/设置)被监听列表serversocket/socket
