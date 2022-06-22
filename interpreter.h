@@ -1,4 +1,4 @@
-//Linux but windows language The best write
+//Linux but windows language The best write ？
 //#inndef interpreter \n #define interpreter \n #endif
 #pragma once
 
