@@ -379,8 +379,8 @@ namespace cip {
     };
 
     u4_int HashMap::hash(char* str) {
-        u4_int h;
-        u1_int *p;
+        register u4_int h;
+        register u1_int *p;
         for(h=0,p=(u1_int*)str;*p;p++) {
             h = 31 * h + *p;
         }
