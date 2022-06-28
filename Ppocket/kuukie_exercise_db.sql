@@ -5,7 +5,7 @@
  Source Server Type    : MySQL
  Source Server Version : 50711
  Source Host           : localhost:3306
- Source Schema         : virtual_router_db
+ Source Schema         : kuukie_exercise_db
 
  Target Server Type    : MySQL
  Target Server Version : 50711
