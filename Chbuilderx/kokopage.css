@@ -1,0 +1,91 @@
+/*kokopage.css*/
+/*-全局- 外边距+内填充+边框 */
+* {
+	margin: 0px auto;
+	padding: 0px;
+	border: 0px;
+}
+/*-全局- 宽度占满*/
+html,body {
+	width: 100%;
+}
+/*-顶层-*/
+.koko-header {
+	width: 100%;
+	background: #f6a143;
+	box-shadow: 0 0 5px rgba(0,0,0,0.35);
+	padding: 15px 0;
+	margin-bottom: 20px;
+	position: fixed;
+	z-index: 100;
+}
+/*-顶层列表居中-*/
+.koko-header-ul {
+	text-align: center;
+}
+/*-顶层列表样式-*/
+.koko-header-ul-li {
+	height: 40px;
+	display: inline-block;
+}
+
+.koko-header-ul-li a {
+	font-size: 1.2rem;
+	font-weight: bold;
+	line-height: 23px;
+	color: #2d271f;
+	width: 130px;
+	height: 100%;
+	display: block;
+	background: #FFF;
+	border-radius: 5px;
+	box-shadow: 0 0 3px rgba(0,0,0,0.35);
+	text-decoration: none;
+	border-bottom: solid 5px #f6a143;
+	transition: all 0.3s;
+}
+
+.koko-header-ul-li a:hover {
+	color: #ffffff;
+	background: #f6a143;
+}
+
+.koko-header-ul-li a span{
+	font-size: 0.8rem;
+	color: #e4007f;
+	display: block;
+	margin-top: -5px;
+}
+/*-主体留出顶层-*/
+.koko-container {
+	width: 800px;
+	margin: 0 auto;
+	padding-top: 100px;
+}
+/*-首行缩进-*/
+.koko-container-p {
+	text-indent: 2em;
+}
+
+.koko-container-hr {
+	width: 80%;
+	height: 20px;
+	border-bottom: 5px solid #987cb9;
+}
+/*-结尾标注-*/
+.koko-footer {
+	width: 100%;
+	text-align: center;
+	padding: 15px 0 10px;
+	margin: 0 auto;
+	background: #f6a143;
+	box-shadow: 0 0 3px rgba(0,0,0,0.35);
+}
+
+.koko-footer-address {
+	font-size: 0.9rem;
+	line-height: 1.5;
+	color: #ffffff;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.45);
+	font-style: normal;
+}
