@@ -354,7 +354,7 @@ void client() {
     cout << l << "The End\n";
 }
 
-// Clion 调试CMakeLists.txt的写法
+// Clion 对于多进程调试中CMakeLists.txt的写法
 // 前面属于常规内容
 //cmake_minimum_required(VERSION 3.16)
 //project(test)
