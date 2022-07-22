@@ -44,7 +44,9 @@
 
 ##安装JDK
   https://www.oracle.com/java/technologies/javase-downloads.html
+  https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
   --下载jdk压缩包
+  --官方jdk的各种版本-全
   cd /opt
   sudo cp ~/下载/jdk-8u11-linux-x64.tar.gz ./
   sudo tar -zxvf jdk-8u11-linux-x64.tar.gz
@@ -688,4 +690,3 @@
     --列出topic
   End
   
-
