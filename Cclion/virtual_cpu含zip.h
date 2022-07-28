@@ -1,5 +1,5 @@
 //
-// Created by kuu*kie on 2022/7/22.
+// Created by kuukie on 2022/7/22.
 //
 
 #ifndef VIRTUAL_CPU_H
@@ -11,11 +11,139 @@
 // 注意，切忌在自定义的命名空间中引用系统头文件，避免造成标识符的混乱。
 // 存在多层namespace的情况，里层namespace对于系统namespace中的函数错乱，找不到的情况
 #include <iostream> //输入输出
+#include <sstream> //输入输出缓冲
+#include <cstdarg> //不定参数处理
 #include <string> //字符串类
 #include <vector> //不定数组，字符串分割
 #include <fstream> //读写文件
 
 namespace kuu {
+    //工具，与工具函数不同，不属于必要的，目前只有对于输出进行了简单的封装，还存在问题
+    namespace str {
+        class system_stream_io {
+        private:
+            unsigned int on_or_off;
+            unsigned int level;
+            void step() const;
+            void log() const;
+            void warning() const;
+            void error() const;
+            std::stringstream* ss;
+            std::stringstream* buff;
+        public:
+            explicit system_stream_io(unsigned int ooo = 1u, unsigned int mode = 0);
+            ~system_stream_io();
+            void clear();
+            void start(unsigned int mode);
+            void maybe(unsigned int mode);
+            void append(const char* format, ...) const;
+            void end();
+        };
+
+        void system_stream_io::step() const {
+            if (buff->rdbuf()->in_avail() > 1048575) {
+                std::cout << buff->str();
+                buff->clear();
+                buff->str("");
+            }
+            *buff << "<->" << ss->str() << "\n";
+        }
+
+        void system_stream_io::log() const {
+            if (buff->rdbuf()->in_avail() > 0) {
+                std::cout << buff->str();
+                buff->clear();
+                buff->str("");
+            }
+            std::cout << "<*>" << ss->str() << std::endl;
+        }
+
+        void system_stream_io::warning() const {
+            std::cout << ">-<" << ss->str() << std::endl;
+        }
+
+        void system_stream_io::error() const {
+            std::cerr << ">*<" << ss->str() << std::endl;
+        }
+
+        system_stream_io::system_stream_io(unsigned int ooo, unsigned int mode) {
+            //如果仅仅作为局部变量，输出完就释放内存
+            //可以将第二个参数填上
+            //不需要进行start或者maybe即可输出
+            //
+            //作为频繁的步骤，输出很影响性能
+            //不完全数据
+            //100040002次循环
+            //中间过程不输出2s完成
+            //中间过程全部每次输出900~1000s完成
+            //加入buff缓冲，全输出但并不是实时的依据设置的大小不同400~700s完成
+            //所以，保留buff
+            ss = new std::stringstream();
+            buff = new std::stringstream();
+            on_or_off = ooo;
+            level = mode;
+        }
+
+        system_stream_io::~system_stream_io() {
+            delete ss;
+            delete buff;
+        }
+
+        void system_stream_io::clear() {
+            ss->clear();
+            ss->str("");
+            level = 0;
+        }
+
+        void system_stream_io::start(unsigned int mode) {
+            //当对象为全局的时候，输出的起始
+            //作为不频繁申请内存
+            if (ss->rdbuf()->in_avail() > 0) {
+                clear();
+            }
+            level = mode;
+        }
+
+        void system_stream_io::maybe(unsigned int mode) {
+            //局部时，可能不确定在那一个地方进行了设置
+            //但又不想在正常情况下输出空行
+            level = mode;
+        }
+
+        void system_stream_io::append(const char* format, ...) const {
+            //不定参数的一种实现
+            //目前来说比较方便的
+            if (level & on_or_off) {
+                char *buffer = (char *) malloc(1024);
+                va_list args;
+                va_start(args, format);
+                int length = vsnprintf(buffer, 1024, format, args);
+                (length >= 1024) ? *ss << length << "- format and args too long" : *ss << buffer;
+                va_end(args);
+                delete buffer;
+            }
+        }
+
+        void system_stream_io::end() {
+            if (level == 0) return;
+            bool error_on = (level & 1u) & (on_or_off & 1u);
+            bool warning_on = (level & 2u) & (on_or_off & 2u);
+            bool log_on = (level & 4u) & (on_or_off & 4u);
+            bool step_on = (level & 8u) & (on_or_off & 8u);
+
+            if (error_on) {
+                error();
+            } else if (warning_on) {
+                warning();
+            } else if (log_on) {
+                log();
+            } else if (step_on) {
+                step();
+            }
+            clear();
+        }
+    }
+
     //考虑使用匿名命名空间，只在本文件内可见
     namespace cpu {
         //.h文件部分
@@ -34,13 +162,20 @@ namespace kuu {
         u4int hash_code(const char* key);
         std::vector<std::string> spilt(std::string str, const std::string& pattern);
         //成员类
+
         // 说明
         // 内存地址大小 1 16 16 16 16 16 16 16 16 32 32 32 32 64 64 128 511
         // 总共1024，每个可以存放32位数据
         // 使用方法
         // 内存先申请，再使用，用完释放
         // 并且对于read不做限制，释放也只是设置使用大小为0，内容不变
+        // 模拟申请内存后，如果不进行初始化，出现奇怪的数
         class virtual_memory;
+        // 说明
+        // 函数名与内存中首地址的键值对映射
+        // 虽然为键值对模型，但时间换空间，空间换时间的思想，没有使用map结构
+        // 目前使用最简单的链表结构
+        // 考虑用红黑树替代
         class function_member;
         // 说明
         // 函数调用栈
@@ -496,7 +631,7 @@ namespace kuu {
             counter_step();
             ~counter_step();
             s4int read(const char* name, u4int length = 0, const char* file = nullptr);
-            s4int interlude();
+            s4int interlude(const char* name = "main");
             s4int step_point();
             void result() const;
         };
@@ -576,7 +711,7 @@ namespace kuu {
         s4int counter_step::read(const char* name, const u4int length, const char* file) {
             if (fm->find(name) != 0) { return 0; }
             std::string str;
-            u4int segment;
+            u4int segment = 0;
             if (file == nullptr) {
                 if (length == 15) {
                     str = "mov e1x 12\n"
@@ -635,6 +770,7 @@ namespace kuu {
                     segment = vmm->apply(length);
                 }
             }
+            if (segment == 0) { return 0; }
             // 真正的主要部分
             std::vector<std::string> lines = spilt(str, "\n");
             for (s4int i = 0; i < lines.size(); i++) {
@@ -650,13 +786,13 @@ namespace kuu {
             return 1;
         }
 
-        s4int counter_step::interlude() {
-            u4int segment = fm->find("main");
-            fm->unload("main");
+        s4int counter_step::interlude(const char* name) {
+            u4int segment = fm->find(name);
+            fm->unload(name);
             if (segment != 0) {
-                vmm->release(segment);
+                return vmm->release(segment);
             }
-            return 1;
+            return 0;
         }
 
         s4int counter_step::step_point() {
@@ -674,9 +810,10 @@ namespace kuu {
         }
 
         void counter_step::result() const {
+            std::printf("ありがとうごじゃいます\n");
             std::printf("pc = [0x%08X(%d)]\n", pc, pc);
-            std::printf("数组中最大值减最小值[0x%08X(%d)]\n", ncr->get(2), ncr->get(2));
-            std::printf("数组中最大值最小值两数之和[0x%08X(%d)]\n", ncr->get(3), ncr->get(3));
+            std::printf("[0x%08X(%d)]\n", ncr->get(2), ncr->get(2));
+            std::printf("[0x%08X(%d)]\n", ncr->get(3), ncr->get(3));
         }
 
         s4int mov(u4int& nc, u4int code, virtual_register* ncr, virtual_memory* mem, function_stack* scf, u4int& cs) {
@@ -803,21 +940,61 @@ namespace kuu {
     //main函数写法，既示例
     int cpu_run_main() {
         auto* counter = new cpu::counter_step();
-        counter->read("add", 0, "../cpu_add.kuu");
-        counter->read("seb", 0, "../cpu_seb.kuu");
-        counter->read("gather", 0, "../cpu_gather.kuu");
-        counter->read("test", 0, "../test_array_spacing.kuu");
-        counter->read("main", 1, "cal 0 test");
+        //第一步
+        {
+            //加载函数
+            auto* out = new str::system_stream_io(1u);
+            if (counter->read("add", 0, "../cpu_add.kuu") == 0) {
+                out->maybe(1u);
+                out->append("加载函数add时内存が足りないのかもしれません");
+            }
+            if (counter->read("seb", 0, "../cpu_seb.kuu") == 0) {
+                out->maybe(1u);
+                out->append("加载函数seb时内存が足りないのかもしれません");
+            }
+            if (counter->read("gather", 0, "../cpu_gather.kuu") == 0) {
+                out->maybe(1u);
+                out->append("加载函数gather时内存が足りないのかもしれません");
+            }
+            if (counter->read("test", 0, "../test_array_spacing.kuu") == 0) {
+                out->maybe(1u);
+                out->append("加载函数test时内存が足りないのかもしれません");
+            }
+            if (counter->read("main", 1, "cal 0 test") == 0) {
+                out->maybe(1u);
+                out->append("加载函数main时内存が足りないのかもしれません");
+            }
+            out->end();
+        }
+        //第二步
         for (;;) {
             if (counter->step_point() == 0) { break; }
         }
+        //第三步
         counter->result();
-        counter->interlude();
-        counter->read("main", 9, "mov ax 10\nmov bx 5\ncal 0 gather\nmov ax rx\nmov bx 1\ncal 0 gather\njny rx 2\nmov cx rx\nmov dx rx");
+        //结束
+        //测试
+        //第壹步
+        if (counter->interlude() == 0) {
+            auto* out = new str::system_stream_io(1u << 1u, 1u << 1u);
+            out->append("気をつけて清理加载的函数内存に異常が出る");
+            out->end();
+            delete out;
+        }
+        //第贰步
+        if (counter->read("main", 9, "mov ax 10\nmov bx 5\ncal 0 gather\nmov ax rx\nmov bx 1\ncal 0 gather\njny rx 2\nmov cx rx\nmov dx rx") == 0) {
+            auto* out = new str::system_stream_io(1u, 1u);
+            out->append("気をつけて清理加载的函数内存に異常が出る");
+            out->end();
+            delete out;
+        }
+        //第弎步
         for (;;) {
             if (counter->step_point() == 0) { break; }
         }
+        //第肆步
         counter->result();
+        //结束
         return 0;
     }
 }
