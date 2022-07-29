@@ -298,6 +298,7 @@ namespace kuu {
         }
 
         u4int virtual_memory::apply(const u4int size) {
+            if (size == 0) { return 0u; }
             if (size <= 1u << 4u) {
                 for (s4int i = 0; i < 8; i++) {
                     if (use[i] == 0) {
@@ -632,7 +633,7 @@ namespace kuu {
             ~counter_step();
             s4int read(const char* name, u4int length = 0, const char* file = nullptr);
             s4int interlude(const char* name = "main");
-            s4int step_point();
+            s4int step_by_step();
             void result() const;
         };
 
@@ -771,7 +772,7 @@ namespace kuu {
                 }
             }
             if (segment == 0) { return 0; }
-            // 真正的主要部分
+            // 真正的主要部分，注意stoi可能抛出异常，出现说明有地方写错了，不做捕获处理（编译器做好后，不会出现这类问题，出现说明编译器有bug）
             std::vector<std::string> lines = spilt(str, "\n");
             for (s4int i = 0; i < lines.size(); i++) {
                 std::vector<std::string> words = spilt(lines[i], " ");
@@ -795,7 +796,7 @@ namespace kuu {
             return 0;
         }
 
-        s4int counter_step::step_point() {
+        s4int counter_step::step_by_step() {
             if (pc >= 0 && pc < 2000000000) {
                 u4int code = vmm->read(cs, nc);
                 if (code == 0) { return 0; }
@@ -937,6 +938,343 @@ namespace kuu {
         //CLang-Tidy属于静态代码扫描，语法要求高，但有时却需要那种写法
     }
 
+    class red_black_tree {
+        // 定义
+        // 红黑树是特殊的二叉查找树（AVL）
+        // 特性
+        // 1）每个节点只有可能为黑色或者红色
+        // 2）根节点为黑色
+        // 3）叶子节点一定是null，即为黑色
+        // 4）如果一个节点是红色，则它的子节点一定是黑色
+        // 5）从一个节点到其叶子节点的所有路径包含相同数量的黑色节点
+        //相关情况分析及图示
+        //https://www.jianshu.com/p/4cd37000f4e3?u_atoken=cdb08e27-1c98-4c4c-a25c-4fbfeb095fa4&u_asession=01ab7xwtg0aZPT-a2o1gat7Mu4ZyIHYXcIxYHdUixTj9qYONbhOgdeNI58HN7RqIWxX0KNBwm7Lovlpxjd_P_q4JsKWYrT3W_NKPr8w6oU7K_uJHWI8z0lFtp0aK1dbNDIE3kHBSeC3ycZ3R-DrPYY52BkFo3NEHBv0PZUm6pbxQU&u_asig=05tPpdLjm4H_veLABeXfEOOcJS5worn3f6CN5tledCQgFfDVi6VSXThHJmziFdfCbe1xEg18CBVN0kQgCY_rmZdunlpetzZIipwTmh8C_agdtp2RoqVBDNZgAveEH6iXtdv3LN_A-oFt43NE19ZET_E9-yK0_zv7zfxz5jr2naAMX9JS7q8ZD7Xtz2Ly-b0kmuyAKRFSVJkkdwVUnyHAIJzdZ24YjhKA_sNukOojR0yiZpLiW964lGVQm7ziqrI2TSWrnxlgSSvoRYzeD7jclHWe3h9VXwMyh6PgyDIVSG1W8Y0HW3Zh6j6ePzqJNxifPBfm5fsg5wmy8bWufzsZqoZDDGBggA94sIlA8ogHcLTxoCN1fL-Q0LRn6kQJGijjnbmWspDxyAEEo4kbsryBKb9Q&u_aref=84kyqG9liWiBspbY%2FI3QVFpYvss%3D
+    private:
+        enum red_black { RED = 0, BLACK = 1};
+        class red_black_tree_node {
+            // Linux内核中的红黑树，color和parent合为一个long指针
+            // 因为在系统中的地址，最后两位一定是0（一般情况）
+        public:
+            int value;
+            red_black color;
+            red_black_tree_node* left;
+            red_black_tree_node* right;
+            void* parent;
+            explicit red_black_tree_node(int number = 0);
+            ~red_black_tree_node();
+        };
+        // 左旋
+        void left_rotate(red_black_tree_node* pivot);
+        // 右旋
+        void right_rotate(red_black_tree_node* pivot);
+        // 为了确保树不会循环（调试查看时绕）同时也为内核实现的方向提供了接口
+        red_black_tree_node* parent_node(red_black_tree_node* child) const;
+        // 插入后的调整
+        void fix_after_append(red_black_tree_node* node);
+        red_black_tree_node* found(int value);
+        // 查找当前节点的后继节点，既中序遍历的下一个节点
+        red_black_tree_node* successor(red_black_tree_node* node) const;
+        // 删除时的调整
+        void fix_after_subtract(red_black_tree_node* node);
+        // 了解内联函数
+        void pre_order(unsigned int index, unsigned int offset, red_black_tree_node* node, unsigned int level, str::system_stream_io* out) const;
+        red_black_tree_node* root;
+    public:
+        red_black_tree();
+        ~red_black_tree();
+        // 插入节点
+        // 1）父节点是黑的，无需做处理
+        // 2）父节点和叔节点为红，修改父节点和叔节点为黑色，改变祖父节点为红色
+        // 3）父节点为红叔节点为黑，四种情况，有直接旋转变色和先反向旋转再旋转变色之分
+        void append(int value);
+        // 删除节点
+        // 1）删除的节点为叶子节点，可以直接删除
+        // 2）删除的节点只有一个子节点，子节点顶替
+        // 3）删除的节点有两个子节点，先找其后继节点，然后复制内容，则删除的是（替身）后继节点所在的位置
+        int subtract(int value);
+        void scanning() const;
+    };
+
+    red_black_tree::red_black_tree_node::red_black_tree_node(const int number) {
+        value = number;
+        color = RED;
+        left = nullptr;
+        right = nullptr;
+        parent = nullptr;
+    }
+
+    red_black_tree::red_black_tree_node::~red_black_tree_node() {
+        delete left;
+        delete right;
+        // 可检验删除节点是否存在纰漏
+        delete (red_black_tree_node*)parent;
+    }
+
+    void red_black_tree::left_rotate(red_black_tree_node* const pivot) {
+        red_black_tree_node* right = pivot->right;
+        pivot->right = right->left;
+        if (right->left != nullptr) {
+            right->left->parent = pivot;
+        }
+        right->parent = pivot->parent;
+        if (pivot->parent == nullptr) {
+            root = right;
+        } else if (parent_node(pivot)->left == pivot) {
+            parent_node(pivot)->left = right;
+        } else {
+            parent_node(pivot)->right = right;
+        }
+        right->left = pivot;
+        pivot->parent = right;
+    }
+
+    void red_black_tree::right_rotate(red_black_tree_node* const pivot) {
+        red_black_tree_node* left = pivot->left;
+        pivot->left = left->right;
+        if (left->right != nullptr) {
+            left->right->parent = pivot;
+        }
+        left->parent = pivot->parent;
+        if (pivot->parent == nullptr) {
+            root = left;
+        } else if (parent_node(pivot)->left == pivot) {
+            parent_node(pivot)->left = left;
+        } else {
+            parent_node(pivot)->right = left;
+        }
+        left->right = pivot;
+        pivot->parent = left;
+    }
+
+    red_black_tree::red_black_tree_node* red_black_tree::parent_node(red_black_tree_node* const child) const {
+        root;
+        if (child == nullptr) {
+            return nullptr;
+        }
+        auto* parent = (red_black_tree_node*)child->parent;
+        return parent;
+    }
+
+    void red_black_tree::fix_after_append(red_black_tree_node* node) {
+        for (;node != nullptr && root != node && parent_node(node)->color == RED;) {
+            if (parent_node(node) == parent_node(parent_node(node))->left) {
+                red_black_tree_node* uncle = parent_node(parent_node(node))->right;
+                if (uncle != nullptr && uncle->color == RED) {
+                    uncle->color = BLACK;
+                    parent_node(node)->color = BLACK;
+                    node = parent_node(parent_node(node));
+                    node->color = RED;
+                } else {
+                    if (node == parent_node(node)->right) {
+                        node = parent_node(node);
+                        left_rotate(node);
+                    }
+                    parent_node(node)->color = BLACK;
+                    parent_node(parent_node(node))->color = RED;
+                    right_rotate(parent_node(parent_node(node)));
+                }
+            } else {
+                red_black_tree_node* uncle = parent_node(parent_node(node))->left;
+                if (uncle != nullptr && uncle->color == RED) {
+                    uncle->color = BLACK;
+                    parent_node(node)->color = BLACK;
+                    node = parent_node(parent_node(node));
+                    node->color = RED;
+                } else {
+                    if (node == parent_node(node)->left) {
+                        node = parent_node(node);
+                        right_rotate(node);
+                    }
+                    parent_node(node)->color = BLACK;
+                    parent_node(parent_node(node))->color = RED;
+                    left_rotate(parent_node(parent_node(node)));
+                }
+            }
+        }
+        root->color = BLACK;
+    }
+
+    red_black_tree::red_black_tree_node* red_black_tree::found(int value) {
+        red_black_tree_node* current = root;
+        for (;current != nullptr;) {
+            if (current->value > value) {
+                current = current->left;
+            } else if (current->value < value) {
+                current = current->right;
+            } else {
+                break;
+            }
+        }
+        return current;
+    }
+
+    red_black_tree::red_black_tree_node* red_black_tree::successor(red_black_tree_node *node) const {
+        root;
+        red_black_tree_node* most_left = node->right;
+        for (;most_left != nullptr && most_left->left != nullptr;) {
+            most_left = most_left->left;
+        }
+        return most_left;
+    }
+
+    void red_black_tree::fix_after_subtract(red_black_tree_node* node) {
+        for (;node != root && BLACK == node->color;) {
+            if (node == parent_node(node)->left) {
+                red_black_tree_node* sister = parent_node(node)->right;
+                if (RED == sister->color) {
+                    sister->color = BLACK;
+                    parent_node(node)->color = RED;
+                    left_rotate(parent_node(node));
+                    sister = parent_node(node)->right;
+                }
+                if ((sister->left == nullptr || BLACK == sister->left->color) && (sister->right == nullptr || BLACK == sister->right->color)) {
+                    sister->color = RED;
+                    node = parent_node(node);
+                } else {
+                    if (BLACK == sister->right->color) {
+                        sister->left->color = BLACK;
+                        sister->color = RED;
+                        right_rotate(sister);
+                        sister = parent_node(node)->right;
+                    }
+                    sister->color = parent_node(node)->color;
+                    parent_node(node)->color = BLACK;
+                    sister->right->color = BLACK;
+                    left_rotate(parent_node(node));
+                    node = root;
+                }
+            } else {
+                red_black_tree_node* sister = parent_node(node)->left;
+                if (RED == sister->color) {
+                    sister->color = BLACK;
+                    parent_node(node)->color = RED;
+                    right_rotate(parent_node(node));
+                    sister = parent_node(node)->left;
+                }
+                if ((sister->left == nullptr || BLACK == sister->left->color) && (sister->right == nullptr || BLACK == sister->right->color)) {
+                    sister->color = RED;
+                    node = parent_node(node);
+                } else {
+                    if (BLACK == sister->left->color) {
+                        sister->right->color = BLACK;
+                        sister->color = RED;
+                        left_rotate(sister);
+                        sister = parent_node(node)->left;
+                    }
+                    sister->color = parent_node(node)->color;
+                    sister->left->color = BLACK;
+                    parent_node(node)->color = BLACK;
+                    right_rotate(parent_node(node));
+                    node = root;
+                }
+            }
+        }
+        node->color = BLACK;
+    }
+
+    inline void red_black_tree::pre_order(unsigned int index, const unsigned int offset, red_black_tree_node* node, const unsigned int level, str::system_stream_io* out) const {
+        if (node == nullptr) { return; }
+        // 树放入数组中，由两个指标表示下标
+        // 一个是父节点的下标，一个是父节点的左子（1）还是右子（2）
+        // 既，根节点默认0，0
+        // 这样父节点的下标乘以2，再加上一个数，即为本节点在数组中的下标
+        index = index * 2 + offset;
+        out->start(8u);
+        out->append("[%4d]{level:%2d,\tcolor:%s\t,value:%d}",
+                index, level, node->color ? "Black\0" : "Red\0", node->value);
+        out->end();
+        pre_order(index, 1, node->left, level + 1, out);
+        pre_order(index, 2, node->right, level + 1, out);
+    }
+
+    red_black_tree::red_black_tree() {
+        root = nullptr;
+    }
+
+    red_black_tree::~red_black_tree() {
+        delete root;
+    }
+
+    void red_black_tree::append(const int value) {
+        auto* node = new red_black_tree_node(value);
+        if (root == nullptr) {
+            node->color = BLACK;
+            root = node;
+        }
+
+        red_black_tree_node* current = root;
+        red_black_tree_node* temp = current;
+        for (;current != nullptr;) {
+            temp = current;
+            if (current->value > value) {
+                current = current->left;
+            } else if (current->value < value) {
+                current = current->right;
+            } else {
+                return;
+            }
+        }
+
+        if (temp->value > value) {
+            temp->left = node;
+        } else {
+            temp->right = node;
+        }
+        node->parent = temp;
+        fix_after_append(node);
+    }
+
+    int red_black_tree::subtract(const int value) {
+        red_black_tree_node* node = found(value);
+        if (node == nullptr) { return 0; }
+        if (node->left != nullptr && node->right != nullptr) {
+            red_black_tree_node* temp = successor(node);
+            node->value = temp->value;
+            node = temp;
+        }
+        red_black_tree_node* replacement = node->left == nullptr ? node->right : node->left;
+        if (replacement == nullptr) {
+            if (node->parent == nullptr) {
+                root = nullptr;
+            } else {
+                if (BLACK == node->color) {
+                    fix_after_subtract(node);
+                }
+                if (node == parent_node(node)->left) {
+                    parent_node(node)->left = nullptr;
+                } else {
+                    parent_node(node)->right = nullptr;
+                }
+                node->parent = nullptr;
+            }
+        } else {
+            replacement->color = BLACK;
+            replacement->parent = parent_node(node);
+            if (node->parent == nullptr) {
+                root = replacement;
+            } else if (node == parent_node(node)->left) {
+                parent_node(node)->left = replacement;
+            } else {
+                parent_node(node)->right = replacement;
+            }
+            node->parent = nullptr;
+            node->left = nullptr;
+            node->right = nullptr;
+        }
+
+        int result = node->value;
+        delete node;
+        return result;
+    }
+
+    void red_black_tree::scanning() const {
+        auto* out = new str::system_stream_io(15u);
+        pre_order(0, 0, root, 1u, out);
+        out->maybe(1u << 2u);
+        out->append("输出的部分数据被缓冲了，直接释放内存，则不会显示ほんとうにすみませんでした");
+        out->end();
+    }
+
     //main函数写法，既示例
     int cpu_run_main() {
         auto* counter = new cpu::counter_step();
@@ -944,19 +1282,19 @@ namespace kuu {
         {
             //加载函数
             auto* out = new str::system_stream_io(1u);
-            if (counter->read("add", 0, "../cpu_add.kuu") == 0) {
+            if (counter->read("add", 0, "../kuu/cpu_add.kuu") == 0) {
                 out->maybe(1u);
                 out->append("加载函数add时内存が足りないのかもしれません");
             }
-            if (counter->read("seb", 0, "../cpu_seb.kuu") == 0) {
+            if (counter->read("sub", 0, "../kuu/cpu_sub.kuu") == 0) {
                 out->maybe(1u);
                 out->append("加载函数seb时内存が足りないのかもしれません");
             }
-            if (counter->read("gather", 0, "../cpu_gather.kuu") == 0) {
+            if (counter->read("gather", 0, "../kuu/cpu_gather.kuu") == 0) {
                 out->maybe(1u);
                 out->append("加载函数gather时内存が足りないのかもしれません");
             }
-            if (counter->read("test", 0, "../test_array_spacing.kuu") == 0) {
+            if (counter->read("test", 0, "../kuu/test_array_spacing.kuu") == 0) {
                 out->maybe(1u);
                 out->append("加载函数test时内存が足りないのかもしれません");
             }
@@ -968,7 +1306,7 @@ namespace kuu {
         }
         //第二步
         for (;;) {
-            if (counter->step_point() == 0) { break; }
+            if (counter->step_by_step() == 0) { break; }
         }
         //第三步
         counter->result();
@@ -984,17 +1322,24 @@ namespace kuu {
         //第贰步
         if (counter->read("main", 9, "mov ax 10\nmov bx 5\ncal 0 gather\nmov ax rx\nmov bx 1\ncal 0 gather\njny rx 2\nmov cx rx\nmov dx rx") == 0) {
             auto* out = new str::system_stream_io(1u, 1u);
-            out->append("気をつけて清理加载的函数内存に異常が出る");
+            out->append("加载函数main时内存が足りないのかもしれません");
             out->end();
             delete out;
         }
         //第弎步
         for (;;) {
-            if (counter->step_point() == 0) { break; }
+            if (counter->step_by_step() == 0) { break; }
         }
         //第肆步
         counter->result();
         //结束
+
+        auto* test = new red_black_tree();
+        for (int i = 1; i < 100; ++i) {
+            test->append(i);
+        }
+        test->subtract(40);
+        test->scanning();
         return 0;
     }
 }
