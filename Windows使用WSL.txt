@@ -1,0 +1,56 @@
+Windows使用WSL手顺
+
+##默认安装
+wsl --install
+##根据需求安装
+####先查看有哪些可以安装的
+wsl --list --online
+####根据查到的结果安装
+wsl --install -d Ubuntu-20.04
+安装成功后重启Windows
+重启之后即开始初始化Linux配置
+##提示
+Enter new UNIX username
+##说明准备完成，设置Linux用户
+Welcome to Ubuntu 20.04 LTS (GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64)
+
+##Linux已经安装完成，接下来就是经典的Linux命令操作了
+####WSL只是一个Linux服务版本，没有图形化界面，所以部分内容需要Windows操作，与Linux图形化界面的操作有些许不一样
+sudo apt update
+sudo apt upgrade
+sudo apt autoremove
+
+sudo apt install net-tools
+##由于g++依赖了gcc所以相当于也安装了gcc
+sudo apt install g++
+sudo apt install cmake
+
+sudo apt-get install openssh-client
+sudo apt-get install openssh-server
+sudo /etc/init.d/ssh start
+ps -e | grep ssh
+##可以看到sshd正在运行说明启动成功
+sudo vim /etc/ssh/sshd_config
+##修改ssh的相关配置并重启
+sudo /etc/init.d/ssh stop
+sudo /etc/init.d/ssh start
+到此环境的基本创建已经完成，后面需要装什么东西，可以使用在Windows上下好Linux版本的，然后scp发送过去，就可以使用命令的方式安装了。
+
+cmake相关的使用
+说明，项目根~/testmp/cpp/InterpreterCPU根下文件
+drwxr-xr-x 4 kuukie kuukie  4096 Aug  2 12:22 ./
+drwxr-xr-x 3 kuukie kuukie  4096 Aug  2 10:27 ../
+-rw-r--r-- 1 kuukie kuukie   145 Aug  2 11:46 CMakeLists.txt
+drwxr-xr-x 2 kuukie kuukie  4096 Aug  2 10:40 cmake-build-debug/
+drwxrwxr-x 2 kuukie kuukie  4096 Aug  2 12:06 kuu/
+-rw-r--r-- 1 kuukie kuukie   139 Aug  2 12:18 main.cpp
+-rw-rw-r-- 1 kuukie kuukie 52946 Aug  2 11:44 virtual_cpu.h
+其中cmake-build-debug为自己创建的空文件夹，名字只是为了与CLion中的对应
+代码写好后进入cmake-build-debug文件夹下
+cmake ../
+##cmake用于初始化一些文件，像cache等的信息，默认生成路径为当前路径所以进入空的文件夹下，参数是含有CMakeLists.txt总文件的目录所在位置
+这样就与CLion的调试环境路径等相对应上
+cmake --build ./ --target InterpreterCPU -- -j 8
+##通过CLion中的终端使用的命令来构建项目，具体含义还不太清楚
+生成了一个可执行的文件InterpreterCPU（win下应该会有.exe的后缀）
+到此，一个简单的cmake项目构建成功
