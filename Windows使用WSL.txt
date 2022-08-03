@@ -54,3 +54,5 @@ cmake --build ./ --target InterpreterCPU -- -j 8
 ##通过CLion中的终端使用的命令来构建项目，具体含义还不太清楚
 生成了一个可执行的文件InterpreterCPU（win下应该会有.exe的后缀）
 到此，一个简单的cmake项目构建成功
+
+总结WSL不能完全替代VM，像一些命令（关机）等无法使用
