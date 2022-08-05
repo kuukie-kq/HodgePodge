@@ -11,7 +11,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
 
-//IOC AOP 核心部分 反射 2021/5/20
+//IOC AOP 核心部分 反射 2021/05/20
 public class Proxy {
 	public static Object newProxyInstance(String str) throws Exception {
         //生成Java源文件  
