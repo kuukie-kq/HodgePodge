@@ -56,3 +56,14 @@ cmake --build ./ --target InterpreterCPU -- -j 8
 到此，一个简单的cmake项目构建成功
 
 总结WSL不能完全替代VM，像一些命令（关机）等无法使用
+
+##Windows关闭防火墙
+netsh firewall set opmode mode=disable
+netsh advfirewall set allprofiles state off
+##查看防火墙状态
+netsh advfirewall show allprofiles
+##防火墙回复默认设置
+netsh firewall reset
+
+##Linux关闭防火墙
+sudo ufw disable
