@@ -14,20 +14,18 @@
  Date: 21/09/2021 16:50:16
 */
 
-/*The start*/
-/*This is added manually.*/
-/*It is used to ensure the consistency of the library name.*/
+#The start
+#This is added manually.
+#It is used to ensure the consistency of the library name.
 DROP DATABASE IF EXISTS `kuukie_exercise_db`;
 CREATE DATABASE `kuukie_exercise_db`;
 USE `kuukie_exercise_db`;
-/*The end*/
+#The end
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
--- ----------------------------
--- Table structure for db_demo
--- ----------------------------
+# Table structure for db_demo
 DROP TABLE IF EXISTS `db_demo`;
 CREATE TABLE `db_demo`  (
   `idD` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
