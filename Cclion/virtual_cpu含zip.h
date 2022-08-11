@@ -1,21 +1,23 @@
 //
-// Created by kuu-kie on 2022/7/28.
+// Created by kuu-kie on 2022/7/22.
 //
 
 #ifndef VIRTUAL_CPU_H
 #define VIRTUAL_CPU_H
 
-#pragma once
+// 编译器指令，有没有用看编译器支持不支持
+//#pragma once
 
 // notice
 // 注意，切忌在自定义的命名空间中引用系统头文件，避免造成标识符的混乱。
-// 存在多层namespace的情况，里层namespace对于系统namespace中的函数错乱，找不到的情况
+// 在多层namespace的情况下存在里层namespace对于系统namespace中的函数错乱，找不到的情况
 #include <iostream> //输入输出
 #include <sstream> //输入输出缓冲
 #include <cstdarg> //不定参数处理
 #include <string> //字符串类
 #include <vector> //不定数组，字符串分割
 #include <fstream> //读写文件
+#include <chrono> //时间戳
 
 namespace kuu {
     //工具，与工具函数不同，不属于必要的，目前只有对于输出进行了简单的封装，还存在问题
@@ -154,13 +156,23 @@ namespace kuu {
         typedef unsigned int u4int;
         typedef unsigned short u2int;
         typedef unsigned char u1int;
-        typedef long s8int;
+        [[maybe_unused]] typedef long s8int;
         typedef int s4int;
         typedef short s2int;
-        typedef char s1int;
+        [[maybe_unused]] typedef char s1int;
         //工具函数，计算hash值和字符串的分割
         u4int hash_code(const char* key);
         std::vector<std::string> spilt(std::string str, const std::string& pattern);
+        //工具类
+
+        //时间戳
+        //C++11 chrono库
+        //使用的最高精度，nanoseconds纳秒
+        //格式化输出方式
+        //先将时间戳转换成chrono::time_point或者chrono::system_clock::time_point
+        //然后就可以使用chrono::system_clock::to_time_t转成std::time_t
+        //既ctime库中的使用方式
+        class time_stamp;
         //成员类
 
         // 说明
@@ -226,8 +238,8 @@ namespace kuu {
         //.cpp文件部分
         class [[maybe_unused]] tagscccd;//实现部分
         u4int hash_code(const char* key) {
-            register u4int result;
-            register u1int* byte;
+            u4int result;
+            u1int* byte;
             for (result = 0, byte = (u1int*)key; *byte; byte++) {
                 result = result * 31 + *byte;
             }
@@ -250,11 +262,47 @@ namespace kuu {
             return result;
         }
 
-        class virtual_memory {
+        class time_stamp {
+            //long long 64位
+            //18446744073709551616 2^64 20位
+            //9999999999000000000 纳秒时间戳 2286-11-21 1:46:39 最大？
+            //unsigned long long 目前够用
         private:
-            u1int use[16];
-            u2int index[16];
-            u4int memory[1024];
+            std::chrono::nanoseconds start_stamp = std::chrono::nanoseconds::zero();
+        public:
+            time_stamp();
+            ~time_stamp();
+            u8int time_line_passed();
+        };
+
+        time_stamp::time_stamp() {
+            start_stamp = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+            );
+        }
+
+        time_stamp::~time_stamp() {
+            start_stamp = std::chrono::nanoseconds::zero();
+        }
+
+        u8int time_stamp::time_line_passed() {
+            std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+            );
+            u8int passed = now.count() - start_stamp.count();
+            if(passed > 0) {
+                return (passed);
+            }
+            return 0;
+        }
+
+        class virtual_memory {
+            //作为CPU自己的小cache
+            //参考分页系统的内存思想，目前只用最简单的方式实现
+        private:
+            u1int use[16]{};
+            u2int index[16]{};
+            u4int memory[1024]{};
         public:
             virtual_memory();
             ~virtual_memory();
@@ -292,6 +340,8 @@ namespace kuu {
         }
 
         virtual_memory::~virtual_memory() {
+            // 只改变使用的部分
+            // 参考内存申请之后不初始化出现奇怪的现象
             for(u1int& i : use) {
                 i = 0;
             }
@@ -344,6 +394,7 @@ namespace kuu {
         }
 
         void virtual_memory::overlay(const u4int segment, const u4int offset, const u4int value) {
+            // 写权限校验，无权限控制只对是否能够访问做限制
             for (s4int i = 0; i < 16; i++) {
                 if (index[i] == segment) {
                     if (use[i] > offset) {
@@ -359,6 +410,10 @@ namespace kuu {
         }
 
         class function_member {
+            //仅简单的使用链表进行实现
+            //红黑树参考red_black_tree
+            //目前想法，需要一个统一接口，作为红黑树中的value
+            //可以作为一个单独的项目，放入工具命名空间中
         private:
             class function_member_node {
             public:
@@ -452,6 +507,9 @@ namespace kuu {
         }
 
         class function_stack {
+            //采用链表结构，插入和删除都是在头结点操作，实现栈的后入先出规则
+            //name可能仅作为调试时所用
+            //使用的32位hash
         private:
             class function_stack_node {
             public:
@@ -488,7 +546,7 @@ namespace kuu {
         }
 
         void function_stack::entrance(const u4int segment) const {
-            function_stack_node* node = new function_stack_node();
+            auto* node = new function_stack_node();
             node->name = 0;
             node->segment = segment;
 
@@ -508,8 +566,10 @@ namespace kuu {
         }
 
         class virtual_register {
+            //作为CPU中的寄存器组
+            //考虑到硬件中的CPU访问寄存器，采用数组以下标的方式进行访问
         private:
-            u4int array[15];
+            u4int array[15]{};
         public:
             virtual_register();
             ~virtual_register();
@@ -538,6 +598,8 @@ namespace kuu {
         }
 
         class coding_tree {
+            //二叉树结构，主要是保存统一的指令操作函数
+            //存在中间结点浪费问题
         private:
             class coding_tree_node {
             public:
@@ -616,6 +678,10 @@ namespace kuu {
         }
 
         class counter_step {
+            //主体
+            //pc程序计数器，记录一个生命周期里所执行的指令数
+            //cs当前访问指令的起始位置，调用函数时修改此值，即可实现跳转
+            //nc访问指令的偏移，用于获取下一跳指令
         private:
             s4int pc;
             u4int cs;
@@ -782,8 +848,9 @@ namespace kuu {
                 }
                 vmm->overlay(segment, i, code);
             }
+            // 函数名处理，只做了15位
             fm->load(name, segment);
-            if (fm->find("main") != 0) { cs = fm->find("main"); }
+            if (fm->find("main") != 0) { cs = fm->find("main"); nc = 0u; }
             return 1;
         }
 
@@ -811,10 +878,22 @@ namespace kuu {
         }
 
         void counter_step::result() const {
-            std::printf("ありがとうごじゃいます\n");
-            std::printf("pc = [0x%08X(%d)]\n", pc, pc);
-            std::printf("[0x%08X(%d)]\n", ncr->get(2), ncr->get(2));
-            std::printf("[0x%08X(%d)]\n", ncr->get(3), ncr->get(3));
+//            std::printf("ありがとうごじゃいます\n");
+//            std::printf("pc = [0x%08X(%d)]\n", pc, pc);
+//            std::printf("[0x%08X(%d)]\n", ncr->get(2), ncr->get(2));
+//            std::printf("[0x%08X(%d)]\n", ncr->get(3), ncr->get(3));
+            auto* out = new str::system_stream_io(15u,8u);
+            out->append("ありがとうごじゃいます");
+            out->end();
+            out->start(8u);
+            out->append("pc = [0x%08X(%d)]\tcx [0x%08X(%d)]\tdx [0x%08X(%d)]", pc, pc, ncr->get(2), ncr->get(2), ncr->get(3), ncr->get(3));
+            out->end();
+            out->start(8u);
+            out->append("目前，15个寄存器中，规定的用法：rx为固定的返回值寄存器（非必要不做其他用处），fx为预留的调用函数，前面的4个寄存器则作为参数使用，局部变量寄存器使用中间的9个寄存器。因为目前实现的关系，非引用传参任何寄存器都可以。");
+            out->end();
+            out->start(4u);
+            out->append("間違いはありませんが、異常がないかどうかは再確認が必要です");
+            out->end();
         }
 
         s4int mov(u4int& nc, u4int code, virtual_register* ncr, virtual_memory* mem, function_stack* scf, u4int& cs) {
@@ -938,345 +1017,373 @@ namespace kuu {
         //CLang-Tidy属于静态代码扫描，语法要求高，但有时却需要那种写法
     }
 
-    class red_black_tree {
-        // 定义
-        // 红黑树是特殊的二叉查找树（AVL）
-        // 特性
-        // 1）每个节点只有可能为黑色或者红色
-        // 2）根节点为黑色
-        // 3）叶子节点一定是null，即为黑色
-        // 4）如果一个节点是红色，则它的子节点一定是黑色
-        // 5）从一个节点到其叶子节点的所有路径包含相同数量的黑色节点
-        //相关情况分析及图示
-        //https://www.jianshu.com/p/4cd37000f4e3?u_atoken=cdb08e27-1c98-4c4c-a25c-4fbfeb095fa4&u_asession=01ab7xwtg0aZPT-a2o1gat7Mu4ZyIHYXcIxYHdUixTj9qYONbhOgdeNI58HN7RqIWxX0KNBwm7Lovlpxjd_P_q4JsKWYrT3W_NKPr8w6oU7K_uJHWI8z0lFtp0aK1dbNDIE3kHBSeC3ycZ3R-DrPYY52BkFo3NEHBv0PZUm6pbxQU&u_asig=05tPpdLjm4H_veLABeXfEOOcJS5worn3f6CN5tledCQgFfDVi6VSXThHJmziFdfCbe1xEg18CBVN0kQgCY_rmZdunlpetzZIipwTmh8C_agdtp2RoqVBDNZgAveEH6iXtdv3LN_A-oFt43NE19ZET_E9-yK0_zv7zfxz5jr2naAMX9JS7q8ZD7Xtz2Ly-b0kmuyAKRFSVJkkdwVUnyHAIJzdZ24YjhKA_sNukOojR0yiZpLiW964lGVQm7ziqrI2TSWrnxlgSSvoRYzeD7jclHWe3h9VXwMyh6PgyDIVSG1W8Y0HW3Zh6j6ePzqJNxifPBfm5fsg5wmy8bWufzsZqoZDDGBggA94sIlA8ogHcLTxoCN1fL-Q0LRn6kQJGijjnbmWspDxyAEEo4kbsryBKb9Q&u_aref=84kyqG9liWiBspbY%2FI3QVFpYvss%3D
-    private:
-        enum red_black { RED = 0, BLACK = 1};
-        class red_black_tree_node {
-            // Linux内核中的红黑树，color和parent合为一个long指针
-            // 因为在系统中的地址，最后两位一定是0（一般情况）
+    //红黑树的标准实现，node为标准的仅有一个int类型的值
+    namespace rbt {
+        class red_black_tree {
+            // 定义
+            // 红黑树是特殊的二叉查找树（AVL）
+            // 特性
+            // 1）每个节点只有可能为黑色或者红色
+            // 2）根节点为黑色
+            // 3）叶子节点一定是null，即为黑色
+            // 4）如果一个节点是红色，则它的子节点一定是黑色
+            // 5）从一个节点到其叶子节点的所有路径包含相同数量的黑色节点
+            //相关情况分析及图示
+            //https://www.jianshu.com/p/4cd37000f4e3?u_atoken=cdb08e27-1c98-4c4c-a25c-4fbfeb095fa4&u_asession=01ab7xwtg0aZPT-a2o1gat7Mu4ZyIHYXcIxYHdUixTj9qYONbhOgdeNI58HN7RqIWxX0KNBwm7Lovlpxjd_P_q4JsKWYrT3W_NKPr8w6oU7K_uJHWI8z0lFtp0aK1dbNDIE3kHBSeC3ycZ3R-DrPYY52BkFo3NEHBv0PZUm6pbxQU&u_asig=05tPpdLjm4H_veLABeXfEOOcJS5worn3f6CN5tledCQgFfDVi6VSXThHJmziFdfCbe1xEg18CBVN0kQgCY_rmZdunlpetzZIipwTmh8C_agdtp2RoqVBDNZgAveEH6iXtdv3LN_A-oFt43NE19ZET_E9-yK0_zv7zfxz5jr2naAMX9JS7q8ZD7Xtz2Ly-b0kmuyAKRFSVJkkdwVUnyHAIJzdZ24YjhKA_sNukOojR0yiZpLiW964lGVQm7ziqrI2TSWrnxlgSSvoRYzeD7jclHWe3h9VXwMyh6PgyDIVSG1W8Y0HW3Zh6j6ePzqJNxifPBfm5fsg5wmy8bWufzsZqoZDDGBggA94sIlA8ogHcLTxoCN1fL-Q0LRn6kQJGijjnbmWspDxyAEEo4kbsryBKb9Q&u_aref=84kyqG9liWiBspbY%2FI3QVFpYvss%3D
+        private:
+            enum red_black {
+                RED = 0, BLACK = 1
+            };
+
+            class red_black_tree_node {
+                // Linux内核中的红黑树，color和parent合为一个long指针
+                // 因为在系统中的地址，最后两位一定是0（一般情况）
+            public:
+                int value;
+                red_black color;
+                red_black_tree_node *left;
+                red_black_tree_node *right;
+                void *parent;
+                explicit red_black_tree_node(int number = 0);
+                ~red_black_tree_node();
+            };
+
+            // 左旋
+            void left_rotate(red_black_tree_node *pivot);
+
+            // 右旋
+            void right_rotate(red_black_tree_node *pivot);
+
+            // 为了确保树不会循环（调试查看时绕）同时也为内核实现的方向提供了接口
+            red_black_tree_node *parent_node(red_black_tree_node *child) const;
+
+            // 插入后的调整
+            void fix_after_append(red_black_tree_node *node);
+
+            red_black_tree_node *found(int value);
+
+            // 查找当前节点的后继节点，既中序遍历的下一个节点
+            red_black_tree_node *successor(red_black_tree_node *node) const;
+
+            // 删除时的调整
+            void fix_after_subtract(red_black_tree_node *node);
+
+            // 了解内联函数
+            void pre_order(unsigned int index, unsigned int offset, red_black_tree_node *node, unsigned int level,
+                           str::system_stream_io *out) const;
+
+            red_black_tree_node *root;
         public:
-            int value;
-            red_black color;
-            red_black_tree_node* left;
-            red_black_tree_node* right;
-            void* parent;
-            explicit red_black_tree_node(int number = 0);
-            ~red_black_tree_node();
+            red_black_tree();
+
+            ~red_black_tree();
+
+            // 插入节点
+            // 1）父节点是黑的，无需做处理
+            // 2）父节点和叔节点为红，修改父节点和叔节点为黑色，改变祖父节点为红色
+            // 3）父节点为红叔节点为黑，四种情况，有直接旋转变色和先反向旋转再旋转变色之分
+            void append(int value);
+
+            // 删除节点
+            // 1）删除的节点为叶子节点，可以直接删除
+            // 2）删除的节点只有一个子节点，子节点顶替
+            // 3）删除的节点有两个子节点，先找其后继节点，然后复制内容，则删除的是（替身）后继节点所在的位置
+            int subtract(int value);
+
+            void scanning() const;
         };
-        // 左旋
-        void left_rotate(red_black_tree_node* pivot);
-        // 右旋
-        void right_rotate(red_black_tree_node* pivot);
-        // 为了确保树不会循环（调试查看时绕）同时也为内核实现的方向提供了接口
-        red_black_tree_node* parent_node(red_black_tree_node* child) const;
-        // 插入后的调整
-        void fix_after_append(red_black_tree_node* node);
-        red_black_tree_node* found(int value);
-        // 查找当前节点的后继节点，既中序遍历的下一个节点
-        red_black_tree_node* successor(red_black_tree_node* node) const;
-        // 删除时的调整
-        void fix_after_subtract(red_black_tree_node* node);
-        // 了解内联函数
-        void pre_order(unsigned int index, unsigned int offset, red_black_tree_node* node, unsigned int level, str::system_stream_io* out) const;
-        red_black_tree_node* root;
-    public:
-        red_black_tree();
-        ~red_black_tree();
-        // 插入节点
-        // 1）父节点是黑的，无需做处理
-        // 2）父节点和叔节点为红，修改父节点和叔节点为黑色，改变祖父节点为红色
-        // 3）父节点为红叔节点为黑，四种情况，有直接旋转变色和先反向旋转再旋转变色之分
-        void append(int value);
-        // 删除节点
-        // 1）删除的节点为叶子节点，可以直接删除
-        // 2）删除的节点只有一个子节点，子节点顶替
-        // 3）删除的节点有两个子节点，先找其后继节点，然后复制内容，则删除的是（替身）后继节点所在的位置
-        int subtract(int value);
-        void scanning() const;
-    };
 
-    red_black_tree::red_black_tree_node::red_black_tree_node(const int number) {
-        value = number;
-        color = RED;
-        left = nullptr;
-        right = nullptr;
-        parent = nullptr;
-    }
-
-    red_black_tree::red_black_tree_node::~red_black_tree_node() {
-        delete left;
-        delete right;
-        // 可检验删除节点是否存在纰漏
-        delete (red_black_tree_node*)parent;
-    }
-
-    void red_black_tree::left_rotate(red_black_tree_node* const pivot) {
-        red_black_tree_node* right = pivot->right;
-        pivot->right = right->left;
-        if (right->left != nullptr) {
-            right->left->parent = pivot;
+        red_black_tree::red_black_tree_node::red_black_tree_node(const int number) {
+            value = number;
+            color = RED;
+            left = nullptr;
+            right = nullptr;
+            parent = nullptr;
         }
-        right->parent = pivot->parent;
-        if (pivot->parent == nullptr) {
-            root = right;
-        } else if (parent_node(pivot)->left == pivot) {
-            parent_node(pivot)->left = right;
-        } else {
-            parent_node(pivot)->right = right;
-        }
-        right->left = pivot;
-        pivot->parent = right;
-    }
 
-    void red_black_tree::right_rotate(red_black_tree_node* const pivot) {
-        red_black_tree_node* left = pivot->left;
-        pivot->left = left->right;
-        if (left->right != nullptr) {
-            left->right->parent = pivot;
+        red_black_tree::red_black_tree_node::~red_black_tree_node() {
+            delete left;
+            delete right;
+            // 注意如果 delete (red_black_tree_node*)parent;
+            // 则会出现double free的情况
+            // 因为原本left是有值的，delete之后值还没有被置为nullptr
+            // 由此可见，循环链表的删除则需要一个判断，是否为尾节点（下一个是头结点）
         }
-        left->parent = pivot->parent;
-        if (pivot->parent == nullptr) {
-            root = left;
-        } else if (parent_node(pivot)->left == pivot) {
-            parent_node(pivot)->left = left;
-        } else {
-            parent_node(pivot)->right = left;
-        }
-        left->right = pivot;
-        pivot->parent = left;
-    }
 
-    red_black_tree::red_black_tree_node* red_black_tree::parent_node(red_black_tree_node* const child) const {
-        root;
-        if (child == nullptr) {
-            return nullptr;
-        }
-        auto* parent = (red_black_tree_node*)child->parent;
-        return parent;
-    }
-
-    void red_black_tree::fix_after_append(red_black_tree_node* node) {
-        for (;node != nullptr && root != node && parent_node(node)->color == RED;) {
-            if (parent_node(node) == parent_node(parent_node(node))->left) {
-                red_black_tree_node* uncle = parent_node(parent_node(node))->right;
-                if (uncle != nullptr && uncle->color == RED) {
-                    uncle->color = BLACK;
-                    parent_node(node)->color = BLACK;
-                    node = parent_node(parent_node(node));
-                    node->color = RED;
-                } else {
-                    if (node == parent_node(node)->right) {
-                        node = parent_node(node);
-                        left_rotate(node);
-                    }
-                    parent_node(node)->color = BLACK;
-                    parent_node(parent_node(node))->color = RED;
-                    right_rotate(parent_node(parent_node(node)));
-                }
+        void red_black_tree::left_rotate(red_black_tree_node *const pivot) {
+            red_black_tree_node *right = pivot->right;
+            pivot->right = right->left;
+            if (right->left != nullptr) {
+                right->left->parent = pivot;
+            }
+            right->parent = pivot->parent;
+            if (pivot->parent == nullptr) {
+                root = right;
+            } else if (parent_node(pivot)->left == pivot) {
+                parent_node(pivot)->left = right;
             } else {
-                red_black_tree_node* uncle = parent_node(parent_node(node))->left;
-                if (uncle != nullptr && uncle->color == RED) {
-                    uncle->color = BLACK;
-                    parent_node(node)->color = BLACK;
-                    node = parent_node(parent_node(node));
-                    node->color = RED;
-                } else {
-                    if (node == parent_node(node)->left) {
-                        node = parent_node(node);
-                        right_rotate(node);
+                parent_node(pivot)->right = right;
+            }
+            right->left = pivot;
+            pivot->parent = right;
+        }
+
+        void red_black_tree::right_rotate(red_black_tree_node *const pivot) {
+            red_black_tree_node *left = pivot->left;
+            pivot->left = left->right;
+            if (left->right != nullptr) {
+                left->right->parent = pivot;
+            }
+            left->parent = pivot->parent;
+            if (pivot->parent == nullptr) {
+                root = left;
+            } else if (parent_node(pivot)->left == pivot) {
+                parent_node(pivot)->left = left;
+            } else {
+                parent_node(pivot)->right = left;
+            }
+            left->right = pivot;
+            pivot->parent = left;
+        }
+
+        red_black_tree::red_black_tree_node *red_black_tree::parent_node(red_black_tree_node *const child) const {
+            root;
+            if (child == nullptr) {
+                return nullptr;
+            }
+            auto *parent = (red_black_tree_node *) child->parent;
+            return parent;
+        }
+
+        void red_black_tree::fix_after_append(red_black_tree_node *node) {
+            for (; node != nullptr && root != node && parent_node(node)->color == RED;) {
+                if (parent_node(node) == parent_node(parent_node(node))->left) {
+                    red_black_tree_node *uncle = parent_node(parent_node(node))->right;
+                    if (uncle != nullptr && uncle->color == RED) {
+                        uncle->color = BLACK;
+                        parent_node(node)->color = BLACK;
+                        node = parent_node(parent_node(node));
+                        node->color = RED;
+                    } else {
+                        if (node == parent_node(node)->right) {
+                            node = parent_node(node);
+                            left_rotate(node);
+                        }
+                        parent_node(node)->color = BLACK;
+                        parent_node(parent_node(node))->color = RED;
+                        right_rotate(parent_node(parent_node(node)));
                     }
-                    parent_node(node)->color = BLACK;
-                    parent_node(parent_node(node))->color = RED;
-                    left_rotate(parent_node(parent_node(node)));
+                } else {
+                    red_black_tree_node *uncle = parent_node(parent_node(node))->left;
+                    if (uncle != nullptr && uncle->color == RED) {
+                        uncle->color = BLACK;
+                        parent_node(node)->color = BLACK;
+                        node = parent_node(parent_node(node));
+                        node->color = RED;
+                    } else {
+                        if (node == parent_node(node)->left) {
+                            node = parent_node(node);
+                            right_rotate(node);
+                        }
+                        parent_node(node)->color = BLACK;
+                        parent_node(parent_node(node))->color = RED;
+                        left_rotate(parent_node(parent_node(node)));
+                    }
                 }
             }
+            root->color = BLACK;
         }
-        root->color = BLACK;
-    }
 
-    red_black_tree::red_black_tree_node* red_black_tree::found(int value) {
-        red_black_tree_node* current = root;
-        for (;current != nullptr;) {
-            if (current->value > value) {
-                current = current->left;
-            } else if (current->value < value) {
-                current = current->right;
-            } else {
-                break;
-            }
-        }
-        return current;
-    }
-
-    red_black_tree::red_black_tree_node* red_black_tree::successor(red_black_tree_node *node) const {
-        root;
-        red_black_tree_node* most_left = node->right;
-        for (;most_left != nullptr && most_left->left != nullptr;) {
-            most_left = most_left->left;
-        }
-        return most_left;
-    }
-
-    void red_black_tree::fix_after_subtract(red_black_tree_node* node) {
-        for (;node != root && BLACK == node->color;) {
-            if (node == parent_node(node)->left) {
-                red_black_tree_node* sister = parent_node(node)->right;
-                if (RED == sister->color) {
-                    sister->color = BLACK;
-                    parent_node(node)->color = RED;
-                    left_rotate(parent_node(node));
-                    sister = parent_node(node)->right;
-                }
-                if ((sister->left == nullptr || BLACK == sister->left->color) && (sister->right == nullptr || BLACK == sister->right->color)) {
-                    sister->color = RED;
-                    node = parent_node(node);
+        red_black_tree::red_black_tree_node *red_black_tree::found(int value) {
+            red_black_tree_node *current = root;
+            for (; current != nullptr;) {
+                if (current->value > value) {
+                    current = current->left;
+                } else if (current->value < value) {
+                    current = current->right;
                 } else {
-                    if (BLACK == sister->right->color) {
-                        sister->left->color = BLACK;
-                        sister->color = RED;
-                        right_rotate(sister);
+                    break;
+                }
+            }
+            return current;
+        }
+
+        red_black_tree::red_black_tree_node *red_black_tree::successor(red_black_tree_node *node) const {
+            root;
+            red_black_tree_node *most_left = node->right;
+            for (; most_left != nullptr && most_left->left != nullptr;) {
+                most_left = most_left->left;
+            }
+            return most_left;
+        }
+
+        void red_black_tree::fix_after_subtract(red_black_tree_node *node) {
+            for (; node != root && BLACK == node->color;) {
+                if (node == parent_node(node)->left) {
+                    red_black_tree_node *sister = parent_node(node)->right;
+                    if (RED == sister->color) {
+                        sister->color = BLACK;
+                        parent_node(node)->color = RED;
+                        left_rotate(parent_node(node));
                         sister = parent_node(node)->right;
                     }
-                    sister->color = parent_node(node)->color;
-                    parent_node(node)->color = BLACK;
-                    sister->right->color = BLACK;
-                    left_rotate(parent_node(node));
-                    node = root;
-                }
-            } else {
-                red_black_tree_node* sister = parent_node(node)->left;
-                if (RED == sister->color) {
-                    sister->color = BLACK;
-                    parent_node(node)->color = RED;
-                    right_rotate(parent_node(node));
-                    sister = parent_node(node)->left;
-                }
-                if ((sister->left == nullptr || BLACK == sister->left->color) && (sister->right == nullptr || BLACK == sister->right->color)) {
-                    sister->color = RED;
-                    node = parent_node(node);
-                } else {
-                    if (BLACK == sister->left->color) {
-                        sister->right->color = BLACK;
+                    if ((sister->left == nullptr || BLACK == sister->left->color) &&
+                        (sister->right == nullptr || BLACK == sister->right->color)) {
                         sister->color = RED;
-                        left_rotate(sister);
+                        node = parent_node(node);
+                    } else {
+                        if (sister->right == nullptr || BLACK == sister->right->color) {
+                            sister->left->color = BLACK;
+                            sister->color = RED;
+                            right_rotate(sister);
+                            sister = parent_node(node)->right;
+                        }
+                        sister->color = parent_node(node)->color;
+                        parent_node(node)->color = BLACK;
+                        if (sister->right != nullptr)
+                            sister->right->color = BLACK;
+                        left_rotate(parent_node(node));
+                        node = root;
+                    }
+                } else {
+                    red_black_tree_node *sister = parent_node(node)->left;
+                    if (RED == sister->color) {
+                        sister->color = BLACK;
+                        parent_node(node)->color = RED;
+                        right_rotate(parent_node(node));
                         sister = parent_node(node)->left;
                     }
-                    sister->color = parent_node(node)->color;
-                    sister->left->color = BLACK;
-                    parent_node(node)->color = BLACK;
-                    right_rotate(parent_node(node));
-                    node = root;
+                    if ((sister->left == nullptr || BLACK == sister->left->color) &&
+                        (sister->right == nullptr || BLACK == sister->right->color)) {
+                        sister->color = RED;
+                        node = parent_node(node);
+                    } else {
+                        if (sister->left == nullptr || BLACK == sister->left->color) {
+                            sister->right->color = BLACK;
+                            sister->color = RED;
+                            left_rotate(sister);
+                            sister = parent_node(node)->left;
+                        }
+                        sister->color = parent_node(node)->color;
+                        if (sister->left != nullptr)
+                            sister->left->color = BLACK;
+                        parent_node(node)->color = BLACK;
+                        right_rotate(parent_node(node));
+                        node = root;
+                    }
                 }
             }
-        }
-        node->color = BLACK;
-    }
-
-    inline void red_black_tree::pre_order(unsigned int index, const unsigned int offset, red_black_tree_node* node, const unsigned int level, str::system_stream_io* out) const {
-        if (node == nullptr) { return; }
-        // 树放入数组中，由两个指标表示下标
-        // 一个是父节点的下标，一个是父节点的左子（1）还是右子（2）
-        // 既，根节点默认0，0
-        // 这样父节点的下标乘以2，再加上一个数，即为本节点在数组中的下标
-        index = index * 2 + offset;
-        out->start(8u);
-        out->append("[%4d]{level:%2d,\tcolor:%s\t,value:%d}",
-                index, level, node->color ? "Black\0" : "Red\0", node->value);
-        out->end();
-        pre_order(index, 1, node->left, level + 1, out);
-        pre_order(index, 2, node->right, level + 1, out);
-    }
-
-    red_black_tree::red_black_tree() {
-        root = nullptr;
-    }
-
-    red_black_tree::~red_black_tree() {
-        delete root;
-    }
-
-    void red_black_tree::append(const int value) {
-        auto* node = new red_black_tree_node(value);
-        if (root == nullptr) {
             node->color = BLACK;
-            root = node;
         }
 
-        red_black_tree_node* current = root;
-        red_black_tree_node* temp = current;
-        for (;current != nullptr;) {
-            temp = current;
-            if (current->value > value) {
-                current = current->left;
-            } else if (current->value < value) {
-                current = current->right;
-            } else {
-                return;
+        inline void red_black_tree::pre_order(unsigned int index, const unsigned int offset, red_black_tree_node *node,
+                                              const unsigned int level, str::system_stream_io *out) const {
+            if (node == nullptr) { return; }
+            // 树放入数组中，由两个指标表示下标
+            // 一个是父节点的下标，一个是父节点的左子（1）还是右子（2）
+            // 既，根节点默认0，0
+            // 这样父节点的下标乘以2，再加上一个数，即为本节点在数组中的下标
+            index = index * 2 + offset;
+            out->start(8u);
+            out->append("[%4u]{level:%2u,\tcolor:%s\t,value:%d}",
+                        index, level, node->color ? "Black\0" : "Red\0", node->value);
+            out->end();
+            pre_order(index, 1, node->left, level + 1, out);
+            pre_order(index, 2, node->right, level + 1, out);
+        }
+
+        red_black_tree::red_black_tree() {
+            root = nullptr;
+        }
+
+        red_black_tree::~red_black_tree() {
+            delete root;
+        }
+
+        void red_black_tree::append(const int value) {
+            auto *node = new red_black_tree_node(value);
+            if (root == nullptr) {
+                node->color = BLACK;
+                root = node;
             }
-        }
 
-        if (temp->value > value) {
-            temp->left = node;
-        } else {
-            temp->right = node;
-        }
-        node->parent = temp;
-        fix_after_append(node);
-    }
-
-    int red_black_tree::subtract(const int value) {
-        red_black_tree_node* node = found(value);
-        if (node == nullptr) { return 0; }
-        if (node->left != nullptr && node->right != nullptr) {
-            red_black_tree_node* temp = successor(node);
-            node->value = temp->value;
-            node = temp;
-        }
-        red_black_tree_node* replacement = node->left == nullptr ? node->right : node->left;
-        if (replacement == nullptr) {
-            if (node->parent == nullptr) {
-                root = nullptr;
-            } else {
-                if (BLACK == node->color) {
-                    fix_after_subtract(node);
-                }
-                if (node == parent_node(node)->left) {
-                    parent_node(node)->left = nullptr;
+            red_black_tree_node *current = root;
+            red_black_tree_node *temp = current;
+            for (; current != nullptr;) {
+                temp = current;
+                if (current->value > value) {
+                    current = current->left;
+                } else if (current->value < value) {
+                    current = current->right;
                 } else {
-                    parent_node(node)->right = nullptr;
+                    return;
+                }
+            }
+
+            if (temp->value > value) {
+                temp->left = node;
+            } else {
+                temp->right = node;
+            }
+            node->parent = temp;
+            fix_after_append(node);
+        }
+
+        int red_black_tree::subtract(const int value) {
+            red_black_tree_node *node = found(value);
+            if (node == nullptr) { return 0; }
+            if (node->left != nullptr && node->right != nullptr) {
+                red_black_tree_node *temp = successor(node);
+                node->value = temp->value;
+                node = temp;
+            }
+            red_black_tree_node *replacement = node->left == nullptr ? node->right : node->left;
+            if (replacement == nullptr) {
+                if (node->parent == nullptr) {
+                    root = nullptr;
+                } else {
+                    if (BLACK == node->color) {
+                        fix_after_subtract(node);
+                    }
+                    if (node == parent_node(node)->left) {
+                        parent_node(node)->left = nullptr;
+                    } else {
+                        parent_node(node)->right = nullptr;
+                    }
+                    node->parent = nullptr;
+                }
+            } else {
+                replacement->color = BLACK;
+                replacement->parent = parent_node(node);
+                if (node->parent == nullptr) {
+                    root = replacement;
+                } else if (node == parent_node(node)->left) {
+                    parent_node(node)->left = replacement;
+                } else {
+                    parent_node(node)->right = replacement;
                 }
                 node->parent = nullptr;
+                node->left = nullptr;
+                node->right = nullptr;
             }
-        } else {
-            replacement->color = BLACK;
-            replacement->parent = parent_node(node);
-            if (node->parent == nullptr) {
-                root = replacement;
-            } else if (node == parent_node(node)->left) {
-                parent_node(node)->left = replacement;
-            } else {
-                parent_node(node)->right = replacement;
-            }
-            node->parent = nullptr;
-            node->left = nullptr;
-            node->right = nullptr;
+
+            int result = node->value;
+            delete node;
+            return result;
         }
 
-        int result = node->value;
-        delete node;
-        return result;
-    }
-
-    void red_black_tree::scanning() const {
-        auto* out = new str::system_stream_io(15u);
-        pre_order(0, 0, root, 1u, out);
-        out->maybe(1u << 2u);
-        out->append("输出的部分数据被缓冲了，直接释放内存，则不会显示ほんとうにすみませんでした");
-        out->end();
+        void red_black_tree::scanning() const {
+            auto *out = new str::system_stream_io(15u);
+            pre_order(0u, 0, root, 1u, out);
+            out->maybe(1u << 2u);
+            out->append("输出的部分数据被缓冲了，直接释放内存，则不会显示ほんとうにすみませんでした");
+            out->end();
+        }
     }
 
     //main函数写法，既示例
     int cpu_run_main() {
+        auto* time = new cpu::time_stamp();
         auto* counter = new cpu::counter_step();
         //第一步
         {
@@ -1320,7 +1427,7 @@ namespace kuu {
             delete out;
         }
         //第贰步
-        if (counter->read("main", 9, "mov ax 10\nmov bx 5\ncal 0 gather\nmov ax rx\nmov bx 1\ncal 0 gather\njny rx 2\nmov cx rx\nmov dx rx") == 0) {
+        if (counter->read("main", 8, "mov ax 10000\nmov bx ax\ndec bx\njnz bx 1\ndec ax\njnz ax 4\nmov cx ax\nmov dx bx") == 0) {
             auto* out = new str::system_stream_io(1u, 1u);
             out->append("加载函数main时内存が足りないのかもしれません");
             out->end();
@@ -1334,12 +1441,31 @@ namespace kuu {
         counter->result();
         //结束
 
-        auto* test = new red_black_tree();
-        for (int i = 1; i < 100; ++i) {
+        //int a[] = {50,12,18,19,35,65,45,84,64,68,74,10,100,59};
+        int a[] = {50,35,78,27,45,56,90,40,48};
+        auto* test = new rbt::red_black_tree();
+        for (int& i:a) {
             test->append(i);
+            test->scanning();
         }
-        test->subtract(40);
+
+        test->subtract(50);
         test->scanning();
+
+        {
+            auto *out = new str::system_stream_io(1u, 1u);
+            unsigned long stamp = time->time_line_passed();
+            unsigned long stamp_ms = stamp % 1000000000 / 1000000;
+            unsigned long stamp_us = stamp % 1000000 / 1000;
+            unsigned long stamp_ns = stamp % 1000;
+            out->append("%llu[%d s %d ms %d us %d ns]", stamp, stamp / 1000000000, stamp_ms, stamp_us, stamp_ns);
+            out->end();
+            delete out;
+        }
+
+        delete test;
+        delete counter;
+        delete time;
         return 0;
     }
 }
