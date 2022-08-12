@@ -19,6 +19,10 @@
 #include <fstream> //读写文件
 #include <chrono> //时间戳
 
+//system为执行脚本命令与exec区别
+//Windows默认代码页936 编码为GBK 说明简体中文 可能与系统语言有关 不是utf-8(65001)编码存在乱码问题
+//system("chcp 65001");
+
 namespace kuu {
     //工具，与工具函数不同，不属于必要的，目前只有对于输出进行了简单的封装，还存在问题
     namespace str {
