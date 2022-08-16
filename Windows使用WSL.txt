@@ -67,3 +67,25 @@ netsh firewall reset
 
 ##Linux关闭防火墙
 sudo ufw disable
+
+##WSL虽然使用的是hper-v，但是并没有固定网卡，而是使用的dhcp动态分配，固写一个脚本来分配一个固定ip
+@echo on
+
+wsl -u root service mysql start | findstr "Starting"
+
+wsl -u root service ssh start | findstr "Starting"
+
+
+wsl -u root ip addr | findstr "172.16.192.2" && echo "wsl ubuntu ip already exists Please confirm whether it is available" || wsl -u root ip addr add 172.16.192.2/30 broadcast 172.16.192.3 dev eth0 label eth0:1
+
+
+ipconfig | findstr "172.16.192.1" && echo "windows ip already exists Please confirm whether it is available" || netsh interface ip add address "vEthernet (WSL)" 172.16.192.1 255.255.255.252
+
+
+echo "redis start >-<unable to open automatically"
+wsl -u kuukie
+
+
+pause & exit
+##注意，需要有管理员权限
+####对这个脚本（Windows）添加一个快捷方式，然后快捷方式绑定管理员权限运行。
