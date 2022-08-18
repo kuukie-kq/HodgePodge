@@ -89,3 +89,48 @@ wsl -u kuukie
 pause & exit
 ##注意，需要有管理员权限
 ####对这个脚本（Windows）添加一个快捷方式，然后快捷方式绑定管理员权限运行。
+
+
+##MySQL多版本安装
+sudo adduser mysql5
+##默认创建一个普通用户，不知道有没有这个必要
+##官网下载tar包mysql-5.7.38-linux-glibc2.12-x86_64.tar
+tar -xvf mysql-5.7.38-linux-glibc2.12-x86_64.tar
+##打开之后，有两个tar.gz包
+tar -zxvf mysql-5.7.38-linux-glibc2.12-x86_64.tar.gz
+##解压
+su - mysql5
+##使用新的用户
+cp -r mysql-5.7.38-linux-glibc2.12-x86_64 ~/
+mkdir -p mysql-5.7.38-linux-glibc2.12-x86_64/data
+vim .profile
+##添加如下内容
+##export MYSQL_HOME=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64
+##export PATH=$MYSQL_HOME/bin:$PATH
+##export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MYSQL_HOME/lib
+##不知道有没有用
+
+cd mysql-5.7.38-linux-glibc2.12-x86_64/
+touch my.cnf
+vim my.cnf
+##添加如下内容
+##[mysqld]
+##bind-address=0.0.0.0
+##port=3306
+##user=mysql5
+##basedir=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64
+##datadir=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/data
+##socket=/tmp/mysql5-3306.sock
+##log-error=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/data/mysql.err
+##pid-file=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/data/mysql.pid
+##character_set_server=utf8mb4
+##symbolic-links=0
+##explicit_defaults_for_timestamp=ture
+
+mysqld --defaults-file=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/my.cnf --initialize --user=mysql5 --basedir=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64 --datadir=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/data
+##初始化MySQL
+whereis mysqld_safe
+##查看是否成功
+nohup mysqld_safe --defaults-file=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/my.cnf --log-error=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/data/mysql.err > /home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/data/start_mysql_message.txt 2>&1 &
+##启动MySQL，存在0（标准输入）1（标准输出）2（标准错误输出）重定向问题
+##未在本机实验成功，固放弃，仅供参考
