@@ -183,6 +183,7 @@ def start_gzs():
 
 
 def start():
+    # 在这之前需要准备相应的环境，并启动起来
     print("xxsy service project automatic starter")
     print("It will take a few more steps to complete")
     for i in iter(int, 1):
@@ -290,7 +291,7 @@ if __name__ == '__main__':
     # 通过python，代替脚本，避免脚本的部分逻辑编写困难的问题
     # 编写日志：
     # ====2022-08-18 version 0.0.1 完成最基本的windows全部服务器的启动
-    # ====2022-08-19 version 0.1.0 整体代码微调
+    # ====2022-08-19 version 0.1.0 整体代码微调（）符号为习惯，虽然可以不要但保留，with语句返回的文件描述符不一定需要，但保留
     # 注意事项：
     # ====2022-08-18 使用死循环，唯一退出关键字exit，且只有在第一步的时候才能退出
     # ====           0.0.1 注意，这是特意这样写的
