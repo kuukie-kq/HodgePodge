@@ -726,9 +726,132 @@ namespace facade {
     };
 }
 
-//main函数写法，既示例
-int design_run_main() {
-    return 0;
+namespace share {
+    //23种设计模式中的享元模式
+    class mg;
+    class utils {
+    private:
+        static utils* us;
+        explicit utils(int id = 0) : id(id) {}
+        ~utils() = default;
+        utils& operator=(utils&)  = default;
+        utils(const utils&) = default;
+    public:
+        int id;
+        static utils* get_instance() { return us; }
+        void display(mg* m, system_stream_io* out);
+    };
+    utils* utils::us = new utils();
+    class mg {
+    private:
+        static utils* us;
+        int a;
+        char b;
+    public:
+        explicit mg(int a, char b) : a(a), b(b) {}
+        ~mg() = default;
+        static utils* get_utils() { return us; }
+        void show() {
+            auto* ooo = new system_stream_io(1u,1u);
+            us->display(this, ooo);
+            ooo->end();
+        }
+        int get_one() const { return a; }
+        char get_two() const { return b; }
+    };
+    utils* mg::us = utils::get_instance();
+
+    void utils::display(mg *m, system_stream_io *out) {
+        out->append("{a:%d,b:%c}", m->get_one(), m->get_two());
+    }
+}
+
+namespace proxy {
+    //23种设计模式中的代理模式
+    //参考java中的Proxy
+}
+
+namespace interpreter {
+    //23种设计模式中的解释器模式
+    //参考虚拟CPU的实现
+    //interpreter.h与virtual_cpu.h两版以及main.cpp中的第一段注释部分
+}
+
+namespace template_method {
+    //23种设计模式中的模板模式
+    class tmp {
+    private:
+        tmp& operator=(tmp&) = default;
+        tmp(tmp&) = default;
+        tmp& operator=(tmp&&) = default;
+        tmp(tmp&&) = default;
+    protected:
+        tmp() = default;
+    public:
+        virtual ~tmp() = default;
+        void show() {
+            auto* out = new system_stream_io(1u,1u);
+            out->append("====");
+            display(out);
+            out->append("====");
+            out->end();
+        }
+        virtual void display(system_stream_io* out) = 0;
+    };
+
+    class stencil : public tmp {
+    public:
+        stencil() = default;
+        ~stencil() override = default;
+        void display(system_stream_io *out) override {
+            out->append("stencil {void}");
+        }
+    };
+}
+
+namespace responsibility {
+    //23种设计模式中的责任链模式
+    //参考网页开发中的请求处理
+}
+
+namespace command {
+    //23种设计模式中的命令模式
+    //回调函数的概念
+}
+
+namespace iterator {
+    //23种设计模式中的迭代器模式
+    //对于数据结构的遍历提供一种方式而不暴露结构形式
+}
+
+namespace mediator {
+    //23种设计模式中的中介模式
+    //生产者消费者模型中的中间队列
+}
+
+namespace memento {
+    //23种设计模式中的备忘录模式
+    //数据库连接的事物管理
+}
+
+namespace observer {
+    //23种设计模式中的观察者模式
+    //消息队列的处理
+}
+
+namespace state {
+    //23种设计模式中的状态模式
+    //行为随状态的变化而变化
+}
+
+namespace strategy {
+    //23种设计模式中的策略模式
+    //算法的不同实现却统一封装
+}
+
+namespace visitor {
+    //23种设计模式中的访问者模式
+    //对于迭代器模式的扩展，迭代器只能操作同类的对象，访问者则是可以操作不同类的对象
 }
 
 #endif //DESIGN_PATTERN_H
