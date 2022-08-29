@@ -153,6 +153,7 @@ namespace kuu {
     //考虑使用匿名命名空间，只在本文件内可见
     namespace cpu {
         //.h文件部分
+        //基本所有函数如果无特殊用途的返回值类型均为int，其中1代表正常退出，0代表异常
         class [[maybe_unused]] tagscccc;//定义部分
         //类型定义
         //统一类型，只有所占字节大小不同，都按整数类型进行处理
@@ -312,7 +313,7 @@ namespace kuu {
             ~virtual_memory();
             u4int apply(u4int size);
             s4int release(u4int segment);
-            void overlay(u4int segment, u4int offset, u4int value);
+            s4int overlay(u4int segment, u4int offset, u4int value);
             u4int read(u4int segment, u4int offset) const;
         };
 
@@ -397,16 +398,18 @@ namespace kuu {
             return 0;
         }
 
-        void virtual_memory::overlay(const u4int segment, const u4int offset, const u4int value) {
+        s4int virtual_memory::overlay(const u4int segment, const u4int offset, const u4int value) {
             // 写权限校验，无权限控制只对是否能够访问做限制
             for (s4int i = 0; i < 16; i++) {
                 if (index[i] == segment) {
                     if (use[i] > offset) {
                         memory[segment + offset] = value;
+                        return 1;
                     }
                     break;
                 }
             }
+            return 0;
         }
 
         u4int virtual_memory::read(const u4int segment, const u4int offset) const {
@@ -527,7 +530,7 @@ namespace kuu {
         public:
             function_stack();
             ~function_stack();
-            void entrance(u4int segment) const;
+            s4int entrance(u4int segment) const;
             u4int exit() const;
         };
 
@@ -549,13 +552,14 @@ namespace kuu {
             delete main;
         }
 
-        void function_stack::entrance(const u4int segment) const {
+        s4int function_stack::entrance(const u4int segment) const {
             auto* node = new function_stack_node();
             node->name = 0;
             node->segment = segment;
 
             node->next = main->next;
             main->next = node;
+            return 1;
         }
 
         u4int function_stack::exit() const {
@@ -577,7 +581,7 @@ namespace kuu {
         public:
             virtual_register();
             ~virtual_register();
-            void set(s4int index, u4int value);
+            s4int set(s4int index, u4int value);
             u4int get(s4int index) const;
         };
 
@@ -593,8 +597,9 @@ namespace kuu {
             }
         }
 
-        void virtual_register::set(const s4int index, const u4int value) {
+        s4int virtual_register::set(const s4int index, const u4int value) {
             array[index] = value;
+            return 1;
         }
 
         u4int virtual_register::get(const s4int index) const {
@@ -704,7 +709,7 @@ namespace kuu {
             s4int read(const char* name, u4int length = 0, const char* file = nullptr);
             s4int interlude(const char* name = "main");
             s4int step_by_step();
-            void result() const;
+            s4int result() const;
         };
 
         u4int counter_step::constant(const std::string &str) const {
@@ -881,7 +886,7 @@ namespace kuu {
             }
         }
 
-        void counter_step::result() const {
+        s4int counter_step::result() const {
 //            std::printf("ありがとうごじゃいます\n");
 //            std::printf("pc = [0x%08X(%d)]\n", pc, pc);
 //            std::printf("[0x%08X(%d)]\n", ncr->get(2), ncr->get(2));
@@ -898,6 +903,8 @@ namespace kuu {
             out->start(4u);
             out->append("間違いはありませんが、異常がないかどうかは再確認が必要です");
             out->end();
+            delete out;
+            return 1;
         }
 
         s4int mov(u4int& nc, u4int code, virtual_register* ncr, virtual_memory* mem, function_stack* scf, u4int& cs) {
@@ -1018,7 +1025,7 @@ namespace kuu {
         }
         class [[maybe_unused]] tagscccd {};
         //notice
-        //CLang-Tidy属于静态代码扫描，语法要求高，但有时却需要那种写法
+        //CLang-Tidy属于静态代码扫描，语法要求高，但有时却需要那种写法 可以使用//NOLINT屏蔽
     }
 
     //红黑树的标准实现，node为标准的仅有一个int类型的值
@@ -1386,7 +1393,7 @@ namespace kuu {
     }
 
     //main函数写法，既示例
-    int cpu_run_main() {
+    int virtual_cpu_run_main() {
         auto* time = new cpu::time_stamp();
         auto* counter = new cpu::counter_step();
         //第一步
