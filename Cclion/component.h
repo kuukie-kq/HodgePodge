@@ -10,6 +10,7 @@
 #include <cstdarg> //不定参数处理
 #include <chrono> //时间戳
 #include <string> //字符串类
+#include <utility>
 #include <vector> //不定数组，字符串分割
 
 namespace kuu {
@@ -121,7 +122,7 @@ namespace kuu {
     }
 
     class system_stream : public hickey {
-    private:
+    protected:
         const static int MAX_LENGTH = 1024;
         const static int BUFFER_SIZE = 1048575; // 2^20 - 1
         class time_stamp {
@@ -292,10 +293,7 @@ namespace kuu {
             bool log_on = (level & 4u) & (on_or_off & 4u);
             bool step_on = (level & 8u) & (on_or_off & 8u);
             unsigned long stamp = time->time_line_passed();
-            unsigned long stamp_ms = stamp % 1000000000 / 1000000;
-            unsigned long stamp_us = stamp % 1000000 / 1000;
-            unsigned long stamp_ns = stamp % 1000;
-            append("%llu[%d s %d ms %d us %d ns]", stamp, stamp / 1000000000, stamp_ms, stamp_us, stamp_ns);
+            append("%llu[%d s %d ms %d us %d ns]", stamp, stamp / 1000000000, time_micro(stamp), time_milli(stamp), time_nano(stamp));
             if (error_on) {
                 error();
             } else if (warning_on) {
@@ -346,32 +344,146 @@ namespace kuu {
         }
     };
 
+    #define ERROR_THROW(message) ({ \
+        auto* eor = new error(); \
+        eor->err->append((message)); \
+        eor; \
+    })
+
+    #define ERROR_CACHE(error) ({ \
+        (error)->err->end(); \
+        delete (error); \
+        ; \
+    })
+
+    class test_stream final : public system_stream {
+    private:
+        unsigned int sign() const override { return UTL->encode("test_s"); }
+        void error() const override {
+            unsigned long long tmp = time_stamp::time_now();
+            std::cerr << ">  \t"
+                      << time_hour(tmp) << ":" << time_minute(tmp) << "  " << time_second(tmp) << "s "
+                      << time_micro(tmp) << "ms " << time_milli(tmp) << "us " << time_nano(tmp) << "ns\n"
+                      << ss->str() << " *< test_stream " << sign() << std::endl;
+        }
+    public:
+        explicit test_stream(unsigned int ooo = 1u, unsigned int mode = 0) : system_stream(ooo, mode) {}
+    };
+
+    class data_node : public hickey {
+    private:
+        std::string name;
+        int age;
+    public:
+        explicit data_node(int age = 0, const char* name = "name") : age(age) {
+            this->name = name;
+        }
+        ~data_node() override = default;
+        unsigned int sign() const override {
+            return UTL->encode("node_d");
+        }
+        int hash() override {
+            return UTL->hash_code(name.c_str());
+        }
+        bool equals(const hickey* target) override {
+            if (target->sign() != sign()) { return false; }
+            return ((data_node*)target)->age == age && ((data_node*)target)->name == name;
+        }
+        int clone(hickey*& target) override {
+            if (target == nullptr) { return 0; }
+            if (sign() == target->sign()) {
+                if (target == this) {
+                    target = new data_node(age, name.c_str());
+                    return 2;
+                } else {
+                    delete target;
+                    target = new data_node(age, name.c_str());
+                    return 1;
+                }
+            } else { return 0; }
+        }
+        void stream_print(system_stream* out) const {
+            out->append("{data_node sign[%d]}\n{age:%d,name:%s}\n", sign(), age, name.c_str());
+        }
+    };
+
+    template<class T>
+    class stack final {
+    private:
+        class node {
+        public:
+            hickey* data;
+            node* next;
+            node() { data = new data_node(); next = nullptr; }
+            ~node() { delete next; delete data; }
+        };
+        node* head;
+        bool template_check() {}
+    public:
+        stack() { head = new node(); }
+        ~stack() { delete head; }
+        void push(hickey* const data) {
+            auto* t = new T();
+            if(t->sign() != data->sign()) { return; }
+            auto* n = new node();
+            n->next = head->next;
+            head->next = n;
+            //不深拷贝
+            n->data = data;
+        }
+        void pop(hickey*& data) {
+            if(head->next == nullptr) { return; }
+            node* n = head->next;
+            head->next = n->next;
+            n->next = nullptr;
+            // 采用深拷贝，然后释放掉原本的内存
+            n->data->clone(reinterpret_cast<hickey*&>(data));
+            delete n;
+        }
+        void stream_print(system_stream* out) {
+            out->append("==== stack %llu ====", head);
+        }
+    };
+
     int component_run_main() {
         try {
             auto* out = new system_stream(7u, 4u);
-            out->append("hash code [%d]\n", UTL->hash_code("system_stream"));
             auto* str = new std::string();
             UTL->decode(out->sign(), str);
-            out->append("decode [%c]\n", str->c_str());
+            out->append("decode [%s]\n", str->c_str());
             UTL->spilt(*str, "t");
-            auto* war = new system_stream(3u);
+            auto* war = new test_stream(3u, 1u);
             war->start(2u);
             war->append("a");
             war->end();
             war->maybe(1u);
             war->append("b e [%d]", war->equals(out));
             war->end();
-            out->end();
+            //out->end();
             delete war;
             delete str;
             delete out;
-            auto* e = new error();
-            e->err->append("test error\nequals [%d]\n", out->equals(e));
-            throw e; //NOLINT
+            throw ERROR_THROW("there are many errors !!!\n"); //NOLINT
         } catch (error* e) { //NOLINT
-            e->err->end();
-            delete e;
+            ERROR_CACHE(e);
         }
+
+        {
+            auto* out = new system_stream(7u, 4u);
+            auto* st = new stack<data_node>();
+            st->push(new data_node(1, "alice"));
+            st->push(new data_node(2, "tom"));
+            auto* dn = new data_node();
+            dn->stream_print(out);
+            st->pop(reinterpret_cast<hickey*&>(dn));
+            dn->stream_print(out);
+            st->pop(reinterpret_cast<hickey*&>(dn));
+            dn->stream_print(out);
+            st->pop(reinterpret_cast<hickey*&>(dn));
+            dn->stream_print(out);
+            out->end();
+        }
+
         return 0;
     }
 }

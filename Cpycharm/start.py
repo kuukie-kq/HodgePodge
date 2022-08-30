@@ -2,11 +2,11 @@ import os
 import time
 
 base_workspace = "D:/KuukieProject/first/xxsyprj/server/bin"
+fork = "start "
 
 
 def start_g_logger_d(configuration):
     logger_workspace = "/glogger/"
-    fork = "start "
     run = "glogger_d.exe "
     command = fork + base_workspace + logger_workspace + run + base_workspace + logger_workspace + configuration
     with os.popen(command) as p:
@@ -15,7 +15,6 @@ def start_g_logger_d(configuration):
 
 def start_basic_dbs4game():
     basic_workspace_dbs4game = "/DBS4Game/"
-    fork = "start "
     run = "DBS4Game_d.exe "
     command = fork + base_workspace + basic_workspace_dbs4game + run
     with os.popen(command) as p:
@@ -24,7 +23,6 @@ def start_basic_dbs4game():
 
 def start_basic_xverifycode():
     # basic_workspace_xverifycode = "/XVerifyCode/"
-    # fork = "start "
     # run = "XVerifyCode.exe "
     # configuration = "vc_cfg.txt"
     # command = fork + base_workspace + basic_workspace_xverifycode + run
@@ -36,7 +34,6 @@ def start_basic_xverifycode():
 
 def start_basic_xlba():
     basic_workspace_xlba = "/XLBA/"
-    fork = "start "
     run = "XLBA.exe "
     configuration = "lba_cfg.txt"
     command = fork + base_workspace + basic_workspace_xlba + run + base_workspace + basic_workspace_xlba + configuration
@@ -46,7 +43,6 @@ def start_basic_xlba():
 
 def start_basic_xnp():
     basic_workspace_xnp = "/XNP/"
-    fork = "start "
     run = "XNP.exe "
     configuration = "np_cfg.txt"
     command = fork + base_workspace + basic_workspace_xnp + run + base_workspace + basic_workspace_xnp + configuration
@@ -56,7 +52,6 @@ def start_basic_xnp():
 
 def start_global_gms4game():
     global_workspace_gms4game = "/GMS4Game/"
-    fork = "start "
     run = "GMS4Game_d.exe "
     command = fork + base_workspace + global_workspace_gms4game + run
     with os.popen(command) as p:
@@ -65,7 +60,6 @@ def start_global_gms4game():
 
 def start_global_xgmgs():
     global_workspace_xgmgs = "/XGMGS/"
-    fork = "start "
     run = "XGMGS.exe "
     configuration = "gmgs_cfg.txt"
     command = fork + base_workspace + global_workspace_xgmgs + run + base_workspace + global_workspace_xgmgs + configuration
@@ -75,7 +69,6 @@ def start_global_xgmgs():
 
 def start_global_xgis():
     global_workspace_xgis = "/XGIS/"
-    fork = "start "
     run = "XGIS.exe "
     configuration = "gis_cfg.txt"
     command = fork + base_workspace + global_workspace_xgis + run + base_workspace + global_workspace_xgis + configuration
@@ -85,7 +78,6 @@ def start_global_xgis():
 
 def start_gms_xshmsvr():
     gms_workspace_xshmsvr = "/XSHMSVR/"
-    fork = "start "
     run = "XSHMSVR_d.exe "
     command = fork + base_workspace + gms_workspace_xshmsvr + run
     with os.popen(command) as p:
@@ -94,7 +86,6 @@ def start_gms_xshmsvr():
 
 def start_gms_xgms():
     gms_workspace_xgms = "/XGMS/"
-    fork = "start "
     run = "XGMS.exe "
     configuration = "gms_cfg.txt"
     command = fork + base_workspace + gms_workspace_xgms + run + base_workspace + gms_workspace_xgms + configuration
@@ -104,7 +95,6 @@ def start_gms_xgms():
 
 def start_gms_xcaafs2():
     gms_workspace_xcaafs2 = "/XCAAFS2/"
-    fork = "start "
     run = "XCAAFS2_d.exe "
     configuration = "caafs2_cfg1.txt"
     command = fork + base_workspace + gms_workspace_xcaafs2 + run + base_workspace + gms_workspace_xcaafs2 + configuration
@@ -114,7 +104,6 @@ def start_gms_xcaafs2():
 
 def start_gms_xcls():
     gms_workspace_xcls2 = "/XCLS2/"
-    fork = "start "
     run = "XCLS2_d.exe "
     configuration = "cls2_cfg1.txt"
     command = fork + base_workspace + gms_workspace_xcls2 + run + base_workspace + gms_workspace_xcls2 + configuration
@@ -128,7 +117,6 @@ def start_gms_xcls():
 
 def start_gzs_d(configuration):
     xgzs_workspace = "/vc141debugs/"
-    fork = "start "
     run = "XGZS_d.exe "
     command = fork + base_workspace + xgzs_workspace + run + base_workspace + xgzs_workspace + configuration
     with os.popen(command) as p:
@@ -183,11 +171,13 @@ def start_gzs():
 
 
 def start():
-    # 在这之前需要准备相应的环境，并启动起来
     print("xxsy service project automatic starter")
     print("It will take a few more steps to complete")
     for i in iter(int, 1):
-        print("1 What mode do you want to start in? If you select all, start all servers.")
+        print("\n\n")
+        print(i)
+        print("\n\n")
+        print("1 Which mode do you want to start in? If you select all, start all servers.")
         first = input("please select : ")
         if ("all" == first):
             start_g_logger()
@@ -292,6 +282,7 @@ if __name__ == '__main__':
     # 编写日志：
     # ====2022-08-18 version 0.0.1 完成最基本的windows全部服务器的启动
     # ====2022-08-19 version 0.1.0 整体代码微调（）符号为习惯，虽然可以不要但保留，with语句返回的文件描述符不一定需要，但保留
+    # ====2022-08-29 version 0.1.1 代码重新整理，并且提示信息稍微完善
     # 注意事项：
     # ====2022-08-18 使用死循环，唯一退出关键字exit，且只有在第一步的时候才能退出
     # ====           0.0.1 注意，这是特意这样写的
