@@ -846,7 +846,7 @@ namespace state {
 
 namespace strategy {
     //23种设计模式中的策略模式
-    //算法的不同实现却统一封装
+    //算法的不同实现却统一封装，与命令模式相似
 }
 
 namespace visitor {
