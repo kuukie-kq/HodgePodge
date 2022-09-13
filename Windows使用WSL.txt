@@ -84,7 +84,7 @@ ipconfig | findstr "172.16.192.1" && echo "windows ip already exists Please conf
 
 echo "redis start >-<unable to open automatically"
 wsl -u kuukie
-
+##对于wsl内部的细节操作，并没有找到合适的命令，而windows不支持输入流所以暂且这样手动启动redis
 
 pause & exit
 ##注意，需要有管理员权限
