@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>路由器</title>
+        <link type="text/css" rel="stylesheet" href="../css/kokoui.css" />
+        <style type="text/css">
+            .koko-home {
+                min-width: 800px;
+                min-height: 480px;
+                width: 100%;
+                height: 100%;
+            }
+            .koko-home-div {
+                min-width: 640px;
+                min-height: 480px;
+                width: 80%;
+                height: 100%;
+            }
+            .koko-home-head {
+                min-width: 640px;
+                min-height: 48px;
+                width: 100%;
+                height: 10%;
+            }
+            .koko-home-body {
+                min-width: 512px;
+                min-height: 432px;
+                width: 80%;
+                height: 90%;
+                background: #CFFFF0;
+            }
+            .koko-home-form {
+                min-width: 448px;
+                min-height: 108px;
+                width: 87.5%;
+                height: 25%;
+                text-align: center;
+            }
+            .koko-home-form input{
+                width: 80px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="koko-home">
+            <div class="koko-home-div">
+                <div class="koko-home-head">虚拟网络环境:路由器</div>
+                <div class="koko-home-body">
+                    <form class="koko-home-form"><br><br>
+                        <span>id</span><input type="text" id="routerId">
+                        <span>路由器名</span><input type="text" id="routerName">
+                        <span>路由器地址</span><input type="text" id="routerAddress">
+                        <input type="button" id="insert" value="添加">
+                    </form>
+                    <table id="routerTable">
+                        <thead>
+                            <tr>
+                                <td colspan="4" class="koko-td-tr koko-td-td">
+                                    <button id="front">上一页</button>
+                                    <span>第</span>
+                                    <input type="text" value="1" style="width: 20px" id="pageNumber">
+                                    <span>页</span>
+                                    <button id="skip">跳转</button>
+                                    <span>共</span>
+                                    <span id="pageCountNumber">1</span>
+                                    <span>页</span>
+                                    <button id="next">下一页</button>
+                                    <span>每页</span>
+                                    <span id="countPageNumber">5</span>
+                                    <span>条共</span>
+                                    <span id="countNumber">0</span>
+                                    <span>条</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="koko-td-th koko-td-tr">id</td>
+                                <td class="koko-td-th koko-td-tr">路由器名</td>
+                                <td class="koko-td-th koko-td-tr">路由器地址</td>
+                                <td class="koko-td-th koko-td-tr">操作</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="koko-td-tr koko-td-td">1</td>
+                                <td class="koko-td-tr koko-td-td">RouterOne</td>
+                                <td class="koko-td-tr koko-td-td">127.0.0.1:55031</td>
+                                <td class="koko-td-tr koko-td-td"></td>
+                            </tr>
+                            <tr>
+                                <td class="koko-td-tr koko-td-td">2</td>
+                                <td class="koko-td-tr koko-td-td">RouterTwo</td>
+                                <td class="koko-td-tr koko-td-td">127.0.0.1:55032</td>
+                                <td class="koko-td-tr koko-td-td"></td>
+                            </tr>
+                            <tr>
+                                <td class="koko-td-tr koko-td-td">3</td>
+                                <td class="koko-td-tr koko-td-td">RouterThree</td>
+                                <td class="koko-td-tr koko-td-td">127.0.0.1:55033</td>
+                                <td class="koko-td-tr koko-td-td"></td>
+                            </tr>
+                            <tr>
+                                <td class="koko-td-tr koko-td-td">4</td>
+                                <td class="koko-td-tr koko-td-td">RouterFour</td>
+                                <td class="koko-td-tr koko-td-td">127.0.0.1:55034</td>
+                                <td class="koko-td-tr koko-td-td"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+        <script type="text/javascript">
+            $.ajax({
+                type: "post",
+                url: "../service/routerMessage"
+            }).done(function(datas){
+                $.each(JSON.parse(datas),function (i,dataObject) {
+                    $("#pageCountNumber").text(Math.ceil(dataObject.countNumber/$("#countPageNumber").text()));
+                    $("#pageNumber").val(dataObject.pageNumber);
+                    $("#countNumber").text(dataObject.countNumber);
+
+                    var tbodyOp = $("#routerTable tbody").empty();
+                    $.each(dataObject.routers,function (j,data) {
+                        var tbodyEd = "<tr><td class='koko-td-tr koko-td-td'>" + data.routerId +
+                            "</td><td class='koko-td-tr koko-td-td'>" + data.routerName +
+                            "</td><td class='koko-td-tr koko-td-td'>" + data.routerAddress + "</td><td class='koko-td-tr koko-td-td'>Normal</td></tr>";
+                        tbodyOp.append(tbodyEd);
+                    });
+                });
+            }).fail(function(){
+                console.log("连接失败");
+            });
+
+            $("#front").click(function (){
+                var pageNumber = Number($("#pageNumber").val());
+                if(pageNumber <= 1) {
+                    console.log("page:" + pageNumber + " It is not have front");
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "../service/routerPage",
+                        data: {"page": pageNumber-1}
+                    }).done(function(datas){
+                        $.each(JSON.parse(datas),function(i,dataObject){
+                            if(pageNumber == dataObject.pageNumber+1) {
+                                $("#pageNumber").val(dataObject.pageNumber);
+                            }
+
+                            var tbodyOp = $("#routerTable tbody").empty();
+                            $.each(dataObject.routers,function (j,data) {
+                                var tbodyEd = "<tr><td class='koko-td-tr koko-td-td'>" + data.routerId +
+                                    "</td><td class='koko-td-tr koko-td-td'>" + data.routerName +
+                                    "</td><td class='koko-td-tr koko-td-td'>" + data.routerAddress + "</td><td class='koko-td-tr koko-td-td'>Normal</td></tr>";
+                                tbodyOp.append(tbodyEd);
+                            });
+                        });
+                    }).fail(function(){
+                        console.log("连接失败");
+                    });
+                }
+            });
+
+            $("#next").click(function(){
+                var pageNumber = Number($("#pageNumber").val());
+                var pageCountNumber = Number($("#pageCountNumber").text());
+                if(pageNumber >= pageCountNumber) {
+                    console.log("page:" + pageNumber + " It is not have next");
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "../service/routerPage",
+                        data: {"page": pageNumber+1}
+                    }).done(function(datas){
+                        $.each(JSON.parse(datas),function(i,dataObject){
+                            if(pageNumber == dataObject.pageNumber-1) {
+                                $("#pageNumber").val(dataObject.pageNumber);
+                            }
+
+                            var tbodyOp = $("#routerTable tbody").empty();
+                            $.each(dataObject.routers,function (j,data) {
+                                var tbodyEd = "<tr><td class='koko-td-tr koko-td-td'>" + data.routerId +
+                                    "</td><td class='koko-td-tr koko-td-td'>" + data.routerName +
+                                    "</td><td class='koko-td-tr koko-td-td'>" + data.routerAddress + "</td><td class='koko-td-tr koko-td-td'>Normal</td></tr>";
+                                tbodyOp.append(tbodyEd);
+                            });
+                        });
+                    }).fail(function(){
+                        console.log("连接失败");
+                    });
+                }
+            });
+
+            $("#skip").click(function(){
+                var pageNumber = Number($("#pageNumber").val());
+                var pageCountNumber = Number($("#pageCountNumber").text());
+                if(pageNumber <= 0 && pageNumber >= pageCountNumber) {
+                    console.log("page:" + pageNumber + " It is not have the page");
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "../service/routerPage",
+                        data: {"page": pageNumber}
+                    }).done(function(datas){
+                        $.each(JSON.parse(datas),function(i,dataObject){
+                            if(pageNumber == dataObject.pageNumber) {
+                                $("#pageNumber").val(dataObject.pageNumber);
+                            }
+
+                            var tbodyOp = $("#routerTable tbody").empty();
+                            $.each(dataObject.routers,function (j,data) {
+                                var tbodyEd = "<tr><td class='koko-td-tr koko-td-td'>" + data.routerId +
+                                    "</td><td class='koko-td-tr koko-td-td'>" + data.routerName +
+                                    "</td><td class='koko-td-tr koko-td-td'>" + data.routerAddress + "</td><td class='koko-td-tr koko-td-td'>Normal</td></tr>";
+                                tbodyOp.append(tbodyEd);
+                            });
+                        });
+                    }).fail(function(){
+                        console.log("连接失败");
+                    });
+                }
+            });
+
+            $("#insert").click(function(){
+                var routerId = $("#routerId").val();
+                var routerName = $("#routerName").val();
+                var routerAddress = $("#routerAddress").val();
+                $.ajax({
+                    type: "post",
+                    url: "../service/addRouter",
+                    data: {"routerId":routerId,"routerName":routerName,"routerAddress":routerAddress}
+                }).done(function(datas){
+                    $.each(JSON.parse(datas),function(i,data){
+                        if(data) {
+                            alert("success");
+                            window.location.href = "router.html";
+                        }
+                    });
+                }).fail(function(){
+                    console.log("连接失败");
+                });
+            });
+        </script>
+    </body>
+</html>
