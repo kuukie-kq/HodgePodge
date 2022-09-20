@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="VirtualNorth:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/VirtualNorth_jar</output-path>
+    <root id="archive" name="VirtualNorth.jar">
+      <element id="module-output" name="VirtualNorth" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/redis/clients/jedis/2.9.0/jedis-2.9.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.42.Final/netty-all-4.1.42.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/mysql/mysql-connector-java/8.0.16/mysql-connector-java-8.0.16.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/protobuf/protobuf-java/3.6.1/protobuf-java-3.6.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-pool2/2.4.2/commons-pool2-2.4.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
