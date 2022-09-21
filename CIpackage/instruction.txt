@@ -3,6 +3,9 @@ VRM 全称virtual router model
 打包
 tar -cvf VRM.tar VRM
 作为源码与bin包
+# tar -xvf为解包
+# tar -zcvf为打压缩包
+# tar -zxvf为解压缩包
 
 用于目录中的Dockerfile创建镜像
 由于docker ubuntu对一些源的支持并不完整
