@@ -179,7 +179,7 @@ def start():
         print("\n\n")
         print("1 Which mode do you want to start in? If you select all, start all servers.")
         first = input("please select : ")
-        if ("all" == first):
+        if "all" == first:
             start_g_logger()
             time.sleep(2)
             start_basic()
@@ -189,86 +189,86 @@ def start():
             start_gms()
             time.sleep(2)
             start_gzs()
-        elif ("exit" == first):
+        elif "exit" == first or "quit" == first:
             break
         else:
             print("2 {15logs} Determine if you have started (no/0) or want to start (yes/1).")
             second = input("please select : ")
-            if ("yes" == second or "1" == second):
+            if "yes" == second or "1" == second:
                 start_g_logger()
             print("3 {3basic(1)} Determine if you have started (no/0) or want to start (yes/1).")
             third = input("please select : ")
-            if ("yes" == third or "1" == third):
+            if "yes" == third or "1" == third:
                 start_basic()
-            elif ("no" == third or "0" == third):
+            elif "no" == third or "0" == third:
                 pass
             else:
                 print("3.1 {DBS4Game} Determine if you have started (no/0) or want to start (yes/1).")
                 third_one = input("please select : ")
-                if ("yes" == third_one or "1" == third_one):
+                if "yes" == third_one or "1" == third_one:
                     start_basic_dbs4game()
                 print("3.2 {XLBA} Determine if you have started (no/0) or want to start (yes/1).")
                 third_two = input("please select : ")
-                if ("yes" == third_two or "1" == third_two):
+                if "yes" == third_two or "1" == third_two:
                     start_basic_xlba()
                 print("3.3 {XNP} Determine if you have started (no/0) or want to start (yes/1).")
                 third_three = input("please select : ")
-                if ("yes" == third_three or "1" == third_three):
+                if "yes" == third_three or "1" == third_three:
                     start_basic_xnp()
                 # 分步启动完成
                 pass
             print("4 {3global} Determine if you have started (no/0) or want to start (yes/1).")
             fourth = input("please select : ")
-            if ("yes" == fourth or "1" == fourth):
+            if "yes" == fourth or "1" == fourth:
                 start_global()
-            elif ("no" == fourth or "0" == fourth):
+            elif "no" == fourth or "0" == fourth:
                 pass
             else:
                 print("4.1 {GMS4Game} Determine if you have started (no/0) or want to start (yes/1).")
                 fourth_one = input("please select : ")
-                if ("yes" == fourth_one or "1" == fourth_one):
+                if "yes" == fourth_one or "1" == fourth_one:
                     start_global_gms4game()
                 print("4.2 {XGMGS} Determine if you have started (no/0) or want to start (yes/1).")
                 fourth_two = input("please select : ")
-                if ("yes" == fourth_two or "1" == fourth_two):
+                if "yes" == fourth_two or "1" == fourth_two:
                     start_global_xgmgs()
                 print("4.3 {XGIS} Determine if you have started (no/0) or want to start (yes/1).")
                 fourth_three = input("please select : ")
-                if ("yes" == fourth_three or "1" == fourth_three):
+                if "yes" == fourth_three or "1" == fourth_three:
                     start_global_xgis()
                 # 分步启动完成
                 pass
             print("5 {4gms} Determine if you have started (no/0) or want to start (yes/1).")
             fifth = input("please select : ")
-            if ("yes" == fifth or "1" == fifth):
+            if "yes" == fifth or "1" == fifth:
                 start_gms()
-            elif ("no" == fifth or "0" == fifth):
+            elif "no" == fifth or "0" == fifth:
                 pass
             else:
                 print("5.1 {XSHMSVR} Determine if you have started (no/0) or want to start (yes/1).")
                 fifth_one = input("please select : ")
-                if ("yes" == fifth_one or "1" == fifth_one):
+                if "yes" == fifth_one or "1" == fifth_one:
                     start_gms_xshmsvr()
                 print("5.2 {XGMS} Determine if you have started (no/0) or want to start (yes/1).")
                 fifth_two = input("please select : ")
-                if ("yes" == fifth_two or "1" == fifth_two):
+                if "yes" == fifth_two or "1" == fifth_two:
                     start_gms_xgms()
                 print("5.3 {XCAAFS2} Determine if you have started (no/0) or want to start (yes/1).")
                 fifth_three = input("please select : ")
-                if ("yes" == fifth_three or "1" == fifth_three):
+                if "yes" == fifth_three or "1" == fifth_three:
                     start_gms_xcaafs2()
                 print("5.4 {XCLS2} Determine if you have started (no/0) or want to start (yes/1).")
                 fifth_four = input("please select : ")
-                if ("yes" == fifth_four or "1" == fifth_four):
+                if "yes" == fifth_four or "1" == fifth_four:
                     start_gms_xcls()
                 # 分步启动完成
                 pass
             print("6 {4gzs} Determine if you have started (no/0) or want to start (yes/1).")
             sixth = input("please select : ")
-            if ("yes" == sixth or "1" == sixth):
+            if "yes" == sixth or "1" == sixth:
                 start_gzs()
             pass
-        # 死循环内 一次循环的末尾
+        # 死循环内 一次循环的末尾 pass的用处
         # 注意python中如何使用for实现死循环
         pass
     print("ありがとうございました")
@@ -283,7 +283,10 @@ if __name__ == '__main__':
     # ====2022-08-18 version 0.0.1 完成最基本的windows全部服务器的启动
     # ====2022-08-19 version 0.1.0 整体代码微调（）符号为习惯，虽然可以不要但保留，with语句返回的文件描述符不一定需要，但保留
     # ====2022-08-29 version 0.1.1 代码重新整理，并且提示信息稍微完善
+    # ====2022-09-23 version 0.1.2 对一些开源软件学习后，增加一个退出关键字quit
     # 注意事项：
     # ====2022-08-18 使用死循环，唯一退出关键字exit，且只有在第一步的时候才能退出
     # ====           0.0.1 注意，这是特意这样写的
+    # ====2022-09-23 if的条件去掉了括号，因为语法上与或与有括号的语言有区别
+    # ====           0.1.2 exit与quit为退出关键字
     pass
