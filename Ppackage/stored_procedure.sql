@@ -118,5 +118,6 @@ DELIMITER ;
 CALL restore_function_name(1240000000000004076,@result);
 /**
  *  注意用户自定义的临时变量必须以@开头
+ *  这个变量的作用域为本次连接
  */
 DROP PROCEDURE IF EXISTS `restore_function_name`;
