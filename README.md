@@ -16,8 +16,9 @@ Directory
 - C -> code
 - P -> public
 - S -> summer
+
 |   name    | language |  editor   | sub |
-|-----------|----------|-----------|-----|
+|:---------:|:--------:|:---------:|:---:|
 |   clion   |  C/C++   |   CLion   |  L  |
 |   idea    |   Java   |   Idea    |  I  |
 |  pycharm  |  Python  |  PyCharm  |  P  |
