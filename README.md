@@ -8,11 +8,9 @@
 都与网络有关，首先通过浏览器看看是否为不可访问，如果没有问题则跟本地环境配置有关
 有ssl校验和http代理等影响，主要修改$HOME/.gitconfig文件
 
-### 7s
-
+#### 7s
 CDEFGAB -> 0xCDEF7AB
-
-Directory
+###### Directory
 - C -> code
 - P -> public
 - S -> summer
