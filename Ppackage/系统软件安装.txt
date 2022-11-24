@@ -274,6 +274,27 @@
   --安装
   
 
+##Valgrind安装与简单使用
+  https://valgrind.org/downloads/current.html#current
+  --Valgrind下载
+  cd /opt
+  sudo cp ~/下载/valgrind-3.20.0.tar.bz2 ./
+  sudo tar -jxvf valgrind-3.20.0.tar.bz2
+  sudo rm -rf valgrind-3.20.0.tar.bz2
+  --解压源码包
+  cd valgrind-3.20.0/
+  ./configure
+  sudo make
+  sudo make install
+  --安装Valgrind
+  valgrind --version
+  --测试是否安装成功
+  valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all ./HelloWorldTest
+  --在可执行程序目录中对目标程序进行分析
+  --由于valgrind仅限Linux平台，其底层是一个虚拟CPU依赖Linux内核
+  --分析感觉上非常全面，将一些容易忽略的细节暴露出来
+  
+
 ##分布式集群搭建
   sudo apt update
   sudo apt upgrade
