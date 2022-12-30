@@ -1,8 +1,63 @@
 import os
+import sys
 import time
 
 base_workspace = "D:/KuukieProject/first/xxsyprj/server/bin"
 fork = "start "
+share_memory = True
+battle = False
+
+
+def set_global_value(workspace):
+    global base_workspace
+    base_workspace = workspace
+    # python特性（原则上本文中的全局变量都应该受到写保护）
+    # return None
+    pass
+
+
+def pwd_path():
+    # linux command = "pwd"
+    command = "echo %cd:\\=/%"
+    with os.popen(command) as p:
+        workspace = p.readline()
+    return ''.join(workspace).strip("\n")
+
+
+def information_version():
+    version = "0.2.0.29"
+    print("starter version ", version, " by <3260681415@qq.com>")
+    pass
+
+
+def information_help():
+    print("\nCopyright python 3.8 anaconda3-2022-05 standard module")
+    print("==== ==== Create by kuu-kie <3260681415@qq.com> on 20221230\n")
+    print("Usage: python start.py [<key> <value>] ...")
+    print("==== ====                 key-value help")
+    print("-v pass              : display version and continue")
+    print("-version pass        : same as -v")
+    print("-h pass              : display help and continue")
+    print("-help pass           : same as -h")
+    print("-share pass          : do not start share memory server")
+    print("-battle pass         : start bn server (bn server starter mode)")
+    print("-pwd [pass | <path>] : use current directory (and path) spliced into workspace")
+    print("-dir <path>          : use path as workspace")
+    print("ps : pass is placeholder keyword which used in key-non-value and weak check")
+    print("pps : ... 为前面的内容可重复")
+    print("      <> 为占位参数，里面的内容具有一定的含义")
+    print("      [] 为可选参数")
+    print("      () 为必选组合")
+    print("      | 表示互斥关系只能使用其一")
+    print("      pass 为弱占位符，最好不要有其他含义")
+    print("\nありがとうございました，またねー")
+    pass
+
+
+def information_error(message):
+    print(message)
+    print("特别注意！！！see help")
+    pass
 
 
 def start_g_logger_d(configuration):
@@ -111,6 +166,15 @@ def start_gms_xcls():
         pass
 
 
+def start_gms_xgbnms():
+    xgbnms_workspace = "/XGBNMS/"
+    run = "XGBNMS.exe "
+    configuration = "gbnms_cfg.txt"
+    command = fork + base_workspace + xgbnms_workspace + run + base_workspace + xgbnms_workspace + configuration
+    with os.popen(command) as p:
+        pass
+
+
 # 由于Nginx本身的原因? 这种方式的启动起不起来，故不在这里控制启动
 # nginx_workspace = "/openresty/openresty_inner/"
 
@@ -155,12 +219,15 @@ def start_global():
 
 
 def start_gms():
-    start_gms_xshmsvr()
+    if share_memory:
+        start_gms_xshmsvr()
     start_gms_xgms()
     time.sleep(5)
     start_gms_xcaafs2()
     time.sleep(5)
     start_gms_xcls()
+    if battle:
+        start_gms_xgbnms()
 
 
 def start_gzs():
@@ -175,6 +242,10 @@ def start():
     print("It will take a few more steps to complete")
     for i in iter(int, 1):
         print("\n\n")
+        if not share_memory:
+            i = i + 1
+        if battle:
+            i = i + 2
         print(i)
         print("\n\n")
         print("1 Which mode do you want to start in? If you select all, start all servers.")
@@ -261,6 +332,10 @@ def start():
                 fifth_four = input("please select : ")
                 if "yes" == fifth_four or "1" == fifth_four:
                     start_gms_xcls()
+                print("5.5 {XGBNMS} Determine if you have started (no/0) or want to start (yes/1).")
+                fifth_five = input("please select : ")
+                if "yes" == fifth_five or "1" == fifth_five:
+                    start_gms_xgbnms()
                 # 分步启动完成
                 pass
             print("6 {4gzs} Determine if you have started (no/0) or want to start (yes/1).")
@@ -275,18 +350,99 @@ def start():
     pass
 
 
+def check_args():
+    arg_size = len(sys.argv)
+    if arg_size == 1:
+        return 1
+    elif arg_size % 2 == 1:
+        flag = 0
+        for i in range(1, arg_size, 2):
+            arg_key = sys.argv[i]
+            arg_value = sys.argv[i + 1]
+            if "-dir" == arg_key:
+                print("==== ==== !\n", arg_value)
+                condition = input("warning !!! please make sure the last line path is valid (Enter) : ")
+                if "" == condition and flag == 0:
+                    set_global_value(arg_value)
+                    flag = 1
+                else:
+                    information_error("-dir 参数解析异常")
+                    return 0
+                pass
+            elif "-pwd" == arg_key:
+                if "pass" == arg_value:
+                    path_value = pwd_path()
+                else:
+                    path_value = pwd_path() + arg_value
+                print("==== ==== !\n", path_value)
+                condition = input("warning !!! please make sure the last line path is valid (Enter) : ")
+                if "" == condition and flag == 0:
+                    set_global_value(path_value)
+                    flag = 1
+                else:
+                    information_error("-pwd 参数解析异常")
+                    return 0
+                pass
+            elif "-battle" == arg_key:
+                if "pass" != arg_value:
+                    information_error("key-value error")
+                    return 0
+                global battle
+                battle = True
+            elif "-share" == arg_key:
+                if "pass" != arg_value:
+                    information_error("key-value error")
+                    return 0
+                global share_memory
+                share_memory = False
+            elif "-v" == arg_key or "-version" == arg_key:
+                if "pass" != arg_value:
+                    information_error("key-value error")
+                    return 0
+                information_version()
+            elif "-h" == arg_key or "-help" == arg_key:
+                information_help()
+                if "pass" != arg_value:
+                    information_error("key-value error")
+                    return 0
+            else:
+                print("unknow key:", arg_key, " & value:", arg_value)
+                information_help()
+            # 循环内 一次循环的末尾
+            pass
+        return flag
+    else:
+        information_error("存在无效的参数")
+        return 0
+    pass
+
+
 if __name__ == '__main__':
-    start()
+    if check_args() == 1:
+        start()
+        # pass的另一种用法debugger，debug测试的时候将上面注释掉，pass是可以断点的
+        pass
     # 使用说明
     # 通过python，代替脚本，避免脚本的部分逻辑编写困难的问题
     # 编写日志：
     # ====2022-08-18 version 0.0.1 完成最基本的windows全部服务器的启动
-    # ====2022-08-19 version 0.1.0 整体代码微调（）符号为习惯，虽然可以不要但保留，with语句返回的文件描述符不一定需要，但保留
+    # ====2022-08-19 version 0.1.0 代码基本检查，主要关注警告内容
     # ====2022-08-29 version 0.1.1 代码重新整理，并且提示信息稍微完善
     # ====2022-09-23 version 0.1.2 对一些开源软件学习后，增加一个退出关键字quit
+    # ====2022-12-28 version 0.1.3 修改每次循环内输出的数字
+    # ====2022-12-29 version 0.1.4 增加自动获取基目录，main参数处理&校验
+    # ====2022-12-30 version 0.1.5 维护help，将本地服务器与竞技服务器合起来
     # 注意事项：
     # ====2022-08-18 使用死循环，唯一退出关键字exit，且只有在第一步的时候才能退出
-    # ====           0.0.1 注意，这是特意这样写的
+    # ====  0.0.1 注意，这是特意这样写的
+    # ====2022-08-19 整体代码微调，（）符号为习惯，虽然可以不要但保留，with语句返回的文件描述符不一定需要，但保留
+    # ====  0.1.0 目前来说基本完成了需求，考虑到方便性，需要配合bat使用
     # ====2022-09-23 if的条件去掉了括号，因为语法上与或与有括号的语言有区别
-    # ====           0.1.2 exit与quit为退出关键字
+    # ====  0.1.2 exit与quit为退出关键字
+    # ====2022-12-28 该条目时间乱了，由于仅为小细节部分，作为提示信息的作用，所以为历史时间
+    # ====  0.1.3 0本地服务器，1本地服务器（多组情况），2竞技服务器（也作为本地服务器），3竞技服务器（多组情况）
+    # ====2022-12-29 基目录以本程序文件start.py所在目录为基准，且不能存在含有特殊字符（空格）的路径
+    # ====  0.1.4 原则上main的参数是成对出现的，既key-value模式，如果version等只有key的情况，则可以使用pass关键字作为占位填充value，未对help信息进行维护
+    # ====2022-12-30 各个参数的作用，必要情况需要配合使用，逻辑上本地服务器与竞技服务器是相同的，但是程序中的分步启动模式却是都可以的
+    # ====  0.1.5 与无参数版本一样，默认情况是启动本地服务器，由全局变量来控制，原则上同时也是静态变量
     pass
