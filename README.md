@@ -27,7 +27,7 @@ CDEFGAB -> 0xCDEF7AB
 |:---------:|:--------:|:---------:|:---:|
 |   clion   |  C/C++   |   CLion   |  L  |
 |   idea    |   Java   |   Idea    |  I  |
-|  pycharm  |  Python  |  PyCharm  |  P  |
+|  pycharm  |  Python  |  PyCharm  |  Y  |
 | hbuilderx |   Html   | HBuilderX |  H  |
 
 ****

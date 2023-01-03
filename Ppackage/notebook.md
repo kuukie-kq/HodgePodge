@@ -19,12 +19,16 @@
 >
 > > [2.1 gdb简单用法](#2简单用法 "当前文档中的标题")
 >
+> [3 Unicode](#unicode "当前文档中的标题")
+>
+> > [3.1 Unicode统一码](#3统一编码库 "当前文档中的标题")
+>
+> > [3.2 UTF-8](#3utf8编码 "当前文档中的标题")
+>
 
 # 正文
 
 ## MarkDown
-
-****
 
 ### 1基本语法
 
@@ -163,6 +167,10 @@ key code
 目前感觉唯一不方便的点是有些格式需要多空一些行<br>
 而有时候这些行却并不是编写者的语义（代码中空行）
 
+本文的编写格式习惯参照GitHub的GitHub&nbsp;Flavored&nbsp;Markdown&nbsp;(GFM)
+
+突然发现可以作为网址收藏专用夹
+
 ### 1其他
 
 ****
@@ -185,8 +193,6 @@ cond(no)->sub1(right)->op
 
 ## gdb
 
-****
-
 ### 2简单用法
 
 ****
@@ -204,10 +210,22 @@ gdb shfilename corefilename
 - 查看断点堆栈信息
 
 ``` gdb
+backtrace
+```
+
+> or
+
+``` gdb
 bt
 ```
 
 - 选择栈层，查看更加详细内容
+
+``` gdb
+frame 0
+```
+
+> or
 
 ``` gdb
 f 0
@@ -216,10 +234,22 @@ f 0
 - 查看源码信息，编译的时候添加的有-g参数才能看到
 
 ``` gdb
+list
+```
+
+> or
+
+``` gdb
 l
 ```
 
 - 查看一些运行时的信息
+
+``` gdb
+info
+```
+
+> or
 
 ``` gdb
 i
@@ -230,7 +260,7 @@ i
 ``` gdb
 p namespace::pointer->pointer->array[2237]->pointer->pointer
 
-p *pointer
+print *pointer
 
 p *(StructName*)pointer
 
@@ -248,6 +278,41 @@ quit
 ``` gdb
 q
 ```
+
+- 查看汇编
+
+``` gdb
+disassemble
+```
+
+> or
+
+``` gdb
+dis
+```
+
+## Unicode
+
+### 3统一编码库
+
+****
+
+[统一码编码库](https://fuhaoku.net/blocks "符号库")
+
+- 预计编码量 $$17 * 65536 = 1114112$$ 所以需要21位
+
+### 3UTF8编码
+
+****
+
+| byte size |               format                | coding bit |      range      |
+|:---------:|:-----------------------------------:|:----------:|:--------------:|
+| 1         | 0xxxxxxx                            |  7         | 0 ~ 127          |
+| 2         | 110xxxxx 10xxxxxx                   | 11         | 128 ~ 2047      |
+| 3         | 1110xxxx 10xxxxxx 10xxxxxx          | 16         | 2048 ~ 65535    |
+| 4         | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx | 21         | 65536 ~ 2097151 |
+
+- 例如：汉的统一码编码是0x6C49，为27721在2048 ~ 65535使用3字节，二进制为0110&nbsp;1100&nbsp;0100&nbsp;1001放入模板中为11100110&nbsp;10110001&nbsp;10001001既0xE6B189（汉的UTF8编码）
 
 # 总结
 
