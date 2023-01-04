@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import sys
 import time
@@ -17,7 +18,7 @@ def set_global_value(workspace):
 
 
 def pwd_path():
-    # linux command = "pwd"
+    # command = "pwd"
     command = "echo %cd:\\=/%"
     with os.popen(command) as p:
         workspace = p.readline()
@@ -25,8 +26,8 @@ def pwd_path():
 
 
 def information_version():
-    version = "0.2.0.29"
-    print("starter version ", version, " by <3260681415@qq.com>")
+    version = "0.2.0.17"
+    print("version ", version, " start.py")
     pass
 
 
@@ -432,6 +433,7 @@ if __name__ == '__main__':
     # ====2022-12-28 version 0.1.3 修改每次循环内输出的数字
     # ====2022-12-29 version 0.1.4 增加自动获取基目录，main参数处理&校验
     # ====2022-12-30 version 0.1.5 维护help，将本地服务器与竞技服务器合起来
+    # ====2023-01-03 version 0.1.6 补充一些兼容Linux的部分
     # 注意事项：
     # ====2022-08-18 使用死循环，唯一退出关键字exit，且只有在第一步的时候才能退出
     # ====  0.0.1 注意，这是特意这样写的
@@ -445,4 +447,6 @@ if __name__ == '__main__':
     # ====  0.1.4 原则上main的参数是成对出现的，既key-value模式，如果version等只有key的情况，则可以使用pass关键字作为占位填充value，未对help信息进行维护
     # ====2022-12-30 各个参数的作用，必要情况需要配合使用，逻辑上本地服务器与竞技服务器是相同的，但是程序中的分步启动模式却是都可以的
     # ====  0.1.5 与无参数版本一样，默认情况是启动本地服务器，由全局变量来控制，原则上同时也是静态变量
+    # ====2023-01-03 尝试一些linux与win相互对应的部分，如果使用参数，则默认情况并不会启动服务器，需要指定-dir或-pwd参数才行
+    # ====  0.1.6 实际上并不能兼容，因为启动的服务器linux版需要另行编译，结果也与win存在区别.exe
     pass
