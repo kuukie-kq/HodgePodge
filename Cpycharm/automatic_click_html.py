@@ -11,7 +11,7 @@ Created by kuu-kie on 2022/06/04
 运行前请修改代码中的相应字符串
 
 代码说明：
-selenium为封装好的模拟键盘鼠标事件的库
+selenium为封装好的模拟键盘鼠标事件的库（需要pip install selenium）
 首先加载驱动，与火狐浏览器相连，驱动为GitHub上的开源包
 然后访问网页
 接着循环输入表单数据，提交，返回
