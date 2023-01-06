@@ -42,15 +42,17 @@ def information_help():
     print("-help pass           : same as -h")
     print("-share pass          : do not start share memory server")
     print("-battle pass         : start bn server (bn server starter mode)")
-    print("-pwd [pass | <path>] : use current directory (and path) spliced into workspace")
+    print("-pwd <pass | <path>> : use current directory (and path) spliced into workspace")
     print("-dir <path>          : use path as workspace")
-    print("ps : pass is placeholder keyword which used in key-non-value and weak check")
-    print("pps : ... 为前面的内容可重复")
-    print("      <> 为占位参数，里面的内容具有一定的含义")
-    print("      [] 为可选参数")
-    print("      () 为必选组合")
-    print("      | 表示互斥关系只能使用其一")
-    print("      pass 为弱占位符，最好不要有其他含义")
+    print("ps   : pass is placeholder keyword which used in key-non-value and weak check")
+    print("pps  : it is necessary to use (-pwd/-dir) when have any args")
+    print("==== ====")
+    print("p*ps : ... 为前面的内容可重复")
+    print("       <> 为占位参数，里面的内容具有一定的含义")
+    print("       [] 为可选参数")
+    print("       () 为必选组合")
+    print("       | 表示互斥关系只能使用其一")
+    print("       pass 为弱占位符，最好不要有其他含义")
     print("\nありがとうございました，またねー")
     pass
 
@@ -434,6 +436,7 @@ if __name__ == '__main__':
     # ====2022-12-29 version 0.1.4 增加自动获取基目录，main参数处理&校验
     # ====2022-12-30 version 0.1.5 维护help，将本地服务器与竞技服务器合起来
     # ====2023-01-03 version 0.1.6 补充一些兼容Linux的部分
+    # ====2023-01-05 version 0.1.7 完善help部分代码review
     # 注意事项：
     # ====2022-08-18 使用死循环，唯一退出关键字exit，且只有在第一步的时候才能退出
     # ====  0.0.1 注意，这是特意这样写的
@@ -447,6 +450,6 @@ if __name__ == '__main__':
     # ====  0.1.4 原则上main的参数是成对出现的，既key-value模式，如果version等只有key的情况，则可以使用pass关键字作为占位填充value，未对help信息进行维护
     # ====2022-12-30 各个参数的作用，必要情况需要配合使用，逻辑上本地服务器与竞技服务器是相同的，但是程序中的分步启动模式却是都可以的
     # ====  0.1.5 与无参数版本一样，默认情况是启动本地服务器，由全局变量来控制，原则上同时也是静态变量
-    # ====2023-01-03 尝试一些linux与win相互对应的部分，如果使用参数，则默认情况并不会启动服务器，需要指定-dir或-pwd参数才行
+    # ====2023-01-03 尝试一些linux与win相互对应的部分，如果使用参数，则默认情况并不会启动服务器，需要指定-dir或-pwd参数且确认路径没问题才行
     # ====  0.1.6 实际上并不能兼容，因为启动的服务器linux版需要另行编译，结果也与win存在区别.exe
     pass

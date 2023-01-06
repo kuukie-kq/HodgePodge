@@ -45,7 +45,7 @@ for i in range(0, 1000):
         el4.send_keys("L210020100200" + str(i))
     el5.click()
 
-    time.sleep(0)
+    # time.sleep(0)
 
     el_r = browser.find_element_by_class_name("plist2_p")
     result = False
