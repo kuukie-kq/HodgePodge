@@ -26,7 +26,7 @@ def pwd_path():
 
 
 def information_version():
-    version = "0.2.0.17"
+    version = "0.2.0.61"
     print("version ", version, " start.py")
     pass
 
@@ -42,10 +42,10 @@ def information_help():
     print("-help pass           : same as -h")
     print("-share pass          : do not start share memory server")
     print("-battle pass         : start bn server (bn server starter mode)")
-    print("-pwd <pass | <path>> : use current directory (and path) spliced into workspace")
+    print("-pwd [pass | <path>] : use current directory (and path) spliced into workspace")
     print("-dir <path>          : use path as workspace")
     print("ps   : pass is placeholder keyword which used in key-non-value and weak check")
-    print("pps  : it is necessary to use (-pwd/-dir) when have any args")
+    print("pps  : it is necessary to use -pwd or -dir when have any args")
     print("==== ====")
     print("p*ps : ... 为前面的内容可重复")
     print("       <> 为占位参数，里面的内容具有一定的含义")
@@ -429,27 +429,30 @@ if __name__ == '__main__':
     # 通过python，代替脚本，避免脚本的部分逻辑编写困难的问题
     # 编写日志：
     # ====2022-08-18 version 0.0.1 完成最基本的windows全部服务器的启动
-    # ====2022-08-19 version 0.1.0 代码基本检查，主要关注警告内容
-    # ====2022-08-29 version 0.1.1 代码重新整理，并且提示信息稍微完善
-    # ====2022-09-23 version 0.1.2 对一些开源软件学习后，增加一个退出关键字quit
-    # ====2022-12-28 version 0.1.3 修改每次循环内输出的数字
-    # ====2022-12-29 version 0.1.4 增加自动获取基目录，main参数处理&校验
-    # ====2022-12-30 version 0.1.5 维护help，将本地服务器与竞技服务器合起来
-    # ====2023-01-03 version 0.1.6 补充一些兼容Linux的部分
-    # ====2023-01-05 version 0.1.7 完善help部分代码review
+    # ====2022-08-19 version 0.0.2 代码基本检查，主要关注警告内容
+    # ====2022-08-29 version 0.0.3 代码重新整理，并且提示信息稍微完善
+    # ====2022-09-23 version 0.1.0 对一些开源软件学习后，增加一个退出关键字quit
+    # ====2022-12-28 version 0.1.1 修改每次循环内输出的数字
+    # ====2022-12-29 version 0.1.2 增加自动获取基目录，main参数处理&校验
+    # ====2022-12-30 version 0.1.3 维护help，将本地服务器与竞技服务器合起来
+    # ====2023-01-03 version 0.1.4 补充一些兼容Linux的部分
+    # ====2023-01-05 version 0.1.5 完善help部分代码review
+    # ====2023-01-06 version 0.2.0 全面测试，并修改细节
     # 注意事项：
     # ====2022-08-18 使用死循环，唯一退出关键字exit，且只有在第一步的时候才能退出
     # ====  0.0.1 注意，这是特意这样写的
     # ====2022-08-19 整体代码微调，（）符号为习惯，虽然可以不要但保留，with语句返回的文件描述符不一定需要，但保留
-    # ====  0.1.0 目前来说基本完成了需求，考虑到方便性，需要配合bat使用
+    # ====  0.0.2 目前来说基本完成了需求，考虑到方便性，需要配合bat使用
     # ====2022-09-23 if的条件去掉了括号，因为语法上与或与有括号的语言有区别
-    # ====  0.1.2 exit与quit为退出关键字
+    # ====  0.1.0 exit与quit为退出关键字
     # ====2022-12-28 该条目时间乱了，由于仅为小细节部分，作为提示信息的作用，所以为历史时间
-    # ====  0.1.3 0本地服务器，1本地服务器（多组情况），2竞技服务器（也作为本地服务器），3竞技服务器（多组情况）
+    # ====  0.1.1 0本地服务器，1本地服务器（多组情况），2竞技服务器（也作为本地服务器），3竞技服务器（多组情况）
     # ====2022-12-29 基目录以本程序文件start.py所在目录为基准，且不能存在含有特殊字符（空格）的路径
-    # ====  0.1.4 原则上main的参数是成对出现的，既key-value模式，如果version等只有key的情况，则可以使用pass关键字作为占位填充value，未对help信息进行维护
+    # ====  0.1.2 原则上main的参数是成对出现的，既key-value模式，如果version等只有key的情况，则可以使用pass关键字作为占位填充value，未对help信息进行维护
     # ====2022-12-30 各个参数的作用，必要情况需要配合使用，逻辑上本地服务器与竞技服务器是相同的，但是程序中的分步启动模式却是都可以的
-    # ====  0.1.5 与无参数版本一样，默认情况是启动本地服务器，由全局变量来控制，原则上同时也是静态变量
+    # ====  0.1.3 与无参数版本一样，默认情况是启动本地服务器，由全局变量来控制，原则上同时也是静态变量
     # ====2023-01-03 尝试一些linux与win相互对应的部分，如果使用参数，则默认情况并不会启动服务器，需要指定-dir或-pwd参数且确认路径没问题才行
-    # ====  0.1.6 实际上并不能兼容，因为启动的服务器linux版需要另行编译，结果也与win存在区别.exe
+    # ====  0.1.4 实际上并不能兼容，因为启动的服务器linux版需要另行编译，结果也与win存在区别.exe
+    # ====2023-01-06 注意使用参数和不使用参数的区别，不使用参数相当于0.1.0版本的用法，而使用参数则是另外一套用法
+    # ====  0.2.0 pwd参数的作用是获取当前shell环境的目录，如果是通过bat启动的，则bat所在的位置要对应得上才行
     pass
