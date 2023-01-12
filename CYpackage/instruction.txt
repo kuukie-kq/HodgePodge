@@ -1,1 +1,4 @@
 # // ====  ====
+python 3.8
+anaconda3-2022-05
+standard module + pyqt5
