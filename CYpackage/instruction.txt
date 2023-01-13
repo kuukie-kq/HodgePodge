@@ -1,4 +1,5 @@
 # // ====  ====
 python 3.8
 anaconda3-2022-05
-standard module + pyqt5
+standard module + pyqt5 (PyQtWebEngine)
+# 想要很方便的支持live2d的显示，因live2d基于html，所以直接应用QWebEngineView即可，但因为pyqt5的版本问题，需要单独下载PyQtWebEngine模块
