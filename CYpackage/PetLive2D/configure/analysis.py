@@ -2,6 +2,7 @@ import sys
 import datetime
 from system.test_first import run as test1run
 from system.test_second import run as test2run
+from system.live2d import run as live2d_main_run
 
 
 class Analysis:
@@ -13,7 +14,7 @@ class Analysis:
     _version_main = 0
     _version_sub = 0
     _version_stage = 1
-    _version_other = 14
+    _version_other = 16
 
     def __init__(self):
         self._arg_size = sys.argv.__len__()
@@ -21,7 +22,8 @@ class Analysis:
         self.tag_func = lambda: print("テスト関数")
         self.tag_index = 0
         self.tag_argv = []
-        self.tgl_func = {"1": test1run, "2": test2run}
+        self.tgl_func = {"test1": test1run, "test2": test2run, "live2d": live2d_main_run}
+        self.tgl_func_args = {test1run: 0, test2run: 0, live2d_main_run: 0}
         if 1 == self._check_args():
             self.tag_run()
 
@@ -30,7 +32,7 @@ class Analysis:
         self.tag_index = 0
         if self._arg_size == 1:
             # 默认情况
-            self.tag_func = test2run
+            self.tag_func = live2d_main_run
         else:
             if self._arg_size % 2 == 1:
                 for i in range(1, self._arg_size, 2):
@@ -43,6 +45,7 @@ class Analysis:
                         break
             else:
                 self._error_information("参数格式异常，参考-help信息")
+                return 0
         return 1
 
     def _warning_information(self, message):
@@ -65,7 +68,7 @@ class Analysis:
                 self._warning_information("-help参数异常key:-help value:" + value)
             self._help_information()
             return 2
-        elif "-test" == key:
+        elif "-exec" == key:
             if "pass" == value:
                 return 0
             self.tag_func = self.tgl_func.get(value)
@@ -91,13 +94,12 @@ class Analysis:
         print("Copyright python 3.8 anaconda3-2022-05 standard module")
         print("==== ==== pip install ---- pyqt5 (PyQtWebEngine)")
         print("==== ==== Create by kuu-kie <3260681415@qq.com> on 20230101")
-        print(str(self._version_main) + "." + str(self._version_sub) + "." + str(self._version_stage) + "." + str(
-            self._version_other))
+        print(str(self._version_main) + "." + str(self._version_sub) + "." + str(self._version_stage) + "." + str(self._version_other))
         print("Usage: python setup.py [<key> <value>] ...")
         print("==== ====                 key-value help")
         print("-version pass           : display version and exit")
         print("-help pass              : display help and exit")
-        print("-test [pass | <number>] : use test pet mode and last show")
+        print("-exec [pass | <name>] : use name pet mode and last show")
         print("-argv <args>            : set custom function arguments (str) one by one")
         print("ps   : pass is placeholder keyword which used in key-non-value and weak check")
         print("p*ps : ... 为前面的内容可重复")
