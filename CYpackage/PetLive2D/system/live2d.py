@@ -18,7 +18,6 @@ class Live2D(QWidget):
         self.q_sys_show_action = QAction("显示", self)
         self.q_sys_exit_action = QAction("关闭", self)
         self.q_sys_hide_action = QAction("隐藏", self)
-        self.q_sys_open_transparent_action = QAction("临时打开鼠标", self)
         self.q_sys_menu = QMenu(self)  # 状态栏图标的右键菜单
         self.q_live_view = QWebEngineView(parent=self)  # live2d的主元素
         self.timer = QTimer()
@@ -38,8 +37,6 @@ class Live2D(QWidget):
         self.q_sys_show_action.triggered.connect(lambda: self.show())
         self.q_sys_exit_action.triggered.connect(self.on_exit_app_action)
         self.q_sys_hide_action.triggered.connect(lambda: self.hide())
-        self.q_sys_open_transparent_action.triggered.connect(lambda: self.on_open_transparent_action())
-        self.timer.timeout.connect(lambda: self._on_or_off_transparent(False))
 
     def _in_it_sys_task(self):
         # 状态栏相关设置
@@ -47,7 +44,6 @@ class Live2D(QWidget):
         self.q_sys_tray_icon.setToolTip("Live2D")  # 信息
         self.q_sys_menu.addAction(self.q_sys_show_action)
         self.q_sys_menu.addAction(self.q_sys_hide_action)
-        # self.q_sys_menu.addAction(self.q_sys_open_transparent_action)
         self.q_sys_menu.addAction(self.q_sys_exit_action)
         self.q_sys_tray_icon.setContextMenu(self.q_sys_menu)  # 菜单
         self.q_sys_tray_icon.show()
@@ -56,25 +52,10 @@ class Live2D(QWidget):
         self.close()
         sys.exit()
 
-    def on_open_transparent_action(self):
-        self._on_or_off_transparent(True)
-        self.timer.start(5000)
-
-    def _on_or_off_transparent(self, flag):
-        if flag:
-            self.setAttribute(Qt.WA_TransparentForMouseEvents, False)
-            self.q_live_view.setAttribute(Qt.WA_TransparentForMouseEvents, False)
-        else:
-            self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-            self.q_live_view.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        self.repaint()
-        self.timer.stop()
-
     def _in_it_live_widget(self):
         # QWebEngineView默认元素大小100x30
         self.set_desktop(95, 95)
         self.q_live_view.setAttribute(Qt.WA_TranslucentBackground, True)
-        self.q_live_view.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.q_live_view.setStyleSheet("background: transparent;")
         self.q_live_view.page().setBackgroundColor(Qt.transparent)
 

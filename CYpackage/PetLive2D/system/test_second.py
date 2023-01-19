@@ -91,7 +91,7 @@ def run():
     screen = QGuiApplication.primaryScreen()
     rect = screen.availableGeometry()
     live2d = Live2DWidget(rect=rect)
-    live2d.in_it_live_view(qt_app.applicationDirPath() + "/../../../PycharmProjects/PetLive2D/static/free/live/demo.html")
+    live2d.in_it_live_view(qt_app.applicationDirPath() + "/../../../PycharmProjects/PetLive2D/static/free/Live2D/demo.html")
     live2d.set_desktop(10, 90)
     live2d.on_show_main_action()
     sys.exit(qt_app.exec_())
