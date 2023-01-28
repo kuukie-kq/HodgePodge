@@ -25,6 +25,12 @@
 >
 > > [3.2 UTF-8](#3utf8编码 "当前文档中的标题")
 >
+> [4 Lua](#lua "当前文档中的标题")
+>
+> > [4.1 Unicode统一码](#4lua基础 "当前文档中的标题")
+>
+> > [4.2 Lua与C/C++的相互调用](#4调用 "当前文档中的标题")
+>
 
 # 正文
 
@@ -313,6 +319,142 @@ dis
 | 4         | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx | 21         | 65536 ~ 2097151 |
 
 - 例如：汉的统一码编码是0x6C49，为27721在2048 ~ 65535使用3字节，二进制为0110&nbsp;1100&nbsp;0100&nbsp;1001放入模板中为11100110&nbsp;10110001&nbsp;10001001既0xE6B189（汉的UTF8编码）
+
+## Lua
+
+### 4Lua基础
+
+****
+
+``` lua
+print("Hello World")
+
+Entity = { length = 0, breadth = 0, height = 0 }
+
+function Entity:new()
+	o = {}
+	setmetatable(o, self)
+	self.__index = self
+	self.length = 0
+	self.breadth = 0
+	self.height = 0
+	return o
+end
+
+function Entity:display()
+	print("面积/体积为", self.length * self.breadth * self.height )
+end
+
+Bool = Entity:new()
+
+function Bool:new()
+	o = Entity:new()
+	setmetatable(o, self)
+	self.__index = self
+	self.message = "圆形"
+	return o
+end
+
+function Bool:display()
+	print(self.message , "面积为", self.length * self.length * 355 / 113)
+end
+
+test = Entity:new()
+
+test.length = 10
+test.breadth = 5
+test.height = 8
+
+t = Bool:new()
+t.length = 3.847
+t.message = "基于实体的圆形"
+
+test:display()
+t:display()
+```
+
+### 4调用
+
+****
+
+- Lua部分（cluac_lua.lua）
+
+``` lua
+function lua_c(a, b)
+	print("<- lua call c function (running) >")
+	print("arg[0]", a, "arg[1]", b)
+	avg, sum = lu_average(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+	return avg, sum
+end
+
+function c_lua(a, b)
+	print("<* lua function is called (running) >")
+	return lua_c(a, b)
+end
+
+-- test
+print("lua start")
+```
+
+- C/C++部分（cluac_c.cpp）
+
+``` C++
+#include <iostream>
+#include <math.h>
+
+extern "C" {
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
+};
+
+int c_lu_average(lua_State* L) {
+	int n = lua_gettop(L);
+	double sum = 0;
+	for (int i=1;i<=n;i++) {
+		if (!lua_isnumber(L,i)) { lua_pushstring(L,"average incorrect args"); lua_error(L); }
+		sum = sum + lua_tonumber(L,i);
+	}
+	double svg = sum / n;
+	std::cerr << svg << std::endl;
+	lua_pushnumber(L,svg);
+	lua_pushnumber(L,sum);
+	return 2;
+}
+
+lua_State* Lua = nullptr;
+
+void binding() {
+	if (Lua != nullptr) { std::cerr << "初始化失败" << std::endl; return; }
+	Lua = luaL_newstate();
+	luaL_openlibs(Lua);
+	lua_register(Lua,"lu_average", c_lu_average);
+}
+
+void release() {
+	lua_close(Lua);
+}
+
+int main() {
+	binding();
+
+	luaL_dofile(Lua, "cluac_lua.lua");
+	lua_getglobal(Lua, "c_lua");
+	lua_pushnumber(Lua, 1);
+	lua_pushnumber(Lua, 10);
+	lua_pcall(Lua,2,2,0);
+
+	int result_sum = lua_tointeger(Lua,-1);
+	lua_pop(Lua,1);
+	int result_avg = lua_tointeger(Lua,-1);
+	lua_pop(Lua,1);
+
+	std::cout << "和为" << result_sum << "平均数为" << result_avg << std::endl;
+
+	release();
+	return 0;
+}
+```
 
 # 总结
 
