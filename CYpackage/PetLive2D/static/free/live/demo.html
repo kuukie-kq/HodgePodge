@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Live2D 看板娘 v1.2 / Demo</title>
-
-        <link rel="stylesheet" type="text/css" href="assets/waifu.css"/>
-        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="assets/waifu.min.css?v=1.4.2"/>
     </head>
     <body>
         <!--<h2><a href="https://www.fghrsh.net/post/123.html" style="color: #38A3DB">Live2D 看板娘 v1.2</a> / Demo</h2>-->
+
+        <!-- waifu-tips.js 依赖 JQuery 库 -->
+        <script src="assets/jquery.min.js?v=3.3.1"></script>
+
+        <!-- 实现拖动效果，需引入 JQuery UI -->
+        <script src="assets/jquery-ui.min.js?v=1.12.1"></script>
 
         <div class="waifu">
             <div class="waifu-tips"></div>
@@ -22,8 +26,34 @@
             </div>
         </div>
 
-        <script src="assets/waifu-tips.js"></script>
-        <script src="assets/live2d.js"></script>
-        <script type="text/javascript">initModel("assets/")</script>
+        <script src="assets/waifu-tips.min.js?v=1.4.2"></script>
+        <script src="assets/live2d.min.js?v=1.0.5"></script>
+        <script type="text/javascript">
+            /* 可直接修改部分参数 */
+            live2d_settings['modelId'] = 1; // 默认模型 ID
+            live2d_settings['modelTexturesId'] = 72; // 默认材质 ID 13 36 37 71 72
+            live2d_settings['modelStorage'] = false; // 不储存模型 ID
+            live2d_settings['canCloseLive2d'] = false; // 隐藏 关闭看板娘 按钮
+            live2d_settings['canTurnToHomePage'] = false; // 隐藏 返回首页 按钮
+            live2d_settings['showToolMenu'] = true; // 显示 工具栏
+            live2d_settings['canSwitchModel'] = true; // 显示 模型切换    按钮
+            live2d_settings['canSwitchTextures'] = true; // 显示 材质切换    按钮
+            live2d_settings['canSwitchHitokoto'] = true; // 显示 一言切换    按钮
+            live2d_settings['canTakeScreenshot'] = true; // 显示 看板娘截图  按钮
+            live2d_settings['canTurnToAboutPage'] = true; // 显示 跳转关于页  按钮
+            live2d_settings['waifuSize'] = '280x250'; // 看板娘大小
+            live2d_settings['waifuTipsSize'] = '180x70'; // 提示框大小
+            live2d_settings['hitokotoAPI'] = 'hitokoto.cn'; // 提示框内容
+            live2d_settings['waifuFontSize'] = '12px'; // 提示框字体
+            live2d_settings['waifuToolFont'] = '14px'; // 工具栏字体
+            live2d_settings['waifuToolLine'] = '20px'; // 工具栏行高
+            live2d_settings['waifuToolTop'] = '-60px'; // 工具栏顶部边距
+            live2d_settings['waifuDraggable'] = 'unlimited'; // 拖拽样式
+            live2d_settings['waifuMinWidth'] = 'disable'; // 页面小于指定宽度 隐藏看板娘
+            live2d_settings['waifuDraggableRevert'] = false; // 拖拽后是否复位
+            live2d_settings['waifuEdgeSide'] = 'left:0';     // 看板娘贴边方向
+            /* 在 initModel 前添加 */
+            initModel("assets/waifu-tips.json?v=1.4.2")
+        </script>
     </body>
 </html>

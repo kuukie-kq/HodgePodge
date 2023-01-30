@@ -14,7 +14,7 @@ class Analysis:
     _version_main = 0
     _version_sub = 0
     _version_stage = 1
-    _version_other = 16
+    _version_other = 21
 
     def __init__(self):
         self._arg_size = sys.argv.__len__()
@@ -99,7 +99,7 @@ class Analysis:
         print("==== ====                 key-value help")
         print("-version pass           : display version and exit")
         print("-help pass              : display help and exit")
-        print("-exec [pass | <name>] : use name pet mode and last show")
+        print("-exec [pass | <name>]   : use name pet mode and last show")
         print("-argv <args>            : set custom function arguments (str) one by one")
         print("ps   : pass is placeholder keyword which used in key-non-value and weak check")
         print("p*ps : ... 为前面的内容可重复")
