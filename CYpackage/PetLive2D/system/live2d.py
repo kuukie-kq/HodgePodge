@@ -8,7 +8,7 @@ import time
 import ctypes
 import inspect
 import threading
-from system.server.botstat import run as server_run
+from system.server.proxy_html import run as server_run
 
 
 class Live2DShadow(QWidget):
@@ -60,7 +60,7 @@ class Live2DShadow(QWidget):
         self.q_live_view.page().setBackgroundColor(Qt.transparent)
 
     def _in_it_live_view(self):
-        from system.server.botstat import server_url
+        from system.server.proxy_html import server_url
         self.q_live_view.load(QUrl(server_url()))
         self.q_live_view.show()
 
@@ -153,7 +153,7 @@ class Live2D(QWidget):
         self.q_live_view.show()
 
     def _in_it_live_view(self):
-        from system.server.botstat import server_url
+        from system.server.proxy_html import server_url
         self.q_live_view.load(QUrl(server_url()))
         self.q_live_view.show()
 
