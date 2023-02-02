@@ -30,7 +30,7 @@ class Test(QWidget):
         self.tray_icon_menu = QMenu(self)
         self.talk_label = QLabel(self)
         self.live2d = QLabel(self)
-        self.movie = QMovie("test.gif")
+        self.movie = QMovie("./static/img/test.gif")
         self.timer = QTimer()
         self.init()
         self.init_base()
@@ -44,7 +44,7 @@ class Test(QWidget):
         self.repaint()
 
     def init_base(self):
-        icons = os.path.join("icon.png")
+        icons = os.path.join("./static/img/icon.png")
         quit_action = QAction("关闭", self)
         quit_action.setIcon(QIcon(icons))
         quit_action.triggered.connect(self.quit)

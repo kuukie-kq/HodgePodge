@@ -3,6 +3,7 @@ import datetime
 from system.test_first import run as test1run
 from system.test_second import run as test2run
 from system.live2d import run as live2d_main_run
+from system.pure2d import run as pure_live2d_run
 
 
 class Analysis:
@@ -14,7 +15,7 @@ class Analysis:
     _version_main = 0
     _version_sub = 0
     _version_stage = 1
-    _version_other = 21
+    _version_other = 31
 
     def __init__(self):
         self._arg_size = sys.argv.__len__()
@@ -22,8 +23,7 @@ class Analysis:
         self.tag_func = lambda: print("テスト関数")
         self.tag_index = 0
         self.tag_argv = []
-        self.tgl_func = {"test1": test1run, "test2": test2run, "live2d": live2d_main_run}
-        self.tgl_func_args = {test1run: 0, test2run: 0, live2d_main_run: 0}
+        self.tgl_func = {"test1": test1run, "test2": test2run, "live2d": live2d_main_run, "pl2d": pure_live2d_run}
         if 1 == self._check_args():
             self.tag_run()
 
@@ -45,6 +45,7 @@ class Analysis:
                         break
             else:
                 self._error_information("参数格式异常，参考-help信息")
+                self._help_information()
                 return 0
         return 1
 
@@ -71,7 +72,8 @@ class Analysis:
         elif "-exec" == key:
             if "pass" == value:
                 return 0
-            self.tag_func = self.tgl_func.get(value)
+            # self.tag_func = self.tgl_func.get(value, default=lambda: print("テスト関数"))
+            self.tag_func = self.tgl_func.get(value, lambda: print("テスト関数"))  # 语法没问题但由于python底层c对default无法解析参数名称导致
             return 1
         elif "-argv" == key:
             if "pass" == value:
@@ -109,6 +111,7 @@ class Analysis:
         print("       | 表示互斥关系只能使用其一")
         print("       pass 为弱占位符，最好不要有其他含义")
         print()
+        print("-exec names", self.tgl_func.keys())
         print("ありがとうございました，またねー")
 
     def tag_run(self):

@@ -54,7 +54,7 @@ class Live2DWidget(QWidget):
         self.qSysMoveTestAction.triggered.connect(lambda: self.set_desktop(90, 90))
 
     def _in_it_sys_task(self):
-        self.qSysTrayIcon.setIcon(QIcon("icon.png"))
+        self.qSysTrayIcon.setIcon(QIcon("./static/img/icon.png"))
         self.qSysTrayIcon.setToolTip("Live2D")
         self.qSysMenu.addAction(self.qSysShowAction)
         self.qSysMenu.addAction(self.qSysExitAction)
