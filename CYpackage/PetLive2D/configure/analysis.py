@@ -12,10 +12,10 @@ class Analysis:
     目前主要用作参数配置分析，来调用对应的效果
     """
     # 静态变量
-    _version_main = 0
+    _version_main = 1
     _version_sub = 0
-    _version_stage = 1
-    _version_other = 31
+    _version_stage = 2
+    _version_other = 3
 
     def __init__(self):
         self._arg_size = sys.argv.__len__()
@@ -96,7 +96,7 @@ class Analysis:
         print("Copyright python 3.8 anaconda3-2022-05 standard module")
         print("==== ==== pip install ---- pyqt5 (PyQtWebEngine)")
         print("==== ==== Create by kuu-kie <3260681415@qq.com> on 20230101")
-        print(str(self._version_main) + "." + str(self._version_sub) + "." + str(self._version_stage) + "." + str(self._version_other))
+        print("%d.%d.%d.%d" % (self._version_main, self._version_sub, self._version_stage, self._version_other))
         print("Usage: python setup.py [<key> <value>] ...")
         print("==== ====                 key-value help")
         print("-version pass           : display version and exit")
@@ -118,7 +118,7 @@ class Analysis:
         if self.tag_index == 0:
             self.tag_func()
         else:
-            print("<**>" + datetime.datetime.now().strftime("%Y-%m-%d") + "The function is not open, please look forward to it")
+            print("<**>" + datetime.datetime.now().strftime("%Y-%m-%d") + "= The function is not open, please look forward to it")
             print("==== func:" + self.tag_func.__str__() + " args:" + str(self.tag_index))
 
     pass

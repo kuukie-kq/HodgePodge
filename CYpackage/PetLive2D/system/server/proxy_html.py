@@ -45,8 +45,8 @@ class Server:
     pass
 
 
-def server_url():
-    return "{address}/demo.html".format(address=Server().address())
+def server_url(html_file):
+    return "{address}/{html}".format(address=Server().address(), html=html_file)
 
 
 def run():
