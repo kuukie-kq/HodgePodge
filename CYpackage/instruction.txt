@@ -7,17 +7,18 @@ standard module + pyqt5 (PyQtWebEngine)
 # ====  ==== 特别注意
 打包使用的python模块pyinstaller
 
-pyinstaller --paths E:/Anaconda3/envs/PetLive2D/lib/site-packages/PyQt5/Qt5/bin --name Live2D --add-data ./static;./static -D -w setup.py
+pyinstaller --paths E:/Anaconda3/envs/PetLive2D/lib/site-packages/PyQt5/Qt5/bin --icon ./static/img/icon.ico --name Live2D --add-data ./static;./static -D -w setup.py
 
 --paths将编辑环境下依赖的第三方资源添加零时环境变量（目的是防止打包后运行可执行文件无法加载对应dll，但并没有用）
+--icon为打包后的可执行程序设定一个图标
 --name为打包后的项目重命名（默认为最后.py的文件名，既打包后目录和可执行文件为--name）
 --add-data为打包后的程序添加使用到的静态资源（html等，注意如果为目录的话，需要手动加上第一层的）注意分隔符区别平台（Windows用；Unix用：）
--D
--w
+-D（与之相对的是-F）以入口程序为起点，将最终可执行文件打包成一个多文件（单文件-所有程序在最终文件中）
+-w（与之相对的是-c）仅Windows有效，打包完的程序使用窗口模式启动，无控制台（无窗口，有控制台）
 最后为入口程序
 
 打包完成后运行可执行文件报DLL load failed，关于此问题说法很多（有版本不对应的兼容问题，有环境变量类的问题，还有DLL缺失的问题）
 遇到的也是DLL缺失问题，但不是像网上说的那种直接的DLL，比如pyd加载失败等，而是QT中的多个DLL，而程序中只用了一部分（from import）pyinstaller在拷贝dll的时候也按用到的部分导致依赖的其他库并没有拷贝而缺失
-解决方法挺简单就是将--paths中的dll包括一个QtWebEngineProcess.exe都拷贝即可（实际应该只需要部分即可，不过因为依赖关系并不清楚，全拷贝更加省事）
+解决方法挺简单就是将--paths中的dll包括一个QtWebEngineProcess.exe都拷贝即可（实际应该只需要部分即可，不过因为依赖关系并不清楚，全拷贝更加省事）可能加一个--add-data（--add-binary）也省去了手动的方式
 
 # ps 打完的包会在当前项目中多出两个目录（build&dist）需要的仅为dist中
