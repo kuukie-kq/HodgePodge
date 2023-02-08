@@ -31,6 +31,12 @@
 >
 > > [4.2 Lua与C/C++的相互调用](#4调用 "当前文档中的标题")
 >
+> [5 Linux](#linux "当前文档中的标题")
+>
+> > [5.1 Lua基础语法](#5定时任务相关 "当前文档中的标题")
+>
+> > [5.2 [Linux+1]定时任务](#5定时任务相关 "当前文档中的标题")
+>
 
 # 正文
 
@@ -454,6 +460,22 @@ int main() {
 	release();
 	return 0;
 }
+```
+
+## Linux
+
+### 5定时任务相关
+
+- 查找定时任务服务进程
+
+``` shell
+root@linux3:~> ps -ef | grep crond | grep -v grep
+root      3388     1  0  2022 ?        00:00:38 crond
+root@linux3:~> 
+
+root@linux3:~> ps aux | grep crond | grep -v grep
+root      3388  0.0  0.0 114940  1028 ?        Ss    2022   0:38 crond
+root@linux3:~> 
 ```
 
 # 总结
