@@ -466,17 +466,40 @@ int main() {
 
 ### 5定时任务相关
 
+附：[Linux系统相关命令](https://www.runoob.com/linux/linux-command-manual.html "菜鸟教程-Linux命令大全")
+
+附：[Linux相关源码](https://elixir.bootlin.com/ "bootlin-kernel&glibc")
+
 - 查找定时任务服务进程
 
 ``` shell
-root@linux3:~> ps -ef | grep crond | grep -v grep
-root      3388     1  0  2022 ?        00:00:38 crond
-root@linux3:~> 
-
-root@linux3:~> ps aux | grep crond | grep -v grep
+kuukie@ubuntu:~> ps aux | grep crond | grep -v grep
 root      3388  0.0  0.0 114940  1028 ?        Ss    2022   0:38 crond
-root@linux3:~> 
+kuukie@ubuntu:~> 
 ```
+
+- 查看&设定的定时任务
+
+``` shell
+kuukie@ubuntu:~> crontab -l
+kuukie@ubuntu:~> crontab -e
+# append
+* * * * * ps aux >> /opt/ps.kaof 2>&1
+kuukie@ubuntu:~> sudo touch /opt/ps.kaof
+kuukie@ubuntu:~> sudo chmod 666 /opt/ps.kaof
+kuukie@ubuntu:~> sudo service --help
+kuukie@ubuntu:~> sudo service --status-all
+kuukie@ubuntu:~> sudo service cron start
+kuukie@ubuntu:~> cat /dev/null > /opt/ps.kaof
+```
+
+- 遇到的一些问题
+
+> 定时任务服务crond(cron)需要启动才行
+>
+> crond为较早版本，新版本名为cron（未从网上得到证实）为GUN相关用户程序
+
+- 原理
 
 # 总结
 

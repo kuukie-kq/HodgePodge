@@ -33,3 +33,9 @@ CDEFGAB -> 0xCDEF7AB
 ****
 
 用于学习参考主要放比较经典有用的，有笔记，有小程序，也有小项目，比较杂乱（大杂烩）
+
+# PostScript
+
+github md 例如#与##的标题自带一个```<hr \>```标签但在vscode预览中只有#有
+
+注意到GitHub中的Issue PullRequest & Actions & Projects的功能，尝试学习使用
