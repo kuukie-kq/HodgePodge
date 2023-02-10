@@ -501,6 +501,8 @@ kuukie@ubuntu:~> cat /dev/null > /opt/ps.kaof
 
 - 原理
 
+[源码？miscutils/crond.c](https://github.com/mirror/busybox/ "busybox")
+
 # 总结
 
 markdown的解释器有各种各样的，其中规范支持的部分官网中已经给出了标准示例，但还是有一些语法在不同环境下的效果不太一样
