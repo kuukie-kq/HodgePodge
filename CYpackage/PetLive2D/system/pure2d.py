@@ -55,6 +55,14 @@ def rect_js_callback(result):
 class Live2D(QWidget):
     _live2d = None
     _flag = 11
+    """
+    flag 相关标记及含义 {}
+    11 : 普通模式显示状态 默认
+    12 : 普通模式隐藏状态
+    2  : 过渡模式 数据传递过程
+    3  : 影子模式显示状态
+    4  : 影子模式隐藏状态
+    """
     rect_js = """
     (function (){
         const live2d_waifu = document.getElementsByClassName("waifu");
@@ -105,6 +113,7 @@ class Live2D(QWidget):
         self.q_sys_shadow_action.setShortcut("Alt+F10")
 
     def _in_it_sys_task(self):
+        self.addAction(self.q_sys_shadow_action)
         # 状态栏相关设置
         self.q_sys_tray_icon.setIcon(QIcon("./static/img/icon.ico"))  # 图标
         self.q_sys_tray_icon.setToolTip("Live2D")  # 信息
@@ -141,12 +150,12 @@ class Live2D(QWidget):
         elif 12 == Live2D._flag:
             self.show()
             Live2D._flag = 11
-        elif 2 == Live2D._flag and Live2D._live2d is not None:
+        elif 3 == Live2D._flag and Live2D._live2d is not None:
             Live2D._live2d.hide()
             Live2D._flag = 4
         elif 4 == Live2D._flag and Live2D._live2d is not None:
             Live2D._live2d.show()
-            Live2D._flag = 2
+            Live2D._flag = 3
         else:
             pass
 
@@ -156,7 +165,10 @@ class Live2D(QWidget):
                 self.hide()
                 Live2D._flag = 2
                 self.q_live_view.page().runJavaScript(Live2D.rect_js, rect_js_callback)
+                self.show()
             else:
+                self.hide()
+                Live2D._flag = 3
                 Live2D._live2d = Live2DShadow()
                 Live2D._live2d.setAttribute(Qt.WA_DeleteOnClose, True)  # 该窗口关闭时自动销毁该对象
                 Live2D._live2d.show()

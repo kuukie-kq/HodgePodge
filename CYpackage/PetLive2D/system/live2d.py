@@ -1,6 +1,6 @@
 import sys
 import warnings
-from PyQt5.QtGui import QGuiApplication, QIcon
+from PyQt5.QtGui import QGuiApplication, QIcon, QKeySequence
 from PyQt5.QtCore import Qt, QUrl, QTimer
 from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, QMenu
 from PyQt5.QtWebEngineWidgets import QWebEngineView
@@ -140,7 +140,7 @@ class Live2D(QWidget):
         self.q_sys_exit_action.triggered.connect(self.on_exit_app_action)
         self.q_sys_shadow_action.triggered.connect(self.on_shadow_app_action)
         # 绑点快捷键
-        self.q_sys_shadow_action.setShortcut("Alt+F10")
+        self.q_sys_shadow_action.setShortcut(QKeySequence.WhatsThis)
 
     def _in_it_sys_task(self):
         # 状态栏相关设置
@@ -154,6 +154,7 @@ class Live2D(QWidget):
         self.q_sys_menu.setStyleSheet("QMenu::item { padding: 2px auto; }")
         self.q_sys_tray_icon.setContextMenu(self.q_sys_menu)  # 菜单
         self.q_sys_tray_icon.show()
+        self.addAction(self.q_sys_shadow_action)
 
     def on_exit_app_action(self):
         # 强杀线程的方式，有问题，如果线程被阻塞（处于python之外）不会捕获到结束信号
@@ -223,6 +224,7 @@ class Live2D(QWidget):
             Live2D._live2d.show()
             Live2D._flag = 2
         else:
+            print("action show hide")
             pass
 
     def on_shadow_app_action(self):
@@ -230,12 +232,15 @@ class Live2D(QWidget):
             if Live2D._flag >= 10:
                 # 影子模式show之前需要获取当前非影子模式得到的界面信息
                 self.hide()
+                self.show()
                 Live2D._flag = 2
                 self.q_live_view.page().runJavaScript(Live2D.rect_js, rect_js_callback)
                 # 尝试发现callback函数回调的时机是在事件响应完成之后，所以需要分两次进行
             else:
+                self.hide()
                 Live2D._live2d = Live2DShadow()
                 Live2D._live2d.setAttribute(Qt.WA_DeleteOnClose, True)  # 该窗口关闭时自动销毁该对象
+                Live2D._live2d.addAction(self.q_sys_shadow_action)
                 Live2D._live2d.show()
         else:
             Live2D._live2d.close()

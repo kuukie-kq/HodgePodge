@@ -1945,15 +1945,7 @@ class HTTPResponse(Response, BottleException):
     def apply(self, other):
         other._status_code = self._status_code
         other._status_line = self._status_line
-        # 跨域问题，修改
-        # old write
         other._headers = self._headers
-        # rewrite
-        # if other._headers:
-        #     other._headers.update(self._headers)
-        # else:
-        #     other._headers = self._headers
-        # rewrite end
         other._cookies = self._cookies
         other.body = self.body
 
