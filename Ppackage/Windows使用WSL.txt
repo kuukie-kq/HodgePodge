@@ -134,4 +134,4 @@ whereis mysqld_safe
 ##查看是否成功
 nohup mysqld_safe --defaults-file=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/my.cnf --log-error=/home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/data/mysql.err > /home/mysql5/mysql-5.7.38-linux-glibc2.12-x86_64/data/start_mysql_message.txt 2>&1 &
 ##启动MySQL，存在0（标准输入）1（标准输出）2（标准错误输出）重定向问题
-##未在本机实验成功，固放弃，仅供参考
+##MySQL多版本未在本机安装成功，固放弃，仅供参考（问题不大，不成功原因可能与WSL有关）
