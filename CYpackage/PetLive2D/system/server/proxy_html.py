@@ -45,6 +45,11 @@ class Server:
     pass
 
 
+def conf(host="127.0.0.1", port=50024):
+    Server._host = host
+    Server._port = port
+
+
 def server_url(html_file):
     return "{address}/{html}".format(address=Server().address(), html=html_file)
 

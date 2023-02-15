@@ -24,8 +24,7 @@ class Analysis:
         self.tag_index = 0
         self.tag_argv = []
         self.tgl_func = {"test1": test1run, "test2": test2run, "live2d": live2d_main_run, "pl2d": pure_live2d_run}
-        if 1 == self._check_args():
-            self.tag_run()
+        self.check = self._check_args()
 
     def _check_args(self):
         self.tag_argv = []
@@ -115,10 +114,12 @@ class Analysis:
         print("ありがとうございました，またねー")
 
     def tag_run(self):
-        if self.tag_index == 0:
-            self.tag_func()
-        else:
-            print("<**>" + datetime.datetime.now().strftime("%Y-%m-%d") + "= The function is not open, please look forward to it")
-            print("==== func:" + self.tag_func.__str__() + " args:" + str(self.tag_index))
+        if self.check == 1:
+            if self.tag_index == 0:
+                self.tag_func()
+            else:
+                print("<**>" + datetime.datetime.now().strftime("%Y-%m-%d") + "= The function is not open, please look forward to it")
+                print("==== func:" + self.tag_func.__str__() + " args:" + str(self.tag_index))
+        pass
 
     pass

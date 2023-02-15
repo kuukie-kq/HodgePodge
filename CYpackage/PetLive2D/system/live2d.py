@@ -30,6 +30,7 @@ class Live2DShadow(QWidget):
         # self.q_sys_hide_action = QAction("隐藏", self)
         # self.q_sys_menu = QMenu(self)  # 状态栏图标的右键菜单
         self.q_live_view = QWebEngineView(parent=self)  # live2d的主元素
+        # self.q_timer = QTimer(parent=self)
         # 自身设置
         self.setGeometry(0, 0, Live2DShadow.q_rect[0], Live2DShadow.q_rect[1])
         self.setAutoFillBackground(False)  # 自动填充背景 false为透明背景
@@ -46,6 +47,8 @@ class Live2DShadow(QWidget):
         # 绑定各种触发事件（槽函数）
         # self.q_sys_show_action.triggered.connect(lambda: self.show())
         # self.q_sys_hide_action.triggered.connect(lambda: self.hide())
+        # self.q_timer.timeout.connect(lambda: self.show())
+        # self.q_timer.start(10)
         pass
 
     def _in_it_sys_task(self):

@@ -1,11 +1,10 @@
 import sys
 from PyQt5.QtGui import QGuiApplication, QIcon
-from PyQt5.QtCore import Qt, QUrl, QTimer
+from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, QMenu
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 import time
 import threading
-from system.server.proxy_html import run as server_run
 from system.server.proxy_html import server_url
 
 """
@@ -84,12 +83,10 @@ class Live2D(QWidget):
         self.q_sys_shadow_action = QAction("shadow", self)
         self.q_sys_menu = QMenu(self)  # 状态栏图标的右键菜单
         self.q_live_view = QWebEngineView(parent=self)  # live2d的主元素
-        self.timer = QTimer()
         # 自身设置
         self.setGeometry(0, 0, self.q_rect.width(), self.q_rect.height())
         self.setAutoFillBackground(False)  # 自动填充背景 false为透明背景
         self.setAttribute(Qt.WA_TranslucentBackground, True)  # 元素透明元素空间不透明
-        # self.setAttribute(Qt.WA_TransparentForMouseEvents, True)  # 鼠标穿透
         self.setWindowFlags(Qt.SubWindow | Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)  # 子窗口（无任务栏），窗口总是处在最上层，无边框窗口
         # 初始化
         self._in_it_connect_func()
@@ -97,6 +94,7 @@ class Live2D(QWidget):
         self._in_it_live_widget()
         self._in_it_live_view()
         # 其他 web服务 使用bottle框架 使用线程库 启动web服务
+        from system.server.proxy_html import run as server_run
         self._thread = threading.Thread(target=server_run)
         self._thread.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
         self._thread.start()
@@ -182,6 +180,8 @@ class Live2D(QWidget):
 
 
 def run():
+    from system.server.proxy_html import conf as server_config
+    server_config(host="192.168.5.121", port=50023)
     app = QApplication(sys.argv)
     rect = QGuiApplication.primaryScreen().availableGeometry()
     live2d = Live2D(rect=rect)

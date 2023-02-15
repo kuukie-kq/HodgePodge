@@ -36,6 +36,6 @@ CDEFGAB -> 0xCDEF7AB
 
 # PostScript
 
-github md 例如#与##的标题自带一个```<hr \>```标签但在vscode预览中只有#有
+github md 例如#与##的标题自带一个```<hr \>```标签（实际上应该是h标签的样式加了border-bottom形成的一个类似的线）但在vscode预览中只有#有
 
 注意到GitHub中的Issue PullRequest & Actions & Projects的功能，尝试学习使用
