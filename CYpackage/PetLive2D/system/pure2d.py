@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, QMe
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 import time
 import threading
+from configure.configuration import Config
 from system.server.proxy_html import server_url
 
 """
@@ -179,9 +180,13 @@ class Live2D(QWidget):
     pass
 
 
-def run():
-    from system.server.proxy_html import conf as server_config
-    server_config(host="192.168.5.121", port=50023)
+def run(args=None):
+    if args is not None:
+        conf = Config(args=args)
+        if not conf.flag():
+            sys.exit(1)
+        conf.source()
+        pass
     app = QApplication(sys.argv)
     rect = QGuiApplication.primaryScreen().availableGeometry()
     live2d = Live2D(rect=rect)

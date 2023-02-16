@@ -254,7 +254,7 @@ class Live2D(QWidget):
     pass
 
 
-def run():
+def run(args=None):
     app = QApplication(sys.argv)
     rect = QGuiApplication.primaryScreen().availableGeometry()
     live2d = Live2D(rect=rect)

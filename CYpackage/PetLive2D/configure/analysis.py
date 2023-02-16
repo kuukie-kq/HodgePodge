@@ -20,10 +20,11 @@ class Analysis:
     def __init__(self):
         self._arg_size = sys.argv.__len__()
         self._arg_array = sys.argv
-        self.tag_func = lambda: print("テスト関数")
+        self.tag_func = lambda x: print("テスト関数")
         self.tag_index = 0
         self.tag_argv = []
         self.tgl_func = {"test1": test1run, "test2": test2run, "live2d": live2d_main_run, "pl2d": pure_live2d_run}
+        self.tgl_max = {pure_live2d_run: 4}
         self.check = self._check_args()
 
     def _check_args(self):
@@ -72,7 +73,7 @@ class Analysis:
             if "pass" == value:
                 return 0
             # self.tag_func = self.tgl_func.get(value, default=lambda: print("テスト関数"))
-            self.tag_func = self.tgl_func.get(value, lambda: print("テスト関数"))  # 语法没问题但由于python底层c对default无法解析参数名称导致
+            self.tag_func = self.tgl_func.get(value, lambda x: print("テスト関数"))  # 语法没问题但由于python底层c对default无法解析参数名称导致
             return 1
         elif "-argv" == key:
             if "pass" == value:
@@ -116,7 +117,9 @@ class Analysis:
     def tag_run(self):
         if self.check == 1:
             if self.tag_index == 0:
-                self.tag_func()
+                self.tag_func(None)
+            elif self.tgl_max.get(self.tag_func, 0) >= self.tag_index:
+                self.tag_func(self.tag_argv)
             else:
                 print("<**>" + datetime.datetime.now().strftime("%Y-%m-%d") + "= The function is not open, please look forward to it")
                 print("==== func:" + self.tag_func.__str__() + " args:" + str(self.tag_index))

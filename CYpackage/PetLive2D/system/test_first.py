@@ -74,7 +74,7 @@ class Test(QWidget):
     pass
 
 
-def run():
+def run(args=None):
     qt_app = QApplication(sys.argv)
     t = Test()
     sys.exit(qt_app.exec_())

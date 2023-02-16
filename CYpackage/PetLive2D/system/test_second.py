@@ -86,7 +86,7 @@ class Live2DWidget(QWidget):
     pass
 
 
-def run():
+def run(args=None):
     qt_app = QApplication(sys.argv)
     screen = QGuiApplication.primaryScreen()
     rect = screen.availableGeometry()
