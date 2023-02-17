@@ -100,6 +100,10 @@ class Live2D(QWidget):
         self._thread.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
         self._thread.start()
         time.sleep(2)
+        from system.server.proxy_resource import run as res_run
+        self._thread = threading.Thread(target=res_run)
+        self._thread.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
+        self._thread.start()
         Live2DShadow.q_rect[0] = self.q_rect.width()
         Live2DShadow.q_rect[1] = self.q_rect.height()
 

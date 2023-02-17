@@ -1,0 +1,93 @@
+from system.server.bottle import static_file, response, Bottle, request
+from system.service.proxy_tool import ModelList, ModelTextures
+
+
+class Server:
+    """
+    Live2D后端接口部分
+    主要是因为由于网络环境的影响，容易出现加载不出来的情况，固将资源本地化
+    """
+    _host = "127.0.0.1"
+    _port = 50025
+
+    def __init__(self):
+        self._bottle_server = Bottle()
+
+        @self._bottle_server.hook("before_request")
+        def validate():
+            request_method = request.environ.get('REQUEST_METHOD')
+
+            http_access_control_request_method = request.environ.get('HTTP_ACCESS_CONTROL_REQUEST_METHOD')
+            if request_method == 'OPTIONS' and http_access_control_request_method:
+                request.environ['REQUEST_METHOD'] = http_access_control_request_method
+
+        @self._bottle_server.hook("after_request")
+        def enable():
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            # response.headers["Access-Control-Allow-Credentials"] = True
+            response.headers["Access-Control-Allow-Headers"] = "*"
+
+        @self._bottle_server.route("/get/")
+        def get():
+            if request.query.id is None:
+                return
+            get_id = request.query.id or "1-23"
+            modelList = ModelList("./static/live2d/model_list.json")
+            modelTextures = ModelTextures()
+            if get_id.split("-").__len__() != 2:
+                return
+            modelId = int(get_id.split("-")[0])
+            modelTexturesId = int(get_id.split("-")[1])
+            # 资源最外层获取基础路径
+            modelName = modelList.id_to_name(modelId)
+            if type(modelName) == list:
+                # 简单处理既直接默认，未做复杂逻辑处理
+                modelName = modelName[0]
+            # 资源信息及修改处理
+            modelJson = ModelList("./static/live2d/model/%s/index.json" % modelName).get_list()
+            if modelTexturesId > 0:
+                modelTexturesName = modelTextures.get_name(modelName, modelTexturesId)
+                modelJson["textures"] = modelTexturesName
+            for i in range(0, modelJson["textures"].__len__()):
+                modelJson["textures"][i] = "../model/%s/%s" % (modelName, modelJson["textures"][i])
+            modelJson["model"] = "../model/%s/%s" % (modelName, modelJson["model"])
+            if "pose" in modelJson:
+                modelJson["pose"] = "../model/%s/%s" % (modelName, modelJson["pose"])
+            if "physics" in modelJson:
+                modelJson["physics"] = "../model/%s/%s" % (modelName, modelJson["physics"])
+            if "motions" in modelJson:
+                for key_i, i in modelJson["motions"].items():
+                    for j in range(0, i.__len__()):
+                        for key_k, k in i[j].items():
+                            if "file" == key_k:
+                                modelJson["motions"][key_i][j][key_k] = "../model/%s/%s" % (modelName, k)
+                # 目的 把含有的路径加上前缀
+                pass
+            if "expressions" in modelJson:
+                for i in range(0, modelJson["expressions"].__len__()):
+                    for key_j, j in modelJson["expressions"][i].items():
+                        if "file" == key_j:
+                            modelJson["expressions"][i][key_j] = "../model/%s/%s" % (modelName, j)
+                # 目的 把含有的路径加上前缀
+                pass
+            response.headers.append("Content-type", "application/json")
+            return modelJson
+
+        @self._bottle_server.route("/model/<path:path>")
+        def resource(path):
+            return static_file(path, root="./static/live2d/model/")
+
+    def run(self):
+        self._bottle_server.run(host=self._host, port=self._port, debug=True)
+
+    pass
+
+
+def conf(port=50025):
+    Server._port = port
+
+
+def run():
+    resource_server = Server()
+    resource_server.run()
+

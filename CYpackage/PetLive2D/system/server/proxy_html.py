@@ -32,9 +32,9 @@ class Server:
             # response.headers["Access-Control-Allow-Credentials"] = True
             response.headers["Access-Control-Allow-Headers"] = "*"
 
-        @self._bottle_server.route("/<filepath:path>")
-        def server_static(filepath):
-            return static_file(filepath, root="./static/free/live/")
+        @self._bottle_server.route("/html/<path:path>")
+        def server_static(path):
+            return static_file(path, root="./static/free/live/")
 
     def run(self):
         self._bottle_server.run(host=self._host, port=self._port, debug=True)
@@ -51,7 +51,7 @@ def conf(host="127.0.0.1", port=50024):
 
 
 def server_url(html_file):
-    return "{address}/{html}".format(address=Server().address(), html=html_file)
+    return "{address}/html/{html}".format(address=Server().address(), html=html_file)
 
 
 def run():
