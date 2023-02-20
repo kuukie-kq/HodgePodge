@@ -7,8 +7,8 @@ class Config:
     用于-argv中配置的main参数的分析
     """
     def __init__(self, args):
-        self._host = "127.0.0.1"
-        self._port = 50024
+        self._html_host = "127.0.0.1"
+        self._html_port = 50024
         # 变量
         self._arg_size = args.__len__()
         self._arg_array = args
@@ -35,11 +35,11 @@ class Config:
         """0:break 1:continue 2:exit"""
         if "--host" == key:
             if "pass" != value:
-                self._host = value
+                self._html_host = value
             return 1
         elif "--port" == key:
             if "pass" != value:
-                self._port = int(value)
+                self._html_port = int(value)
             return 1
         elif "--conf" == key:
             conf_path = "./static/live2d"
@@ -63,6 +63,6 @@ class Config:
 
     def source(self):
         from system.server.proxy_html import conf as server_config
-        server_config(host=self._host, port=self._port)
+        server_config(host=self._html_host, port=self._html_port)
 
     pass

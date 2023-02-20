@@ -255,6 +255,13 @@ class Live2D(QWidget):
 
 
 def run(args=None):
+    if args is not None:
+        from configure.configuration import Config
+        conf = Config(args=args)
+        if not conf.flag():
+            sys.exit(1)
+        conf.source()
+        pass
     app = QApplication(sys.argv)
     rect = QGuiApplication.primaryScreen().availableGeometry()
     live2d = Live2D(rect=rect)

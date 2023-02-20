@@ -3713,14 +3713,21 @@ def run(app=None,
 
         server.quiet = server.quiet or quiet
         if not server.quiet:
-            _stderr("Bottle v%s server starting up (using %s)..." %
-                    (__version__, repr(server)))
+            # old write
+            # _stderr("Bottle v%s server starting up (using %s)..." %
+            #         (__version__, repr(server)))
+            # if server.host.startswith("unix:"):
+            #     _stderr("Listening on %s" % server.host)
+            # else:
+            #     _stderr("Listening on http://%s:%d/" %
+            #             (server.host, server.port))
+            # _stderr("Hit Ctrl-C to quit.\n")
+            # rewrite
             if server.host.startswith("unix:"):
                 _stderr("Listening on %s" % server.host)
             else:
-                _stderr("Listening on http://%s:%d/" %
-                        (server.host, server.port))
-            _stderr("Hit Ctrl-C to quit.\n")
+                _stderr("Listening on http://%s:%d/" % (server.host, server.port))
+            # rewrite end
 
         if reloader:
             lockfile = os.environ.get('BOTTLE_LOCKFILE')

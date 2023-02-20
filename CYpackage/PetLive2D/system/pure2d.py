@@ -96,14 +96,14 @@ class Live2D(QWidget):
         self._in_it_live_view()
         # 其他 web服务 使用bottle框架 使用线程库 启动web服务
         from system.server.proxy_html import run as server_run
-        self._thread = threading.Thread(target=server_run)
-        self._thread.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
-        self._thread.start()
+        self._thread_html = threading.Thread(target=server_run)
+        self._thread_html.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
+        self._thread_html.start()
         time.sleep(2)
-        from system.server.proxy_resource import run as res_run
-        self._thread = threading.Thread(target=res_run)
-        self._thread.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
-        self._thread.start()
+        from system.server.proxy_resource_api import run as res_run
+        self._thread_rapi = threading.Thread(target=res_run)
+        self._thread_rapi.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
+        self._thread_rapi.start()
         Live2DShadow.q_rect[0] = self.q_rect.width()
         Live2DShadow.q_rect[1] = self.q_rect.height()
 
