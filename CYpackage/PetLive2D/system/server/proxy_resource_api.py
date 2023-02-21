@@ -1,3 +1,4 @@
+import random
 from system.server.bottle import static_file, response, Bottle, request
 from system.service.proxy_tool import ModelList, ModelTextures
 
@@ -76,6 +77,52 @@ class Server:
         @self._bottle_server.route("/model/<path:path>")
         def resource(path):
             return static_file(path, root="./static/live2d/model/")
+
+        @self._bottle_server.route("/rand_textures/")
+        def clothing():
+            if request.query.id is None:
+                return
+            get_id = request.query.id or "1-23"
+            modelList = ModelList("./static/live2d/model_list.json")
+            modelTextures = ModelTextures()
+            if get_id.split("-").__len__() != 2:
+                return
+            modelId = int(get_id.split("-")[0])
+            modelTexturesId = int(get_id.split("-")[1])
+            modelName = modelList.id_to_name(modelId)
+            # 随机查找同模型下的不同资源
+            if type(modelName) == list:
+                # 简单处理既直接默认，未做复杂逻辑处理
+                modelName = modelName[0]
+            modelTexturesList = modelTextures.get_list(modelName)
+            modelTexturesIndex = 0
+            if modelTexturesList is not None and modelTexturesList.__len__() > 1:
+                for i in iter(int, 1):
+                    i.__sizeof__()
+                    modelTexturesIndex = random.choice(range(modelTexturesList.__len__())) + 1
+                    if modelTexturesId != modelTexturesIndex:
+                        break
+            else:
+                modelTexturesIndex = 1
+            response.headers.append("Content-type", "application/json")
+            return modelList.rand_textures_json(modelTexturesIndex, modelTexturesList[modelTexturesIndex-1], modelName)
+
+        @self._bottle_server.route("/rand/")
+        def change():
+            if request.query.id is None:
+                return
+            modelId = int(request.query.id or "1")
+            modelList = ModelList("./static/live2d/model_list.json")
+            modelListJson = modelList.get_list()
+            modelRandId = 0
+            for i in iter(int, 1):
+                i.__sizeof__()
+                modelRandId = random.choice(range(modelListJson["models"].__len__())) + 1
+                if modelRandId != modelId and (modelRandId == 1 or modelRandId == 3 or modelRandId == 4):
+                    # 由于删除了一些资源而未修改model_list文件
+                    break
+            response.headers.append("Content-type", "application/json")
+            return modelList.rand_model_json(modelRandId, modelListJson["models"][modelRandId-1], modelListJson["messages"][modelRandId-1])
 
     def run(self):
         self._bottle_server.run(host=self._host, port=self._port, debug=True)

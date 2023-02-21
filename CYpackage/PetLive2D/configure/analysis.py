@@ -13,9 +13,9 @@ class Analysis:
     """
     # 静态变量
     _version_main = 1
-    _version_sub = 0
-    _version_stage = 2
-    _version_other = 3
+    _version_sub = 2
+    _version_stage = 0
+    _version_other = 3220
 
     def __init__(self):
         self._arg_size = sys.argv.__len__()
@@ -32,7 +32,7 @@ class Analysis:
         self.tag_index = 0
         if self._arg_size == 1:
             # 默认情况
-            self.tag_func = live2d_main_run
+            self.tag_func = pure_live2d_run
         else:
             if self._arg_size % 2 == 1:
                 for i in range(1, self._arg_size, 2):

@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtGui import QGuiApplication, QIcon
-from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtCore import Qt, QUrl, QTimer, QEventLoop
 from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, QMenu
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 import time
@@ -99,11 +99,12 @@ class Live2D(QWidget):
         self._thread_html = threading.Thread(target=server_run)
         self._thread_html.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
         self._thread_html.start()
-        time.sleep(2)
+        time.sleep(1)
         from system.server.proxy_resource_api import run as res_run
         self._thread_rapi = threading.Thread(target=res_run)
         self._thread_rapi.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
         self._thread_rapi.start()
+        time.sleep(1)
         Live2DShadow.q_rect[0] = self.q_rect.width()
         Live2DShadow.q_rect[1] = self.q_rect.height()
 
@@ -168,7 +169,11 @@ class Live2D(QWidget):
                 self.hide()
                 Live2D._flag = 2
                 self.q_live_view.page().runJavaScript(Live2D.rect_js, rect_js_callback)
+                loop = QEventLoop()
+                QTimer.singleShot(500, loop.quit)
+                loop.exec()
                 self.show()
+                self.on_shadow_app_action()
             else:
                 self.hide()
                 Live2D._flag = 3

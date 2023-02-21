@@ -42,7 +42,10 @@
             live2d_settings['waifuMinWidth'] = 'disable'; // 页面小于指定宽度 隐藏看板娘
             live2d_settings['waifuDraggableRevert'] = false; // 拖拽后是否复位
             live2d_settings['waifuEdgeSide'] = 'right:0'; // 看板娘贴边方向
+            /* 本地后端接口，以及仅支持的配置 */
             live2d_settings['modelAPI'] = 'http://127.0.0.1:50025/'
+            live2d_settings['modelRandMode'] = 'rand'; // 模型切换
+            live2d_settings['modelTexturesRandMode'] = 'rand'; // 材质切换
             /* 在 initModel 前添加 */
             initModel("assets/waifu-tips.json?v=1.4.2")
         </script>

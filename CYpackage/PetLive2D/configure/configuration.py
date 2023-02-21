@@ -9,6 +9,8 @@ class Config:
     def __init__(self, args):
         self._html_host = "127.0.0.1"
         self._html_port = 50024
+        self._api_host = "127.0.0.1"
+        self._api_port = 50025
         # 变量
         self._arg_size = args.__len__()
         self._arg_array = args
@@ -64,5 +66,7 @@ class Config:
     def source(self):
         from system.server.proxy_html import conf as server_config
         server_config(host=self._html_host, port=self._html_port)
+        from system.server.proxy_resource_api import conf as api_config
+        api_config(port=self._api_port)
 
     pass

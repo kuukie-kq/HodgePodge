@@ -24,6 +24,16 @@ class ModelList:
                 if name == value:
                     return i + 1
 
+    def rand_textures_json(self, index, path, name):
+        self.__sizeof__()
+        modelRandTextures = {"textures": {"id": index, "name": path, "model": name}}
+        return json.dumps(modelRandTextures)
+
+    def rand_model_json(self, index, name, message):
+        self.__sizeof__()
+        modelRandTextures = {"model": {"id": index, "name": name, "message": message}}
+        return json.dumps(modelRandTextures)
+
     pass
 
 

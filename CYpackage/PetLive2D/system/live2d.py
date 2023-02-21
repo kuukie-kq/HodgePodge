@@ -1,7 +1,7 @@
 import sys
 import warnings
 from PyQt5.QtGui import QGuiApplication, QIcon, QKeySequence
-from PyQt5.QtCore import Qt, QUrl, QTimer
+from PyQt5.QtCore import Qt, QUrl, QTimer, QEventLoop
 from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, QMenu
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 import time
@@ -9,6 +9,7 @@ import ctypes
 import inspect
 import threading
 from system.server.proxy_html import run as server_run
+from system.server.proxy_resource_api import run as res_run
 
 
 class Live2DShadow(QWidget):
@@ -130,9 +131,14 @@ class Live2D(QWidget):
         self._in_it_live_widget()
         self._in_it_live_view()
         # 其他 web服务 使用bottle框架 使用线程库 启动web服务
-        self._thread = threading.Thread(target=server_run)
-        self._thread.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
-        self._thread.start()
+        self._thread_html = threading.Thread(target=server_run)
+        self._thread_html.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
+        self._thread_html.start()
+        time.sleep(1)
+        self._thread_rapi = threading.Thread(target=res_run)
+        self._thread_rapi.setDaemon(True)  # web服务 虽然不属于守护线程，但退出时可以忽略
+        self._thread_rapi.start()
+        time.sleep(1)
         time.sleep(2)
         Live2DShadow.q_rect[0] = self.q_rect.width()
         Live2DShadow.q_rect[1] = self.q_rect.height()
@@ -239,7 +245,11 @@ class Live2D(QWidget):
                 Live2D._flag = 2
                 self.q_live_view.page().runJavaScript(Live2D.rect_js, rect_js_callback)
                 # 尝试发现callback函数回调的时机是在事件响应完成之后，所以需要分两次进行
-            else:
+                loop = QEventLoop()
+                QTimer.singleShot(500, loop.quit)
+                loop.exec()
+                # 添加一个事件循环，等待500ms（回调一般都执行完了）这样不需要执行两次shadow点击
+            # else:
                 self.hide()
                 Live2D._live2d = Live2DShadow()
                 Live2D._live2d.setAttribute(Qt.WA_DeleteOnClose, True)  # 该窗口关闭时自动销毁该对象
@@ -258,10 +268,7 @@ def run(args=None):
     if args is not None:
         from configure.configuration import Config
         conf = Config(args=args)
-        if not conf.flag():
-            sys.exit(1)
         conf.source()
-        pass
     app = QApplication(sys.argv)
     rect = QGuiApplication.primaryScreen().availableGeometry()
     live2d = Live2D(rect=rect)
