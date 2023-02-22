@@ -9,7 +9,7 @@ standard module + pyqt5 (PyQtWebEngine)
 
 pyinstaller --paths E:/Anaconda3/envs/PetLive2D/lib/site-packages/PyQt5/Qt5/bin --icon ./static/img/icon.ico --name Live2D --add-data ./static;./static -D -w setup.py
 
---paths将编辑环境下依赖的第三方资源添加零时环境变量（目的是防止打包后运行可执行文件无法加载对应dll，但并没有用）
+--paths将编辑环境下依赖的第三方资源添加临时环境变量（目的是防止打包后运行可执行文件无法加载对应dll，但并没有用）
 --icon为打包后的可执行程序设定一个图标
 --name为打包后的项目重命名（默认为最后.py的文件名，既打包后目录和可执行文件为--name）
 --add-data为打包后的程序添加使用到的静态资源（html等，注意如果为目录的话，需要手动加上第一层的）注意分隔符区别平台（Windows用；Unix用：）
