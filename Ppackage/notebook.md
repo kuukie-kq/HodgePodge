@@ -181,6 +181,8 @@ key code
 
 本文的编写格式习惯参照GitHub的GitHub&nbsp;Flavored&nbsp;Markdown&nbsp;(GFM)
 
+github md 例如#与##的标题自带一个```<hr \>```标签（实际上应该是h标签的样式加了border-bottom形成的一个类似的线）但在vscode预览中只有#有
+
 突然发现可以作为网址收藏专用夹
 
 ### 1其他
