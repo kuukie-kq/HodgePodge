@@ -84,6 +84,8 @@ struct Address {
     user(nullptr) {}
 };
 
+// 1.0.0
+#if true
 class SocketBuffer final {
 private:
     SocketAddress sock;
@@ -237,6 +239,108 @@ public:
     Address* get_address() { return &connect; }
 };
 
+static int kcp_output(const char *buf, int len, ikcpcb *kcp, void *user) {
+    kcp; //NOLINT
+#if IO_LEVEL > 2
+    std::cout << __FUNCTION__ << len << std::endl;
+#endif
+    auto* output = (SocketBuffer*)user;
+    return output->s_send(buf, len);
+}
+
+void working(SocketBuffer* sc) {
+    current_number = 1;
+    for(;;) {
+        current(100);
+        ikcp_update(sc->get_address()->kcp, ikcp_check(sc->get_address()->kcp, CLOCK));
+        char server_recv_buffer[max_buffer]{0};
+        int recv_length, kcp_length;
+
+        recv_length = sc->s_recv(server_recv_buffer, max_buffer);
+        if (recv_length < 0) { continue; }
+
+#if IO_LEVEL > 1
+        std::cout << "udp sock package size " << recv_length << std::endl;
+#endif
+        ikcp_input(sc->get_address()->kcp, server_recv_buffer, recv_length);
+
+        memset(server_recv_buffer, 0, max_buffer);
+        for(;;) {
+            kcp_length = ikcp_recv(sc->get_address()->kcp, server_recv_buffer, max_buffer);
+            if (kcp_length < 0) { break; }
+            sc->s_tick(server_recv_buffer, kcp_length);
+        }
+
+        if (current_number == 0) break;
+    }
+}
+
+void terminal_kcp_s() {
+    auto* server = new SocketBuffer();
+    server->s_in_it(SocketMode::server);
+
+    ikcpcb* kcp = ikcp_create(kcp_topic, server);
+    kcp->output = kcp_output;
+    ikcp_wndsize(kcp, 128, 128);
+    ikcp_nodelay(kcp, 0, 10, 0, 1);
+
+    server->get_address()->kcp = kcp;
+
+    working(server);
+
+    server->get_address()->kcp = nullptr;
+    ikcp_release(kcp);
+    server->s_un_it();
+}
+
+void kcp_server() {
+    std::thread td(terminal_kcp_s);
+    td.detach();
+    for(;;) {
+        std::string s;
+        std::cin >> s;
+        if ("exit" == s) { current_number = 0; pthread_cancel(td.native_handle()); break; }
+    }
+}
+
+static Address* client_address = nullptr;
+void terminal_kcp_c() {
+    auto* client = new SocketBuffer();
+    client->s_in_it(SocketMode::client);
+
+    ikcpcb* kcp = ikcp_create(kcp_topic, client);
+    kcp->output = kcp_output;
+    ikcp_wndsize(kcp, 128, 128);
+    ikcp_nodelay(kcp, 0, 10, 0, 1);
+
+    client->get_address()->kcp = kcp;
+    client_address = client->get_address();
+
+    std::string syn = "SYN";
+    ikcp_send(client->get_address()->kcp, syn.c_str(), syn.size());
+
+    working(client);
+
+    client_address = nullptr;
+    client->get_address()->kcp = nullptr;
+    ikcp_release(kcp);
+    client->s_un_it();
+}
+
+void kcp_client() {
+    std::thread td(terminal_kcp_c);
+    td.detach();
+    for(;;) {
+        if (client_address == nullptr) continue;
+        std::string s;
+        std::cin >> s;
+        if ("exit" == s) { current_number = 0; pthread_cancel(td.native_handle()); break; }
+        ikcp_send(client_address->kcp, s.c_str(), s.size());
+    }
+}
+#endif
+
+// 1.1.0
 #if false
 class SocketBufferI {
 protected:
@@ -475,18 +579,17 @@ public:
 
     Address* s_get_address() { return get_address(); }
 };
-#endif
 
 static int kcp_output(const char *buf, int len, ikcpcb *kcp, void *user) {
     kcp; //NOLINT
-    #if IO_LEVEL > 2
+#if IO_LEVEL > 2
     std::cout << __FUNCTION__ << len << std::endl;
-    #endif
-    auto* output = (SocketBuffer*)user;
+#endif
+    auto* output = (SocketBufferI*)user;
     return output->s_send(buf, len);
 }
 
-void working(SocketBuffer* sc) {
+void working(SocketBufferI* sc) {
     current_number = 1;
     for(;;) {
         current(100);
@@ -497,9 +600,9 @@ void working(SocketBuffer* sc) {
         recv_length = sc->s_recv(server_recv_buffer, max_buffer);
         if (recv_length < 0) { continue; }
 
-        #if IO_LEVEL > 1
+#if IO_LEVEL > 1
         std::cout << "udp sock package size " << recv_length << std::endl;
-        #endif
+#endif
         ikcp_input(sc->get_address()->kcp, server_recv_buffer, recv_length);
 
         memset(server_recv_buffer, 0, max_buffer);
@@ -514,21 +617,21 @@ void working(SocketBuffer* sc) {
 }
 
 void terminal_kcp_s() {
-    auto* server = new SocketBuffer();
-    server->s_in_it(SocketMode::server);
+    auto* server = new ISBServer();
+    server->isb_s_in_it();
 
     ikcpcb* kcp = ikcp_create(kcp_topic, server);
     kcp->output = kcp_output;
     ikcp_wndsize(kcp, 128, 128);
     ikcp_nodelay(kcp, 0, 10, 0, 1);
 
-    server->get_address()->kcp = kcp;
+    server->s_get_address()->kcp = kcp;
 
-    working(server);
+    working((SocketBufferI*)server);
 
-    server->get_address()->kcp = nullptr;
+    server->s_get_address()->kcp = nullptr;
     ikcp_release(kcp);
-    server->s_un_it();
+    server->isb_s_un_it();
 }
 
 void kcp_server() {
@@ -543,27 +646,26 @@ void kcp_server() {
 
 static Address* client_address = nullptr;
 void terminal_kcp_c() {
-    auto* client = new SocketBuffer();
-    client->s_in_it(SocketMode::client);
+    auto* client = new ISBClient();
+    client->isb_s_in_it();
 
     ikcpcb* kcp = ikcp_create(kcp_topic, client);
     kcp->output = kcp_output;
     ikcp_wndsize(kcp, 128, 128);
     ikcp_nodelay(kcp, 0, 10, 0, 1);
 
-    client->get_address()->kcp = kcp;
-    client_address = client->get_address();
+    client->s_get_address()->kcp = kcp;
+    client_address = client->s_get_address();
 
     std::string syn = "SYN";
-    ikcp_send(client->get_address()->kcp, syn.c_str(), syn.size());
+    ikcp_send(client->s_get_address()->kcp, syn.c_str(), syn.size());
 
-    working(client);
+    working((SocketBufferI*)client);
 
     client_address = nullptr;
-    client->get_address()->kcp = nullptr;
+    client->s_get_address()->kcp = nullptr;
     ikcp_release(kcp);
-    client->s_un_it();
-    printf("end");
+    client->isb_s_un_it();
 }
 
 void kcp_client() {
@@ -577,3 +679,4 @@ void kcp_client() {
         ikcp_send(client_address->kcp, s.c_str(), s.size());
     }
 }
+#endif
