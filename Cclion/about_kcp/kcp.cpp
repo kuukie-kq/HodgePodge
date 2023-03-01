@@ -84,7 +84,7 @@ struct Address {
     user(nullptr) {}
 };
 
-// 1.0.0
+// 1.0.0 仅简单为kcp应用（同tcp/udp的使用）上
 #if true
 class SocketBuffer final {
 private:
