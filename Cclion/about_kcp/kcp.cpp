@@ -340,7 +340,7 @@ void kcp_client() {
 }
 #endif
 
-// 1.1.0
+// 1.1.0 仿照，利用继承将kcp简单封装，消息的处理也采用tick重写的方式
 #if false
 class SocketBufferI {
 protected:
