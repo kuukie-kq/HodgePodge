@@ -84,7 +84,7 @@ struct Address {
     user(nullptr) {}
 };
 
-// 1.0.0 仅简单为kcp应用（同tcp/udp的使用）上
+// 1.0.0
 #if true
 class SocketBuffer final {
 private:
@@ -340,7 +340,7 @@ void kcp_client() {
 }
 #endif
 
-// 1.1.0 仿照，利用继承将kcp简单封装，消息的处理也采用tick重写的方式
+// 1.1.0
 #if false
 class SocketBufferI {
 protected:
