@@ -15,7 +15,7 @@ class Analysis:
     _version_main = 1
     _version_sub = 2
     _version_stage = 0
-    _version_other = 3220
+    _version_other = 3021
 
     def __init__(self):
         self._arg_size = sys.argv.__len__()
@@ -32,7 +32,8 @@ class Analysis:
         self.tag_index = 0
         if self._arg_size == 1:
             # 默认情况
-            self.tag_func = pure_live2d_run
+            # self.tag_func = pure_live2d_run
+            pass
         else:
             if self._arg_size % 2 == 1:
                 for i in range(1, self._arg_size, 2):
@@ -89,7 +90,7 @@ class Analysis:
 
     def _version_information(self):
         version = str(self._version_main) + "." + str(self._version_sub) + "." + str(self._version_stage)
-        print("version " + version + " PetLive2D.setup(Analysis)")
+        print("version %s PetLive2D/setup %s" % (version, self.__str__()))
 
     def _help_information(self):
         print()
@@ -121,7 +122,7 @@ class Analysis:
             elif self.tgl_max.get(self.tag_func, 0) >= self.tag_index:
                 self.tag_func(self.tag_argv)
             else:
-                print("<**>" + datetime.datetime.now().strftime("%Y-%m-%d") + "= The function is not open, please look forward to it")
+                print("<**>[" + datetime.datetime.now().strftime("%Y-%m-%d") + "] The function is not open, please look forward to it")
                 print("==== func:" + self.tag_func.__str__() + " args:" + str(self.tag_index))
         pass
 
