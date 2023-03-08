@@ -37,6 +37,8 @@
 >
 > > [5.2 [Linux+1]定时任务](#5定时任务相关 "当前文档中的标题")
 >
+> > [5.3 断言](#5cc断言 "当前文档中的标题")
+>
 
 # 正文
 
@@ -468,6 +470,8 @@ int main() {
 
 ### 5定时任务相关
 
+****
+
 附：[Linux系统相关命令](https://www.runoob.com/linux/linux-command-manual.html "菜鸟教程-Linux命令大全")
 
 附：[Linux相关源码](https://elixir.bootlin.com/ "bootlin-kernel&glibc")
@@ -504,6 +508,17 @@ kuukie@ubuntu:~> cat /dev/null > /opt/ps.kaof
 - 原理
 
 [源码？miscutils/crond.c](https://github.com/mirror/busybox/ "busybox")
+
+### 5C/C++断言
+
+***
+
+巧妙的应用
+
+``` C
+#include <assert.h>
+(void) ((!!0) || (_assert("test", __FILE__, __LINE__), 0));
+```
 
 # 总结
 
