@@ -20,7 +20,7 @@ static int current_number = 0;
 // linux
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <sys/time.h> //nanosleep中参数结构
+#include <sys/time.h>
 #else
 #include <winsock2.h>
 #endif
