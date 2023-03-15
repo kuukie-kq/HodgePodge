@@ -9,6 +9,7 @@
 #else
 #define PLATFORM 0
 #endif
+// #ifdef _WIN32 ---- #ifdef _WIN64
 
 extern void kcp_server();
 extern void kcp_client();
