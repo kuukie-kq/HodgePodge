@@ -84,7 +84,7 @@ struct Address {
     user(nullptr) {}
 };
 
-// 1.0.0
+// 1.0.0 简单使用
 #if true
 class SocketBuffer final {
 private:
