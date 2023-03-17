@@ -520,6 +520,9 @@ kuukie@ubuntu:~> cat /dev/null > /opt/ps.kaof
 (void) ((!!0) || (_assert("test", __FILE__, __LINE__), 0));
 ```
 
+
+[Redis相关操作](https://blog.csdn.net/Dance_sheng/article/details/118904661 "CSDN")
+
 # 总结
 
 markdown的解释器有各种各样的，其中规范支持的部分官网中已经给出了标准示例，但还是有一些语法在不同环境下的效果不太一样
