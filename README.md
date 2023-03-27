@@ -37,3 +37,5 @@ CDEFGAB -> 0xCDEF7AB
 ## PostScript
 
 注意到GitHub中的Issue PullRequest & Actions & Projects的功能，尝试学习使用
+
+vscode ctrl+shift+v 开启预览
