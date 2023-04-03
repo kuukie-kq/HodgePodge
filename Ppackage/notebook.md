@@ -532,6 +532,8 @@ markdown的解释器有各种各样的，其中规范支持的部分官网中已
 
 # 待研究
 
+什么是帧同步&状态同步及之间的区别
+
 [帧同步系统-相关](https://zhuanlan.zhihu.com/p/556920018 "知乎")
 
 [kcp相关-使用设计需考虑问题](https://github.com/skywind3000/kcp/issues/100 "GitHub-issue")
