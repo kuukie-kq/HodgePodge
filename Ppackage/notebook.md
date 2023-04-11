@@ -532,6 +532,12 @@ kuukie@ubuntu:~> cat /dev/null > /opt/ps.kaof
 readlink /proc/self/exe
 ```
 
+### 5命令大全
+
+****
+
+[linux命令大全](https://www.runoob.com/linux/linux-command-manual.html "菜鸟教程")
+
 [Redis相关操作](https://blog.csdn.net/Dance_sheng/article/details/118904661 "CSDN")
 
 # 总结
