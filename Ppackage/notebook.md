@@ -476,6 +476,8 @@ sysstat包
 
 [sar命令相关](https://cloud.tencent.com/developer/article/1513543 "")
 
+注意与其他系统监控工具（glibc）的区别
+
 ### 5定时任务相关
 
 ****
