@@ -478,6 +478,8 @@ sysstat包
 
 注意与其他系统监控工具（glibc）的区别
 
+[glibc](https://www.cnblogs.com/the-tops/p/5586415.html "")
+
 ### 5定时任务相关
 
 ****
