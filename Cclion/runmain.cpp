@@ -16,9 +16,9 @@ int main() {
         return 0;
     } else if (pid == 0) {
         cout << "Sub-process PID:" << getpid() << " PPID:" << getppid() << "\n\n";
-        char* args[] = {"/home/polite/","test",(char*)0};
+        char* args[] = {"/home/kuukie/","test",(char*)0};
         char* evnp[] = {0};
-        execve("/home/polite/test",args,evnp);
+        execve("/home/kuukie/test",args,evnp);
     } else {
         cout << "Parent process\n";
         pid_t pr = wait(NULL);
