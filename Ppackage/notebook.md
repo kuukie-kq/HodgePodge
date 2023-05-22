@@ -259,6 +259,12 @@ list
 l
 ```
 
+> rip函数指针地址
+
+``` gdb
+list *0xrip
+```
+
 - 查看一些运行时的信息
 
 ``` gdb
@@ -577,6 +583,8 @@ readlink /proc/self/exe
 ****
 
 [linux命令大全](https://www.runoob.com/linux/linux-command-manual.html "菜鸟教程")
+
+- ldd
 
 [Redis相关操作](https://blog.csdn.net/Dance_sheng/article/details/118904661 "CSDN")
 
