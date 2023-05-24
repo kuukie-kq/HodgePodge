@@ -586,6 +586,12 @@ readlink /proc/self/exe
 
 - ldd
 
+>
+
+- firewall-cmd
+
+>
+
 [Redis相关操作](https://blog.csdn.net/Dance_sheng/article/details/118904661 "CSDN")
 
 # 总结
