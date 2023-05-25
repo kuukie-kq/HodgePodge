@@ -592,6 +592,20 @@ readlink /proc/self/exe
 
 >
 
+- 内核参数&未完
+
+``` shell /etc/default/grub
+GRUB_TIMEOUT=5
+GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
+GRUB_DEFAULT=saved
+GRUB_DISABLE_SUBMENU=true
+GRUB_TERMINAL_OUTPUT="console"
+GRUB_CMDLINE_LINUX="crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M resume=/dev/mapper/cs-swap rd.lvm.lv=cs/root rd.lvm.lv=cs/swap rhgb quiet"
+GRUB_DISABLE_RECOVERY="true"
+GRUB_ENABLE_BLSCFG=true
+GRUB_CMDLINE_LINUX_DEFAULT="quiet split_lock_detect=fatal"
+```
+
 [Redis相关操作](https://blog.csdn.net/Dance_sheng/article/details/118904661 "CSDN")
 
 # 总结
