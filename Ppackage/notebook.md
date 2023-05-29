@@ -608,6 +608,8 @@ GRUB_CMDLINE_LINUX_DEFAULT="quiet split_lock_detect=fatal"
 
 [Redis相关操作](https://blog.csdn.net/Dance_sheng/article/details/118904661 "CSDN")
 
+[JS压缩成min](https://www.toptal.com/developers/javascript-minifier "在线压缩工具")
+
 # 总结
 
 markdown的解释器有各种各样的，其中规范支持的部分官网中已经给出了标准示例，但还是有一些语法在不同环境下的效果不太一样
