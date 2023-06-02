@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, QMe
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 import time
 import threading
-from configure.configuration import Config
+from system.configure.configuration import Config
 from system.server.proxy_html import server_url
 
 """

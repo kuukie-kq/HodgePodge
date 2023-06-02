@@ -1,4 +1,4 @@
-from configure.analysis import Analysis
+from system.configure.analysis import Analysis
 
 if __name__ == "__main__":
     print("Hello World")
@@ -52,3 +52,6 @@ if __name__ == "__main__":
 # ====  ==== 2023-02-21 基本完成了整个需要用到的请求，并打包1.2.0后续研究一下动
 # ====  ==== ====  ==== 作触发等问题，看怎么样在无鼠标键盘事件情况下实现一些交互
 # ====  ==== ====  ==== 同时也将配置文件的解析等补充
+# ====  ==== 2023-04-28 模块优化封装预计，map自动生成映射关系，封装logger信息
+# ====  ==== ====  ==== ，基本上重构（private以_开头），一些临时的引用使用局部
+# ====  ==== ====  ==== from-import

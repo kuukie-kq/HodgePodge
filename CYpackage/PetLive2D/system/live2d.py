@@ -266,7 +266,7 @@ class Live2D(QWidget):
 
 def run(args=None):
     if args is not None:
-        from configure.configuration import Config
+        from system.configure import Config
         conf = Config(args=args)
         conf.source()
     app = QApplication(sys.argv)
