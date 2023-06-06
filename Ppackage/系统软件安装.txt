@@ -139,7 +139,7 @@
   mysql> create user 'kuukie'@'%' identified by 'kuukie';
   mysql> grant all privileges on *.* to 'kuukie'@'%' with grant option;
   mysql> flush privileges;
-  --由于mysql-8.0限制了root的远程访问，所以需要自己建一个用户用来作为远程访问入口，旧版本可以直接修改root用户的远程访问权限
+  --添加白名单，由于mysql-8.0限制了root的远程访问，所以需要自己建一个用户用来作为远程访问入口，旧版本可以直接修改root用户的远程访问权限
   mysql> alter user 'kuukie'@'%' identified with mysql_native_password by 'kuukie';
   --更改密码规则，方便Navicat连接
   --grant失败问题，可能与当前连接的用户并没有grant的使用权限，'kuukie'@'%'为一个用户，通过show grants;可以看到，切换成有grant权限的即可
