@@ -6,7 +6,7 @@
 
 static const int max_buffer = 1024;
 static const int kcp_topic = 10246;
-static int current_number = 0;
+static volatile int current_number = 0;
 
 #define IO_LEVEL 1
 
