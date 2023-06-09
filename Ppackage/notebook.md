@@ -592,6 +592,13 @@ readlink /proc/self/exe
 
 >
 
+``` shell
+# 删除环境变量
+unset ***
+# 删除别名
+unalias ***
+```
+
 - 内核参数&未完
 
 ``` shell /etc/default/grub
