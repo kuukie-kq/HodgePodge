@@ -599,6 +599,15 @@ unset ***
 unalias ***
 ```
 
+``` shell ***.sh
+#!/bin/bash
+
+echo "clock"
+sleep 1
+exec $0
+
+```
+
 - 内核参数&未完
 
 ``` shell /etc/default/grub
