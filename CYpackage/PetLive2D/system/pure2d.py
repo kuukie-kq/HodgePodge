@@ -73,6 +73,7 @@ class Live2D(QWidget):
         return r;
     } ())
     """
+    # Object.freeze(r);
 
     def __init__(self, rect, parent=None):
         super(Live2D, self).__init__(parent)

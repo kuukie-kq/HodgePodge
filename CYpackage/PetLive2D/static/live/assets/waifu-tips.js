@@ -356,6 +356,25 @@ function loadTipsMessage(result) {
     }
     
     function showHitokoto() {
+        if (live2d_settings.hitokotoAPI.indexOf("http://127.0.0.1") === 0 && live2d_settings.hitokotoAPI.indexOf("hitokoto") !== -1) {
+            // 本地请求
+            $.ajax({
+                type: "post",
+                url: live2d_settings.hitokotoAPI + "/rand"
+            }).done(function(data) {
+                // $.each(JSON.parse(data),function (i,data) {});
+                // window.setTimeout(function() {showMessage("(⁄ ⁄•⁄ω⁄•⁄ ⁄)", 3000, true);}, 5000);
+                // showMessage("ฅ( ̳• ◡ • ̳)ฅ", 5000, true);
+                var result = JSON.parse(data);
+                var text = waifu_tips.hitokoto_api_message['local.default'][0];
+                text = text.render({source: result.source, author: result.author});
+                window.setTimeout(function() {showMessage(text, 3000, true);}, 5000);
+                showMessage(result.data, 5000, true);
+            }).fail(function () {
+                console.log("hitokoto url miss");
+            });
+            return;
+        }
     	switch(live2d_settings.hitokotoAPI) {
     	    case 'lwl12.com':
     	        $.getJSON('https://api.lwl12.com/hitokoto/v1?encode=realjson',function(result){
@@ -388,20 +407,6 @@ function loadTipsMessage(result) {
                     }
                 });break;
     	    default:
-    	        if (live2d_settings.hitokotoAPI.indexOf("http://127.0.0.1") === 0 && live2d_settings.hitokotoAPI.indexOf("hitokoto") !== -1) {
-    	            // 本地请求
-                    // $.ajax({
-                    //     type: "post",
-                    //     url: live2d_settings.hitokotoAPI + "/rand/"
-                    // }).done(function(data) {
-                    //
-                    // }).fail(function () {
-                    //     console.log("hitokoto url miss")
-                    // })
-                    window.setTimeout(function() {showMessage("(⁄ ⁄•⁄ω⁄•⁄ ⁄)", 3000, true);}, 5000);
-                    showMessage("ฅ( ̳• ◡ • ̳)ฅ", 5000, true);
-    	            return;
-                }
     	        $.getJSON('https://v1.hitokoto.cn',function(result){
             	    if (!empty(result.from)) {
                         var text = waifu_tips.hitokoto_api_message['hitokoto.cn'][0];

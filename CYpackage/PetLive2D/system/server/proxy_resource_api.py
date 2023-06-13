@@ -1,6 +1,6 @@
 import random
 from system.service.bottle import static_file, response, Bottle, request
-from system.service.proxy_tool import ModelList, ModelTextures
+from system.service.proxy_tool import ModelList, ModelTextures, Hitokoto
 
 
 class Server:
@@ -124,9 +124,15 @@ class Server:
             response.headers.append("Content-type", "application/json")
             return modelList.rand_model_json(modelRandId, modelListJson["models"][modelRandId-1], modelListJson["messages"][modelRandId-1])
 
-        @self._bottle_server.route("/hitokoto/rand/")
+        @self._bottle_server.route("/hitokoto/rand", method="POST")
         def rand_json():
-            pass
+            # request.method
+            rand_one = random.randint(0, 999)
+            rand_two = random.randint(0, 999)
+            rand_three = random.randint(0, 999)
+            json = Hitokoto().get(rand_one, rand_two, rand_three)
+            # response.content_type = "application/json"
+            return json
 
     def run(self):
         self._bottle_server.run(host=self._host, port=self._port, debug=True)
@@ -138,7 +144,7 @@ def conf(port=50025):
     Server._port = port
 
 
-def run():
+def interface_run():
     resource_server = Server()
     resource_server.run()
 
