@@ -36,6 +36,10 @@ class Server:
         def server_static(path):
             return static_file(path, root="./static/live/")
 
+        @self._bottle_server.route("/welcome/<path:path>")
+        def server_web(path):
+            return static_file(path, root="./static/local/")
+
     def run(self):
         self._bottle_server.run(host=self._host, port=self._port, debug=True)
 

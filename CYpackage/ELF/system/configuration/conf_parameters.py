@@ -4,9 +4,9 @@ import datetime
 class Config:
     def __init__(self, args):
         self._html_host = "127.0.0.1"
-        self._html_port = 40024
+        self._html_port = 50024
         self._api_host = "127.0.0.1"
-        self._api_port = 40025
+        self._api_port = 50025
         # 变量
         self._arg_size = args.__len__()
         self._arg_array = args

@@ -6,8 +6,8 @@ class Analysis:
     # 静态变量
     _version_main = 1
     _version_sub = 2
-    _version_stage = 0
-    _version_other = 3612
+    _version_stage = 6
+    _version_other = 3620
     #
     tgl_func = {}
     tgl_max = {}
@@ -122,9 +122,6 @@ class Analysis:
 
 
 def register(name, func, num):
-    if type(name) != str:
-        return
-    if type(num) != int:
-        return
-    Analysis.tgl_func.update({name: func})
-    Analysis.tgl_max.update({func: num})
+    if type(name) == str and type(num) == int:
+        Analysis.tgl_func.update({name: func})
+        Analysis.tgl_max.update({func: num})

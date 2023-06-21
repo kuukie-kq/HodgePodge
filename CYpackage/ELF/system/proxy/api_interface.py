@@ -131,7 +131,7 @@ class Server:
             rand_two = random.randint(0, 999)
             rand_three = random.randint(0, 999)
             json = Hitokoto().get(rand_one, rand_two, rand_three)
-            # response.content_type = "application/json"
+            # response.content_type = "application/json" 前端不JSON.parse的情况
             return json
 
     def run(self):

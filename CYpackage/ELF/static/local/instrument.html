@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Pet Live2D</title>
+        <!-- <meta http-equiv="Cache-Control" content="no-store" /> -->
+        <script type="text/javascript" src="./cssimgjs/qwebchannel.js"></script>
+        <script type="text/javascript">
+            window.onload = function() {
+                new QWebChannel(qt.webChannelTransport, function (channel) {
+                    const control = channel.objects.buffer;
+                    // buffer.single.connect(function () {})
+
+                    document.getElementById("open_terminal").onclick = function () {
+                        control.no_parameter_call("open_terminal");
+                    }
+
+                    document.getElementById("commend").addEventListener("keydown", function (inputs) {
+                        if (inputs.code === "Enter" || inputs.key === "Enter") {
+                            document.getElementById("enter").click();
+                        }
+                    });
+
+                    document.getElementById("enter").onclick = function () {
+                        if (document.getElementById("commend").value !== "") {
+                            let c = "";
+                            if (document.getElementById("control").value === "fork") {
+                                c = c + "start "
+                            }
+                            control.str_commend_call(c + document.getElementById("commend").value);
+                            document.getElementById("commend").value = "";
+                        }
+                    }
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <div id="pl2d" class="waifu">
+            <div class="waifu-tips"></div>
+            <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+            <div class="waifu-tool">
+                <span class="fui-chat"></span>
+                <span class="fui-eye"></span>
+                <span class="fui-user"></span>
+                <span class="fui-photo"></span>
+                <span class="fui-info-circle"></span>
+            </div>
+            <div>
+                <!-- 简单使用  需修改样式 -->
+                <input id="open_terminal" type="button" value="打开终端" />
+                <hr />
+                <input id="control" type="button" value="fork" onclick="if (this.value === 'fork') { this.value = './'; } else { this.value = 'fork'; }" />
+                <label for="commend">命令：</label><input id="commend" type="text" />
+                <input type="button" value="[+]" onclick="if (this.value === '[+]') { this.value = '[-]'; document.getElementById('commend_list').style.display = 'block'; } else { this.value = '[+]'; document.getElementById('commend_list').style.display = 'none'; }" />
+                <input id="enter" type="button" value="←" onclick="alert(document.getElementById('commend').value);document.getElementById('commend').value = '';" />
+                <br />
+                <!-- input自带的下拉列表datalist在qt中无法正常显示 -->
+                <div id="commend_list" style="display: none;">
+                    <input type="button" title="注册表" value="regedit" onclick="document.getElementById('commend').value = this.value;" style="display: block;" />
+                </div>
+                <input id="test" value="test" />
+            </div>
+        </div>
+    </body>
+</html>

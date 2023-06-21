@@ -50,10 +50,17 @@
 # ====  ==== 2023-06-12 map采用注册的形式动态（解析时）加载，存在循环引用问题以
 # ====  ==== ====  ==== 及unused警告，重构（主要部分不含-，private含-临时引
 # ====  ==== ====  ==== 用），未加log&conf&welcome page&game
+# ====  ==== 2023-06-19 添加了welcome page作为附加功能集合，依然采用web的方
+# ====  ==== ====  ==== 式进行界面设计不同的地方在于使用qwebchannel进行交互（
+# ====  ==== ====  ==== 原理类似rpc）后续需设计界面布局等
+# ====  ==== 2023-06-20 解决阻塞非阻塞问题，os.popen采用with语法糖时，虽然未
+# ====  ==== ====  ==== read相关信息依然会存在阻塞情况，QT的信号槽绑定默认为函
+# ====  ==== ====  ==== 数调用（阻塞）模式，也可以换成非阻塞的事件队列模式
 
 from system.configuration.analysis import Analysis
 # 通过引用，执行对应文件，动态注册对应函数  这里避免循环引用问题
 from system.pure2d import pure2d_run
+from system.instrument import instrument_run
 
 if __name__ == "__main__":
     print("Hello World")

@@ -91,6 +91,7 @@ class Live2D(QWidget):
         self._q_sys_show_action = QAction("显示/隐藏", self)
         self._q_sys_exit_action = QAction("关闭", self)
         self._q_sys_shadow_action = QAction("shadow", self)
+        self._q_sys_control_action = QAction("控制调用", self)
         self._q_sys_menu = QMenu(self)  # 状态栏图标的右键菜单
         self._q_live_view = QWebEngineView(parent=self)  # live2d的主元素
         # 自身设置
@@ -122,19 +123,23 @@ class Live2D(QWidget):
         self._q_sys_show_action.triggered.connect(self.on_show_or_hide_action)
         self._q_sys_exit_action.triggered.connect(self.on_exit_app_action)
         self._q_sys_shadow_action.triggered.connect(self.on_shadow_app_action)
+        self._q_sys_control_action.triggered.connect(self.on_control_app_action)
         # 绑点快捷键
         self._q_sys_shadow_action.setShortcut("Alt+F10")
+        self._q_sys_control_action.setShortcut("Alt+F9")
 
     def _in_it_sys_task(self):
         self.addAction(self._q_sys_shadow_action)
+        self.addAction(self._q_sys_control_action)
         # 状态栏相关设置
         self._q_sys_tray_icon.setIcon(QIcon("./static/img/icon.ico"))  # 图标
         self._q_sys_tray_icon.setToolTip("Live2D")  # 信息
         self._q_sys_menu.addAction(self._q_sys_show_action)
-        self._q_sys_menu.addSeparator()
-        self._q_sys_menu.addAction(self._q_sys_exit_action)
+        self._q_sys_menu.addAction(self._q_sys_control_action)
         self._q_sys_menu.addSeparator()
         self._q_sys_menu.addAction(self._q_sys_shadow_action)
+        self._q_sys_menu.addSeparator()
+        self._q_sys_menu.addAction(self._q_sys_exit_action)
         self._q_sys_tray_icon.setContextMenu(self._q_sys_menu)  # 菜单
         self._q_sys_tray_icon.show()
 
@@ -195,6 +200,15 @@ class Live2D(QWidget):
             Live2D._live2d = None
             self.show()
             Live2D._flag = 11
+
+    def on_control_app_action(self):
+        self.__sizeof__()
+        # TODO change&delete
+        command = "start E:\\Anaconda3\\envs\\ELF\\python.exe E:\\PycharmProjects\\ELF\\setup.py -exec inst"
+        # command = "start ./Live2d.exe -exec inst"
+        import os
+        with os.popen(command) as p:
+            pass
 
     pass
 

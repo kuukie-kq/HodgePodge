@@ -1,1 +1,25 @@
-静态文件
+# 静态文件
+
+| directory | annotation | memo |
+|:---------:|:----------:|:----:|
+| free | 资源备份 | 项目中用到一些重要资源组件 |
+| img | 图片相关 | ico/jpg/png |
+| live | live2d重要部分 | 前端assets |
+| live2d | live2d模型资源 | 增加或修改资源时同步变动对应json文件*cache.json可删除自动生成 |
+| local | 欢迎页相关 | 采用WebChannel做到程序环境与渲染环境交互（像rpc） |
+| message | 说话相关 | 内容在json文件中有变动删除对应*cache.json即可 |
+
+| step | annotation | memo |
+|:----:|:----------:|:----:|
+| 1 | 复制对应路径下的文件 | Live2D/PyQt5/Qt5/bin/ -> Live2D/<br />由于打包问题造成环境路径不正确 |
+| 2 | 自定语句修改 | Live2D/static/message/目录下存放目录&文件对应删除cache即可 |
+| 3 | 配置变量 | Live2D/static/free/trash.txt文件（暂定） |
+| 4 | 修改参数 | Live2D/static/live/live2d.html文件中的API的地址 |
+| 5 | 快捷启动 | Live2D/Live2D.exe添加快捷方式并编辑<br />Live2D.exe -exec pl2d -argv --host,192.168.5.121,--port,50026<br />不仅方便启动，而且可以自动启动参数 |
+
+| status | annotation | memo |
+|:------:|:----------:|:----:|
+| - | live2d交互单一 | 目前完全依赖原本源，可以加入AI语音等 |
+| - | 日志相关欠缺 | 如果出现意外情况，无法确认问题原因（live2d没加载出来，目前依赖浏览器debug） |
+| - | 打包问题 | qt相关深dll未深拷贝 |
+| . | Channel问题 | qt与web交互容易造成卡死，如何异步处理 |
