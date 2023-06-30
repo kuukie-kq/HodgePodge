@@ -3,6 +3,9 @@ project(HelloWorld)
 
 set(CMAKE_CXX_STANDARD 17)
 
+#添加编译调试参数，可通过gdb查看源码
+add_compile_options(-g)
+
 # start 以下是打开QT的MOC功能，UI文件处理功能和RCC
 set(CMAKE_AUTOMOC ON)
 #set(CMAKE_AUTOUIC ON)
