@@ -637,3 +637,5 @@ markdown的解释器有各种各样的，其中规范支持的部分官网中已
 [帧同步系统-相关](https://zhuanlan.zhihu.com/p/556920018 "知乎")
 
 [kcp相关-使用设计需考虑问题](https://github.com/skywind3000/kcp/issues/100 "GitHub-issue")
+
+[线上问题整体思路-Connection reset by peer](https://zhuanlan.zhihu.com/p/540070326 "知乎")
