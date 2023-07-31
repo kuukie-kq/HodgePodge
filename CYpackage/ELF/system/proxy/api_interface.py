@@ -119,6 +119,7 @@ class Server:
                 i.__sizeof__()
                 modelRandId = random.choice(range(modelListJson["models"].__len__())) + 1
                 if modelRandId != modelId and (modelRandId == 1 or modelRandId == 3 or modelRandId == 4):
+                    # TODO change&delete
                     # 由于删除了一些资源而未修改model_list文件
                     break
             response.headers.append("Content-type", "application/json")

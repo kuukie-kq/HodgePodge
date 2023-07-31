@@ -1,4 +1,5 @@
 import os
+import datetime
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 
@@ -28,5 +29,6 @@ def commend_start(commend):
     # 一般写法
     # with os.popen(commend) as p:
     #     pass
-    # 非阻塞写法  为何不许手动close
+    # 非阻塞写法  为何不许手动close  为何with与start配合使用
     os.popen(commend)
+    print(datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), "[--info---]", commend, "called")

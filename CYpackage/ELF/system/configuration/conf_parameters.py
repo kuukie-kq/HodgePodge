@@ -49,12 +49,12 @@ class Config:
             return 2
 
     def _warning_information(self, message):
-        print("<-->" + datetime.datetime.now().strftime("%Y-%m-%d") + message)
+        print("<-warning->", datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), message)
         self.__sizeof__()
 
     def _error_information(self, message):
-        print("<**>" + datetime.datetime.now().strftime("%Y-%m-%d") + message)
-        print("==== args:" + str(self._arg_size))
+        print("<--error-->", datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), message)
+        print("==== args :", str(self._arg_size))
 
     def source(self):
         from system.proxy.html_render import conf as server_config

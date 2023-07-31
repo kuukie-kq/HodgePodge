@@ -1,4 +1,5 @@
 import sys
+import datetime
 import time
 import threading
 from PyQt5.QtGui import QGuiApplication, QIcon
@@ -24,6 +25,7 @@ class Live2DShadow(QWidget):
         self.setGeometry(0, 0, Live2DShadow.q_rect[0], Live2DShadow.q_rect[1])
         self.setAutoFillBackground(False)  # 自动填充背景 false为透明背景
         self.setAttribute(Qt.WA_TranslucentBackground, True)  # 元素透明元素空间不透明
+        # linux无法穿透shell
         self.setAttribute(Qt.WA_TransparentForMouseEvents, True)  # 鼠标穿透
         self.setWindowFlags(Qt.SubWindow | Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)  # 子窗口（无任务栏），窗口总是处在最上层，无边框窗口
         # 初始化
@@ -46,6 +48,7 @@ class Live2DShadow(QWidget):
 
 
 def rect_js_callback(result):
+    print(datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), "[--info---] rect", result)
     if result is not None:
         Live2DShadow.rect[0] = result[0]
         Live2DShadow.rect[1] = result[1]
@@ -129,6 +132,7 @@ class Live2D(QWidget):
         self._q_sys_control_action.setShortcut("Alt+F9")
 
     def _in_it_sys_task(self):
+        # linux响应快捷键效果存在差异
         self.addAction(self._q_sys_shadow_action)
         self.addAction(self._q_sys_control_action)
         # 状态栏相关设置
@@ -160,6 +164,7 @@ class Live2D(QWidget):
             Live2D._live2d.close()
             Live2D._live2d = None
         self.close()
+        print(datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), "[--info---] おやすみなさい")
         sys.exit()
 
     def on_show_or_hide_action(self):
@@ -203,9 +208,9 @@ class Live2D(QWidget):
 
     def on_control_app_action(self):
         self.__sizeof__()
-        # TODO change&delete
+        # TODO change&delete <py install>
         command = "start E:\\Anaconda3\\envs\\ELF\\python.exe E:\\PycharmProjects\\ELF\\setup.py -exec inst"
-        # command = "start ./Live2d.exe -exec inst"
+        # command = "start ./Live2D.exe -exec inst"
         import os
         with os.popen(command) as p:
             pass

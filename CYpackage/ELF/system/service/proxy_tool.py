@@ -1,10 +1,11 @@
 import json
 import os
+import datetime
 
 
 class ModelList:
     def __init__(self, path):
-        with open(path, "r", encoding="utf-8") as file:
+        with open(path, "r", encoding="utf-8", newline="\n") as file:
             self._json = json.load(file)
 
     def get_list(self):
@@ -52,12 +53,12 @@ class ModelTextures:
         textures = None
         filepath = "./static/live2d/model/%s/textures_cache.json" % name
         if os.path.exists(filepath):
-            with open(filepath, "r", encoding="utf-8") as file:
+            with open(filepath, "r", encoding="utf-8", newline="\n") as file:
                 textures = json.load(file)
         else:
             textures = self._get_textures(name)
             if textures is not None:
-                with open(filepath, "w", encoding="utf-8") as file:
+                with open(filepath, "w", encoding="utf-8", newline="\n") as file:
                     json.dump(textures, file, indent=4, ensure_ascii=False)
         return textures
 
@@ -82,32 +83,33 @@ class Hitokoto:
         dirpath = "./static/message/dirs_cache.json"
         dirs = None
         if os.path.exists(dirpath):
-            with open(dirpath, "r", encoding="utf-8") as file:
+            with open(dirpath, "r", encoding="utf-8", newline="\n") as file:
                 dirs = json.load(file)
         else:
             dirs = self._get_dir()
             if dirs is not None:
-                with open(dirpath, "w", encoding="utf-8") as file:
+                with open(dirpath, "w", encoding="utf-8", newline="\n") as file:
                     json.dump(dirs, file, indent=4, ensure_ascii=False)
         folder = dirs[x % dirs.__len__()]
         # 多文件  文件数量出现变动时重新生成files_cache.json 1000
         cachepath = "./static/message/%s/files_cache.json" % folder
         files = None
         if os.path.exists(cachepath):
-            with open(cachepath, "r", encoding="utf-8") as file:
+            with open(cachepath, "r", encoding="utf-8", newline="\n") as file:
                 files = json.load(file)
         else:
             files = self._get_file(folder)
             if files is not None:
-                with open(cachepath, "w", encoding="utf-8") as file:
+                with open(cachepath, "w", encoding="utf-8", newline="\n") as file:
                     json.dump(files, file, indent=4, ensure_ascii=False)
         #
         filepath = "./static/message/%s/%s" % (folder, files[y % files.__len__()])
         messages = None
         if os.path.exists(filepath):
-            with open(filepath, "r", encoding="utf-8") as file:
+            with open(filepath, "r", encoding="utf-8", newline="\n") as file:
                 messages = json.load(file)
         else:
+            print(datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), "[-warning-] file", filepath, "is not exists")
             return "{'data': 'ฅ( ̳• ◡ • ̳)ฅ', 'source': 'system-default', 'author': '(⁄ ⁄•⁄ω⁄•⁄ ⁄)'}"
         # bottle返回json非数组直接dictionary即可数组则需要dumps  既内置有json解析
         # return messages[z % messages.__len__()]

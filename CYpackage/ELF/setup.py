@@ -56,14 +56,39 @@
 # ====  ==== 2023-06-20 解决阻塞非阻塞问题，os.popen采用with语法糖时，虽然未
 # ====  ==== ====  ==== read相关信息依然会存在阻塞情况，QT的信号槽绑定默认为函
 # ====  ==== ====  ==== 数调用（阻塞）模式，也可以换成非阻塞的事件队列模式
+# ====  ==== 2023-06-25 log部分采用标准输出重定向的方式记录，实际做法应该是一个
+# ====  ==== ====  ==== 消息队列的方式，通过订阅并写文件，暂时先简写
 
+import sys
 from system.configuration.analysis import Analysis
 # 通过引用，执行对应文件，动态注册对应函数  这里避免循环引用问题
 from system.pure2d import pure2d_run
 from system.instrument import instrument_run
 
-if __name__ == "__main__":
+
+def redirect(path, func):
+    _console_out = sys.stdout
+    _console_err = sys.stderr
+    with open(path, "a", 1, encoding="utf-8", newline="\n") as out_handler:
+        sys.stdout = out_handler
+        sys.stderr = out_handler
+        func()
+    sys.stdout = _console_out
+    sys.stderr = _console_err
+
+
+def run():
     print("Hello World")
     ana = Analysis()
     ana.start()
+
+
+if __name__ == "__main__":
+    if 1 != sys.argv.__len__() and sys.argv[1] == "-exec":
+        if sys.argv[2] == "pl2d":
+            redirect("./static/free/log.txt", run)
+        else:
+            redirect("./static/free/command.txt", run)
+    else:
+        run()
     pass

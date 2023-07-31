@@ -7,7 +7,7 @@ class Analysis:
     _version_main = 1
     _version_sub = 2
     _version_stage = 6
-    _version_other = 3620
+    _version_other = 3630
     #
     tgl_func = {}
     tgl_max = {}
@@ -44,12 +44,12 @@ class Analysis:
         return 1
 
     def _warning_information(self, message):
-        print("<-->" + datetime.datetime.now().strftime("%Y-%m-%d") + message)
+        print("<-warning->", datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), message)
         self.__sizeof__()
 
     def _error_information(self, message):
-        print("<**>" + datetime.datetime.now().strftime("%Y-%m-%d") + message)
-        print("==== args:" + str(self._arg_size))
+        print("<--error-->", datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), message)
+        print("==== args :", str(self._arg_size))
 
     def _args_analysis(self, key, value):
         """0:break 1:continue 2:exit"""
@@ -98,6 +98,7 @@ class Analysis:
         print("-help pass              : display help and exit")
         print("-exec [pass | <name>]   : use name pet mode and last show")
         print("-argv <args>            : set custom function arguments (str) one by one")
+        print("                          or separated by commas")
         print("ps   : pass is placeholder keyword which used in key-non-value and weak check")
         print("p*ps : ... 为前面的内容可重复")
         print("       <> 为占位参数，里面的内容具有一定的含义")
@@ -117,6 +118,8 @@ class Analysis:
             self._tag_func(None)
         elif Analysis.tgl_max.get(self._tag_func, 0) >= self._tag_index:
             self._tag_func(self._tag_argv)
+        else:
+            self._warning_information("function arguments " + str(self._tag_index))
 
     pass
 
