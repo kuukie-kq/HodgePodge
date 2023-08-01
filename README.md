@@ -23,7 +23,10 @@ git fetch --unshallow
 
 ``` conf
 [http]
-	version = HTTP/1.1
+    version = HTTP/1.1
+[user]
+    email = 3260681415@qq.com
+    name = kuukie
 
 ```
 
