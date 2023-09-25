@@ -19,6 +19,8 @@
 >
 > > [2.1 gdb简单用法](#2简单用法 "当前文档中的标题")
 >
+> > [2.2 gdb简单用法](#2栈指针 "当前文档中的标题")
+>
 > [3 Unicode](#unicode "当前文档中的标题")
 >
 > > [3.1 Unicode统一码](#3统一编码库 "当前文档中的标题")
@@ -314,6 +316,26 @@ disassemble
 ``` gdb
 dis
 ```
+
+### 2栈指针
+
+****
+
+[使用GDB恢复堆栈信息](https://blog.csdn.net/swartz_lubel/article/details/77972384 "CSDN")
+
+``` gdb
+# 查询cpu架构寻找保存栈的寄存器
+i r ebp
+# ebp            0xffc6e208          0xffc6e208
+x /4x 0xffc6e208
+# 这个就是栈顶
+# 0xffc6e208:     0xffc6e238      0xd6ace5aa      0x3a1d9420      0x00000014
+#                  ↑下一层栈        ↑当前栈返回地址
+info symbol 0xd6ace5aa
+# xxsy::SkillEventRegister::GetData5(xxsy::SkillHelper*, xxsy::SkillEvent*) + 30 in section .text of ./ScnSvr_d.so
+```
+
+不确定真实（栈指针被破坏后）堆栈情况是否吻合
 
 ## Unicode
 
