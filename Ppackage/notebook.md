@@ -19,7 +19,7 @@
 >
 > > [2.1 gdb简单用法](#2简单用法 "当前文档中的标题")
 >
-> > [2.2 gdb简单用法](#2栈指针 "当前文档中的标题")
+> > [2.2 gdb栈指针相关](#2栈指针 "当前文档中的标题")
 >
 > [3 Unicode](#unicode "当前文档中的标题")
 >
@@ -511,40 +511,6 @@ sysstat包
 [glibc](https://www.cnblogs.com/the-tops/p/5586415.html "")
 
 [kcp-rust](https://docs.rs/kcp/latest/kcp/struct.Kcp.html "https://github.com/Matrix-Zhang/tokio_kcp")
-
-- 内存占用
-
-``` shell
-#!/bin/bash
-
-stats=""
-echo "mem%   user"
-echo "============"
-
-# collect the data
-for user in `ps aux | grep -v COMMAND | awk '{print $1}' | sort -u`
-do
-  stats="$stats\n`ps aux | egrep ^$user | awk 'BEGIN{total=0}; \
-    {total += $4};END{print total,$1}'`"
-done
-
-# sort data numerically (largest first)
-echo -e $stats | grep -v ^$ | sort -rn | head
-
-# end & case output
-# mem%   user
-# ============
-# 20.5 sy2
-# 9.8 root
-# 4.7 sy4
-# 4.1 w4
-# 4 w2
-# 4 sy2
-# 3.6 sy3
-# 3.5 syb
-# 1.7 mysql
-# 0 zabbix
-```
 
 ### 5定时任务相关
 
