@@ -580,6 +580,21 @@ readlink /proc/self/exe
 
 - firewall-cmd
 
+``` shell
+# 添加端口
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+# 删除端口
+firewall-cmd --zone=public --remove-port=80/tcp --permanent
+# 添加服务
+firewall-cmd --zone=public --add-service=http --permanent
+# 删除服务
+firewall-cmd --zone=public --remove-service=http --permanent
+# 列出所有规则
+firewall-cmd --list-all
+# 重新加载防火墙
+firewall-cmd --reload
+```
+
 >
 
 ``` shell
@@ -610,6 +625,14 @@ GRUB_CMDLINE_LINUX="crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M resume=/dev/map
 GRUB_DISABLE_RECOVERY="true"
 GRUB_ENABLE_BLSCFG=true
 GRUB_CMDLINE_LINUX_DEFAULT="quiet split_lock_detect=fatal"
+```
+
+``` shell /etc/sysctl.conf
+# 随机端口范围 []
+net.ipv4.ip_local_port_range = 1024 65535
+# 预留端口（随机端口排除） 零散值,分割 范围值[]
+net.ipv4.ip_local_reserved_ports = 32768-60999
+# sysctl -p
 ```
 
 [Redis相关操作](https://blog.csdn.net/Dance_sheng/article/details/118904661 "CSDN")
