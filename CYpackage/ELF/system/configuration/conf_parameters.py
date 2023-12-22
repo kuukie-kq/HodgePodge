@@ -7,6 +7,8 @@ class Config:
         self._html_port = 50024
         self._api_host = "127.0.0.1"
         self._api_port = 50025
+        self.flag_conf = ""
+        self.temp_html = ""
         # 变量
         self._arg_size = args.__len__()
         self._arg_array = args
@@ -40,10 +42,20 @@ class Config:
                 self._html_port = int(value)
             return 1
         elif "--conf" == key:
-            conf_path = "./static/live2d"
+            from system.service.conf_tool import ConfigFile
+            conf_path = "./static/config/default"
             if "pass" != value:
                 conf_path = value
-            print("pass (Config-_args_analysis--conf)")
+            conf_json = ConfigFile(conf_path)
+            html = conf_json.get_front()
+            self._html_host = html["host"]
+            self._html_port = html["port"]
+            api = conf_json.get_after()
+            self._api_host = api["host"]
+            self._api_port = api["port"]
+            self.flag_conf = value
+            if html["welcome"] is not None:
+                self.temp_html = html["welcome"]
             return 1
         else:
             return 2
@@ -60,6 +72,12 @@ class Config:
         from system.proxy.html_render import conf as server_config
         server_config(host=self._html_host, port=self._html_port)
         from system.proxy.api_interface import conf as api_config
-        api_config(port=self._api_port)
+        api_config(host=self._api_host, port=self._api_port)
+
+    def welcome_address(self):
+        return "%s:%d" % (self._html_host, self._html_port)
+
+    def service_address(self):
+        return "%s:%d" % (self._api_host, self._api_port)
 
     pass

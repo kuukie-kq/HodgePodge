@@ -1,0 +1,200 @@
+/*ko-ko-page.css*/
+/*-全局-外边距+内填充+边框*/
+* {
+	margin: 0 auto;
+	padding: 0;
+	border: 0;
+}
+/*旧版实现需要设置的参数，更换思路后可以不需要此样式
+**-全局-宽度占满**
+html {
+	width: 100%;
+}
+**-全局-宽度占满**
+body {
+	width: 100%;
+}
+**顺便当做一个笔记
+transition可以为一个元素在不同状态之间切换的时候定义不同的过渡效果。比如在不同的伪元素之间切换实现的状态变化。
+*/
+/*-class-清除浮动 */
+.clear-float {
+	clear: both;
+}
+/*-首行缩进-*/
+.container-text {
+	text-indent: 2em;
+}
+/*-顶层-*/
+.ko-ko-top {
+	width: 100%;
+	background: #c66f6c;
+	/*添加阴影*/
+	box-shadow: 0 0 50px rgba(0,0,0,0.5);
+	padding: 10px 0;
+	/*定位方式单独出来，相当于独立一层*/
+	position: fixed;
+	top: 0;
+	/*图层优先级，越大代表越上层，默认为0，注意数字的差距要稍微大些*/
+	z-index: 100;
+	opacity: 100%;
+}
+/*-左栏-*/
+.ko-ko-left {
+	width: 100px;
+	background-color: #ffffff;
+	/*添加阴影*/
+	box-shadow: -10px 0 50px rgba(0,0,0,0.6);
+	/*定位方式单独出来，相当于独立一层*/
+	position: fixed;
+	left: 10%;
+	top: 200px;
+	/*图层优先级，越大代表越上层，默认为0，注意数字的差距要稍微大些*/
+	z-index: 90;
+	/*默认不显示*/
+	display: none;
+}
+/*-右栏-*/
+.ko-ko-right {
+	width: 100px;
+	background-color: #ffffff;
+	/*添加阴影*/
+	box-shadow: 10px 0 50px rgba(0,0,0,0.6);
+	position: fixed;
+	right: 10%;
+	top: 200px;
+	/*图层优先级，越大代表越上层，默认为0，注意数字的差距要稍微大些*/
+	z-index: 90;
+	/*默认不显示*/
+	display: none;
+}
+/*-主体背景-占满整个页面*/
+.ko-ko-cover {
+	width: 100%;
+	height: 100%;
+	background-image: url("./0920FE71B691.jpg");
+	/*使用绝对定位，从页面起始开始*/
+	position: fixed;
+	top: 0;
+	left: 0;
+	/*设置不透明度为完全不透明*/
+	opacity: 100%;
+	/*图层放置在最底层*/
+	z-index: -100;
+}
+/*-同上-*/
+.ko-ko-cover::before {
+    content: "";
+	display: block;
+    position: fixed;
+    top: 0;
+	left: 0;
+    width: 50%;
+    height: 100%;
+    background-size: auto 100%;
+	background-position: center left;
+}
+/*-同上-*/
+.ko-ko-cover::after {
+    content: "";
+	display: block;
+    position: fixed;
+    top: 0;
+	right: 0;
+    width: 50%;
+    height: 100%;
+    background-size: auto 100%;
+	background-position: center right;
+}
+/*-主体-正常浏览器的定位*/
+.ko-ko-main {
+	min-width: 1000px;
+	width: 100%;
+	margin: 100px auto;
+}
+/*-脚注-正常浏览器的定位+位于页面最底部*/
+.ko-ko-footer {
+	min-width: 1000px;
+	width: 100%;
+	color: #00cccc;
+}
+/*-标志-*/
+.top-logo {
+	margin-left: 10%;
+	width: 100px;
+	height: 60px;
+	float: left;
+}
+/*-徽章-*/
+.top-logo-image {
+	width: 100px;
+	height: 60px;
+	border-radius: 10%;
+}
+/*-个人-*/
+.top-home {
+	margin-right: 10%;
+	margin-left: 10px;
+	width: 60px;
+	height: 60px;
+	float: right;
+}
+/*-头像-*/
+.top-home-image {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+}
+/*-信息卡-*/
+.top-home-card {
+	width: 100px;
+	border-radius: 10%;
+}
+/*-信息-*/
+.top-home-card-message {
+	height: 20px;
+}
+/*-选项卡-由于float呈现的是反向的顺序*/
+.top-card {
+	height: 60px;
+	float: right;
+}
+/*-选项-位于选项卡内顺序排列*/
+.top-card-project {
+	margin: 0 10px;
+	width: 60px;
+	height: 60px;
+	float: left;
+}
+/*-带有块内的浮动效果-通过伪元素来清除*/
+.ko-ko-top::after, .top-card::after {
+	content: "";
+	width: 0;
+	height: 0;
+	clear: both;
+	display: block;
+	overflow: hidden;
+}
+/*==== 工具样式，用于定制各种不同的界面 ====*/
+.top-button {
+	padding: 10px 20px;
+	text-align: center;
+	border-radius: 5%;
+}
+/*-页面-不跳转获取*/
+.main-page {
+	width: 1000px;
+	height: 600px;
+	background-color: #ffffff;
+}
+/*-页面-不跳转获取*/
+.main-message {
+	width: 1000px;
+	height: 600px;
+	background-color: #ffffff;
+}
+/*-页面-不跳转获取*/
+.main-segment {
+	width: 1000px;
+	background-color: #ffffff;
+}

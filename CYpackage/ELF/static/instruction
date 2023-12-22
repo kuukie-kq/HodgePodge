@@ -4,6 +4,7 @@
 
 | directory | annotation | memo |
 |:---------:|:----------:|:----:|
+| config | 配置文件 | 通过参数修改部分运行常量 |
 | free | 资源备份 | 项目中用到一些重要资源组件 |
 | img | 图片相关 | ico/jpg/png |
 | live | live2d重要部分 | 前端assets |
@@ -13,6 +14,8 @@
 
 新包使用流程
 
+<details>
+<summary>作废</summary>
 | step | annotation | memo |
 |:----:|:----------:|:----:|
 | 1 | 复制对应路径下的文件<br />替代方案运行static目录下的step1.bat/.sh | Live2D/PyQt5/Qt5/bin/ -> Live2D/<br />由于打包问题造成环境路径不正确 |
@@ -20,6 +23,14 @@
 | 3 | 配置变量 | Live2D/static/free/trash.txt文件（暂定） |
 | 4 | 修改参数 | Live2D/static/live/live2d.html文件中的API的地址 |
 | 5 | 快捷启动 | Live2D/Live2D.exe添加快捷方式并编辑<br />Live2D.exe -exec pl2d -argv --host,127.0.0.1,--port,50026<br />不仅方便启动，而且可以自动启动参数 |
+</details>
+
+| step | annotation | memo |
+|:----:|:----------:|:----:|
+| 1 | 双击运行static目录下的step1.bat/.sh | Live2D/PyQt5/Qt5/bin/ -> Live2D/<br />由于打包问题造成环境路径不正确 |
+| 2 | 自定语句修改（非必要） | Live2D/static/message/目录下存放目录&文件对应删除cache即可 |
+| 3 | 配置变量（非必要） | Live2D/static/config/default文件（可不修改） |
+| 4 | 快捷启动 | Live2D/Live2D.exe添加快捷方式并编辑<br />Live2D.exe -exec pl2d -argv --conf -argv ./static/config/default<br />不仅方便启动，而且可以自动启动参数 |
 
 目前存在的问题
 

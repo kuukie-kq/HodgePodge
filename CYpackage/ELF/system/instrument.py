@@ -12,6 +12,8 @@ from system.configuration.analysis import register
 
 
 class Control(QWidget):
+    _address = "127.0.0.1:50024"
+
     def __init__(self):
         super(Control, self).__init__()
         self._q_web_view = QWebEngineView(parent=self)
@@ -31,11 +33,7 @@ class Control(QWidget):
         self._q_web_view.setGeometry(0, 0, 1280, 800)
         self._q_web_channel.registerObject("buffer", self._q_web_buffer)
         self._q_web_view.page().setWebChannel(self._q_web_channel)
-        # TODO change&delete
-        welcome_address = ""
-        with open("./static/free/trash.txt") as p:
-            welcome_address = p.readline()
-        self._q_web_view.page().load(QUrl("http://{address}/welcome/instrument.html".format(address=welcome_address)))
+        self._q_web_view.page().load(QUrl("http://{address}/welcome/instrument.html".format(address=Control._address)))
         self._q_web_view.show()
 
     def _in_it_connect_func(self):
@@ -64,6 +62,11 @@ class Control(QWidget):
 
 def instrument_run(args=None):
     if args is not None:
+        from system.configuration.conf_parameters import Config
+        c = Config(args)
+        if c.check != 1:
+            sys.exit(1)
+        Control._address = c.welcome_address()
         pass
     app = QApplication(sys.argv)
     control = Control()
@@ -71,4 +74,4 @@ def instrument_run(args=None):
     sys.exit(app.exec_())
 
 
-register("inst", instrument_run, 0)
+register("inst", instrument_run, 2)

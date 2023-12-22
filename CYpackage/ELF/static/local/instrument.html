@@ -34,23 +34,18 @@
                 });
             }
         </script>
+        <link type="text/css" rel="stylesheet" href="./cssimgjs/ko-ko-page.css">
     </head>
     <body>
-        <div id="pl2d" class="waifu">
-            <div class="waifu-tips"></div>
-            <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
-            <div class="waifu-tool">
-                <span class="fui-chat"></span>
-                <span class="fui-eye"></span>
-                <span class="fui-user"></span>
-                <span class="fui-photo"></span>
-                <span class="fui-info-circle"></span>
+        <div id="ko-ko-main" class="ko-ko-main">
+            <div class="main-segment">
+                <div id="timer" style="width: 200px;"></div>
             </div>
-            <div>
+            <div class="main-page">
                 <!-- 简单使用  需修改样式 -->
                 <input id="open_terminal" type="button" value="打开终端" />
                 <hr />
-                <input id="control" type="button" value="fork" onclick="if (this.value === 'fork') { this.value = './'; } else { this.value = 'fork'; }" />
+                <input id="control" type="button" value="./" onclick="if (this.value === 'fork') { this.value = './'; } else { this.value = 'fork'; }" />
                 <label for="commend">命令：</label><input id="commend" type="text" />
                 <input type="button" value="[+]" onclick="if (this.value === '[+]') { this.value = '[-]'; document.getElementById('commend_list').style.display = 'block'; } else { this.value = '[+]'; document.getElementById('commend_list').style.display = 'none'; }" />
                 <input id="enter" type="button" value="←" onclick="alert(document.getElementById('commend').value);document.getElementById('commend').value = '';" />
@@ -62,5 +57,171 @@
                 <input id="test" value="test" />
             </div>
         </div>
+        <div class="ko-ko-cover"></div>
+        <div id="ko-ko-top" class="ko-ko-top">
+            <div class="top-logo">
+                <img src="" class="top-logo-image" alt="logo" />
+            </div>
+            <div id="top-home" class="top-home">
+                <img src="" id="top-home-image" class="top-home-image" alt="" />
+            </div>
+            <div class="top-card">
+                <div class="top-card-project"></div>
+                <div class="top-card-project"></div>
+                <div class="top-card-project">
+                    <input id="card-left-info" type="button" class="top-button" style="display: block;" value="左栏" />
+                </div>
+                <div class="top-card-project">
+                    <input id="card-right-info" type="button" class="top-button" style="display: block;" value="右栏" />
+                </div>
+            </div>
+        </div>
+        <div id="ko-ko-left" class="ko-ko-left">
+            <div>
+                <input type="button" id="card-left-rein" class="top-button" value="隐藏" style="display: block;" />
+            </div>
+        </div>
+        <div id="ko-ko-right" class="ko-ko-right">
+            <div>
+                <input type="button" id="card-right-rein" class="top-button" value="隐藏" style="display: block;" />
+            </div>
+        </div>
+        <div class="ko-ko-footer">
+            <div style="width: 300px;">
+                <p>Created by 堀祈 on 2022 09 01</p>
+                <p>计划部分</p>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="./cssimgjs/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript">
+            // 页面中的一些细节动态样式
+            // 原本使用纯JavaScript单独写在一个文件中，但由于动态元素的处理方面没有JQuery灵活
+            // 且文件中引用其他js需要本地资源代理，故直接写在html中
+            // 注意两种写法之间的区别，虽然有些效果一样，但还存在写法不同
+            // 根据id删除元素（自杀）
+            function remain(id) {
+                $("#" + id).remove();
+            }
+            //
+            $().ready(function () {
+                const top = $("#ko-ko-top");
+                let timer = null;
+                let number = 100;
+                //透明度匀速变化
+                function dynamic(target) {
+                    clearInterval(timer);
+                    timer = setInterval(function () {
+                        if (target > number) {
+                            number = number + 5;
+                            top.css("opacity",number / 100);
+                        } else if (target < number) {
+                            number = number - 5;
+                            top.css("opacity",number / 100);
+                        } else {
+                            clearInterval(timer);
+                        }
+                    },40);
+                }
+                //
+                top.mouseover(function () {
+                    const position = document.documentElement.scrollTop || document.body.scrollTop;
+                    if (position > 0) {
+                        dynamic(100);
+                    }
+                });
+                //
+                top.mouseout(function () {
+                    const position = document.documentElement.scrollTop || document.body.scrollTop;
+                    if (position > 0) {
+                        dynamic(20);
+                    }
+                });
+                // 当上下滚动条出现变化时，改变顶部透明度
+                window.onscroll = function () {
+                    const position = document.documentElement.scrollTop || document.body.scrollTop;
+                    if (position === 0) {
+                        dynamic(100);
+                    }
+                    // 直接变透明度，有点突兀
+                    if (number === 100 && position > 0) {
+                        dynamic(20);
+                    }
+                }
+                //
+                let home = $("#top-home");
+                //
+                home.mouseover(function () {
+                    home.append("" +
+                        "<div id='top-home-card' class='top-home-card'>" +
+                        "<div class='top-home-card-message'>1</div>" +
+                        "<div class='top-home-card-message'>2</div>" +
+                        "<div class='top-home-card-message'>3</div>" +
+                        "</div>");
+                    const image = $("#top-home-image");
+                    image.css("width","100px");
+                    image.css("height","100px");
+                });
+                //
+                home.mouseout(function () {
+                    remain("top-home-card");
+                    const image = $("#top-home-image");
+                    image.css("width","60px");
+                    image.css("height","60px");
+                });
+                // 时间
+                Date.prototype.format = function(format) {
+                    const o = {
+                        "y+": this.getFullYear(), //年
+                        "M+": this.getMonth() + 1, //月份
+                        "d+": this.getDate(), //日
+                        "h+": this.getHours(), //小时
+                        "m+": this.getMinutes(), //分
+                        "s+": this.getSeconds() //秒
+                    };
+                    if (/(y+)/.test(format)) format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                    for (let k in o) {
+                        if (new RegExp("(" + k + ")").test(format)) {
+                            format = format.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                        }
+                    }
+                    return format;
+                }
+                setInterval("document.getElementById('timer').innerHTML = (new Date()).format('yyyy-MM-dd hh:mm:ss');", 1000);
+                //
+                $("#card-left-info").click(function () {
+                    $("#ko-ko-left").css("display", "block");
+                });
+                //
+                $("#card-right-info").click(function () {
+                    $("#ko-ko-right").css("display", "block");
+                });
+                //
+                $("#card-left-rein").click(function () {
+                    $("#ko-ko-left").css("display", "none");
+                });
+                //
+                $("#card-right-rein").click(function () {
+                    $("#ko-ko-right").css("display", "none");
+                });
+                //
+                $("#").onmousedown = (e) => {
+                    let x = e.clientX - $("#").offsetLeft;
+                    let y = e.clientY - $("#").offsetTop;
+                    document.onmousemove = function (e) {
+                        let mx = e.clientX - x;
+                        let my = e.clientY - y;
+                        if (mx >= 0 && my >= 0 && (window.innerWidth - $("#").offsetWidth) >= mx && (window.innerHeight - $("#").offsetHeight) >= my) {
+                            $("#").css("left", mx + "px");
+                            $("#").css("top", my + "px");
+                        }
+                    }
+                    document.onmouseup = function () {
+                        document.onmousemove = null;
+                        document.onmouseup = null;
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

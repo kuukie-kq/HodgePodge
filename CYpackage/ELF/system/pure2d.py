@@ -41,7 +41,7 @@ class Live2DShadow(QWidget):
 
     def _in_it_live_view(self):
         from system.proxy.html_render import server_url
-        self.q_live_view.load(QUrl(server_url("live2d.html")))
+        self.q_live_view.load(QUrl(server_url(Live2D.html_show)))
         self.q_live_view.show()
 
     pass
@@ -85,6 +85,8 @@ class Live2D(QWidget):
     #         return r;
     #     } ())
     # """
+    _conf_arg = ""
+    html_show = "live2d.html"
 
     def __init__(self, rect, parent=None):
         super(Live2D, self).__init__(parent)
@@ -156,7 +158,7 @@ class Live2D(QWidget):
 
     def _in_it_live_view(self):
         from system.proxy.html_render import server_url
-        self._q_live_view.load(QUrl(server_url("live2d.html")))
+        self._q_live_view.load(QUrl(server_url(Live2D.html_show)))
         self._q_live_view.show()
 
     def on_exit_app_action(self):
@@ -209,8 +211,11 @@ class Live2D(QWidget):
     def on_control_app_action(self):
         self.__sizeof__()
         # TODO change&delete <py install>
-        command = "start E:\\Anaconda3\\envs\\ELF\\python.exe E:\\PycharmProjects\\ELF\\setup.py -exec inst"
-        # command = "start ./Live2D.exe -exec inst"
+        argument = ""
+        if Live2D._conf_arg != "":
+            argument = " -argv --conf -argv %s" % Live2D._conf_arg
+        # command = "start E:\\Anaconda3\\envs\\ELF\\python.exe E:\\PycharmProjects\\ELF\\setup.py -exec inst" + argument
+        command = "start ./Live2D.exe -exec inst" + argument
         import os
         with os.popen(command) as p:
             pass
@@ -225,6 +230,14 @@ def pure2d_run(args=None):
         if c.check != 1:
             sys.exit(1)
         c.source()
+
+        Live2D._conf_arg = c.flag_conf
+        if c.temp_html != "":
+            Live2D.html_show = c.temp_html
+            from system.service.conf_tool import TempLive2d
+            TempLive2d._api_address = c.service_address()
+            trash = TempLive2d()
+            trash.construction()
         pass
     app = QApplication(sys.argv)
     rect = QGuiApplication.primaryScreen().availableGeometry()

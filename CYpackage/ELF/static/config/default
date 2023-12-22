@@ -1,0 +1,15 @@
+{
+    "version": "1.2.7",
+    "html": {
+        "host": "127.0.0.1",
+        "port": 40024,
+        "welcome": "trash.html",
+        "placeholder": 0
+    },
+    "api": {
+        "host": "127.0.0.1",
+        "port": 40025,
+        "placeholder": 0
+    },
+    "placeholder": 0
+}

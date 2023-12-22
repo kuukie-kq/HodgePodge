@@ -136,12 +136,16 @@ class Server:
             return json
 
     def run(self):
-        self._bottle_server.run(host=self._host, port=self._port, debug=True)
+        if Server._host == "127.0.0.1":
+            self._bottle_server.run(host=self._host, port=self._port, debug=True)
+        else:
+            print("The address is not local address and do not listen to %s:%d" % (Server._host, Server._port))
 
     pass
 
 
-def conf(port=50025):
+def conf(host="127.0.0.1", port=50025):
+    Server._host = host
     Server._port = port
 
 
