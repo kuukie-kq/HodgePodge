@@ -1,6 +1,5 @@
-import json
 import os
-import datetime
+import json
 
 
 class ConfigFile:
@@ -14,14 +13,27 @@ class ConfigFile:
     def get_after(self):
         return self._json["api"]
 
+    def get(self):
+        return self._json
+
     pass
 
 
 class TempLive2d:
-    _api_address = "127.0.0.1:50025"
+    def __init__(self):
+        from system.argument.situation import automatic_html_path
+        temp_file = automatic_html_path()
+        self.touch_flag = os.path.exists(temp_file)
+        pass
 
     def construction(self):
-        temp_file = "./static/live/trash.html"
+        if self.touch_flag:
+            # live2d部分的配置并不灵活
+            return
+        from system.argument.situation import automatic_html_path
+        temp_file = automatic_html_path()
+        from system.argument.situation import after_api_address
+        api_address = after_api_address()
         code = """
         <!DOCTYPE html>
         <html>
@@ -72,7 +84,7 @@ class TempLive2d:
             </body>
         </html>
 
-        """ % (TempLive2d._api_address, TempLive2d._api_address)
+        """ % (api_address, api_address)
 
         with open(temp_file, "w", encoding="utf-8", newline="\n") as file:
             file.write(code)

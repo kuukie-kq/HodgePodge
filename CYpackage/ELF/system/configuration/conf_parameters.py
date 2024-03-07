@@ -1,14 +1,5 @@
-import datetime
-
-
 class Config:
     def __init__(self, args):
-        self._html_host = "127.0.0.1"
-        self._html_port = 50024
-        self._api_host = "127.0.0.1"
-        self._api_port = 50025
-        self.flag_conf = ""
-        self.temp_html = ""
         # 变量
         self._arg_size = args.__len__()
         self._arg_array = args
@@ -33,51 +24,36 @@ class Config:
 
     def _args_analysis(self, key, value):
         """0:break 1:continue 2:exit"""
+        from system.argument.situation import Args
         if "--host" == key:
             if "pass" != value:
-                self._html_host = value
+                Args.set_front_html_host(value)
             return 1
         elif "--port" == key:
             if "pass" != value:
-                self._html_port = int(value)
+                Args.set_front_html_port(int(value))
             return 1
         elif "--conf" == key:
             from system.service.conf_tool import ConfigFile
-            conf_path = "./static/config/default"
             if "pass" != value:
-                conf_path = value
-            conf_json = ConfigFile(conf_path)
+                Args.set_config_file_path(value)
+            conf_json = ConfigFile(Args.get_config_file_path())
             html = conf_json.get_front()
-            self._html_host = html["host"]
-            self._html_port = html["port"]
+            Args.set_front_html_host(html["host"])
+            Args.set_front_html_port(html["port"])
             api = conf_json.get_after()
-            self._api_host = api["host"]
-            self._api_port = api["port"]
-            self.flag_conf = value
+            Args.set_after_api_host(api["host"])
+            Args.set_after_api_port(api["port"])
             if html["welcome"] is not None:
-                self.temp_html = html["welcome"]
+                Args.set_front_html_welcome(html["welcome"])
             return 1
         else:
             return 2
 
-    def _warning_information(self, message):
-        print("<-warning->", datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), message)
-        self.__sizeof__()
-
-    def _error_information(self, message):
-        print("<--error-->", datetime.datetime.now().strftime("[%Y-%m-%d-%H:%M:%S]"), message)
-        print("==== args :", str(self._arg_size))
-
     def source(self):
-        from system.proxy.html_render import conf as server_config
-        server_config(host=self._html_host, port=self._html_port)
-        from system.proxy.api_interface import conf as api_config
-        api_config(host=self._api_host, port=self._api_port)
-
-    def welcome_address(self):
-        return "%s:%d" % (self._html_host, self._html_port)
-
-    def service_address(self):
-        return "%s:%d" % (self._api_host, self._api_port)
+        self.__sizeof__()
+        from system.service.conf_tool import TempLive2d
+        trash = TempLive2d()
+        trash.construction()
 
     pass

@@ -12,9 +12,6 @@ class Server:
     该服务器作为窗体中的一个守护线程（因为关闭的时候不需要等该线程结束，也结束不了）的形式存在，这会不会有点小题大做考虑换成协程方式运行
     """
 
-    _host = "127.0.0.1"
-    _port = 50024
-
     def __init__(self):
         self._bottle_server = Bottle()
 
@@ -41,21 +38,15 @@ class Server:
             return static_file(path, root="./static/local/")
 
     def run(self):
-        self._bottle_server.run(host=self._host, port=self._port, debug=True)
-
-    def address(self):
-        return "http://%s:%d" % (self._host, self._port)
+        from system.argument.situation import Args
+        self._bottle_server.run(host=Args.get_front_html_host(), port=Args.get_front_html_port(), debug=True)
 
     pass
 
 
-def conf(host="127.0.0.1", port=50024):
-    Server._host = host
-    Server._port = port
-
-
 def server_url(html_file):
-    return "{address}/html/{html}".format(address=Server().address(), html=html_file)
+    from system.argument.situation import front_html_address
+    return "{address}/html/{html}".format(address="http://" + front_html_address(), html=html_file)
 
 
 def render_run():

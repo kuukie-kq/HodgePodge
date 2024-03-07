@@ -258,7 +258,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 		target = {};
 	}
 
-	// Extend jQuery itself if only one argument is passed
+	// Extend jQuery itself if only one arguments is passed
 	if ( i === length ) {
 		target = this;
 		i--;
@@ -1666,8 +1666,8 @@ Expr = Sizzle.selectors = {
 			/* matches from matchExpr["CHILD"]
 				1 type (only|nth|...)
 				2 what (child|of-type)
-				3 argument (even|odd|\d*|\d*n([+-]\d+)?|...)
-				4 xn-component of xn+y argument ([+-]?\d*n|)
+				3 arguments (even|odd|\d*|\d*n([+-]\d+)?|...)
+				4 xn-component of xn+y arguments ([+-]?\d*n|)
 				5 sign of xn-component
 				6 x of xn-component
 				7 sign of y-component
@@ -1676,7 +1676,7 @@ Expr = Sizzle.selectors = {
 			match[1] = match[1].toLowerCase();
 
 			if ( match[1].slice( 0, 3 ) === "nth" ) {
-				// nth-* requires argument
+				// nth-* requires arguments
 				if ( !match[3] ) {
 					Sizzle.error( match[0] );
 				}
@@ -1718,7 +1718,7 @@ Expr = Sizzle.selectors = {
 				match[2] = unquoted.slice( 0, excess );
 			}
 
-			// Return only captures needed by the pseudo filter method (type and argument)
+			// Return only captures needed by the pseudo filter method (type and arguments)
 			return match.slice( 0, 3 );
 		}
 	},
@@ -3095,7 +3095,7 @@ jQuery.fn.extend( {
 	// Determine the position of an element within the set
 	index: function( elem ) {
 
-		// No argument, return index in parent
+		// No arguments, return index in parent
 		if ( !elem ) {
 			return ( this[ 0 ] && this[ 0 ].parentNode ) ? this.first().prevAll().length : -1;
 		}
@@ -3370,7 +3370,7 @@ jQuery.Callbacks = function( options ) {
 			},
 
 			// Check if a given callback is in the list.
-			// If no argument is given, return whether or not list has callbacks attached.
+			// If no arguments is given, return whether or not list has callbacks attached.
 			has: function( fn ) {
 				return fn ?
 					jQuery.inArray( fn, list ) > -1 :
@@ -3486,7 +3486,7 @@ jQuery.extend( {
 		var tuples = [
 
 				// action, add listener, callbacks,
-				// ... .then handlers, argument index, [final state]
+				// ... .then handlers, arguments index, [final state]
 				[ "notify", "progress", jQuery.Callbacks( "memory" ),
 					jQuery.Callbacks( "memory" ), 2 ],
 				[ "resolve", "done", jQuery.Callbacks( "once memory" ),
@@ -4512,7 +4512,7 @@ var documentElement = document.documentElement;
 var isHiddenWithinTree = function( elem, el ) {
 
 		// isHiddenWithinTree might be called from jQuery#filter function;
-		// in that case, element will be second argument
+		// in that case, element will be second arguments
 		elem = el || elem;
 
 		// Inline style trumps all
@@ -4746,7 +4746,7 @@ wrapMap.th = wrapMap.td;
 function getAll( context, tag ) {
 
 	// Support: IE <=9 - 11 only
-	// Use typeof to avoid zero-argument method invocation on host objects (#15151)
+	// Use typeof to avoid zero-arguments method invocation on host objects (#15151)
 	var ret;
 
 	if ( typeof context.getElementsByTagName !== "undefined" ) {
@@ -5443,7 +5443,7 @@ function leverageNative( el, type, expectSync ) {
 				if ( !saved.length ) {
 
 					// Store arguments for use when handling the inner native event
-					// There will always be at least one argument (an event object), so this array
+					// There will always be at least one arguments (an event object), so this array
 					// will not be confused with a leftover capture object.
 					saved = slice.call( arguments );
 					dataPriv.set( this, type, saved );
@@ -9572,7 +9572,7 @@ jQuery.extend( {
 jQuery.each( [ "get", "post" ], function( i, method ) {
 	jQuery[ method ] = function( url, data, callback, type ) {
 
-		// Shift arguments if data argument was omitted
+		// Shift arguments if data arguments was omitted
 		if ( isFunction( data ) ) {
 			type = type || callback;
 			callback = data;
@@ -10206,7 +10206,7 @@ jQuery.offset = {
 
 		if ( isFunction( options ) ) {
 
-			// Use jQuery.extend here to allow modification of coordinates argument (gh-1848)
+			// Use jQuery.extend here to allow modification of coordinates arguments (gh-1848)
 			options = options.call( elem, i, jQuery.extend( {}, curOffset ) );
 		}
 

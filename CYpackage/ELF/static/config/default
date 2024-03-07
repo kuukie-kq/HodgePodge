@@ -1,14 +1,19 @@
 {
-    "version": "1.2.7",
+    "version": "1.2.8",
     "html": {
         "host": "127.0.0.1",
-        "port": 40024,
+        "port": 50024,
         "welcome": "trash.html",
         "placeholder": 0
     },
     "api": {
         "host": "127.0.0.1",
-        "port": 40025,
+        "port": 50025,
+        "placeholder": 0
+    },
+    "exec": {
+        "function": "pl2d",
+        "argument": ["--conf", "./static/config/default"],
         "placeholder": 0
     },
     "placeholder": 0

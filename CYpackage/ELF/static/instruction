@@ -14,6 +14,15 @@
 
 新包使用流程
 
+| step | annotation | memo |
+|:----:|:----------:|:----:|
+| 0 | 可直接运行目标程序 | 打包工具既解决了病毒问题也解决了路径问题，且也支持默认启动 |
+| - | - | - |
+| 1 | 配置文件目录 | static/config/ |
+| 2 | 默认配置文件 | default |
+| 3 | 启动参数 | ↓快捷启动相关，详情也可通过-help pass查看 |
+| 4 | 自定语句修改 | Live2D/static/message/目录下存放目录&文件对应删除cache即可 |
+
 <details>
 <summary>作废</summary>
 | step | annotation | memo |
@@ -23,7 +32,6 @@
 | 3 | 配置变量 | Live2D/static/free/trash.txt文件（暂定） |
 | 4 | 修改参数 | Live2D/static/live/live2d.html文件中的API的地址 |
 | 5 | 快捷启动 | Live2D/Live2D.exe添加快捷方式并编辑<br />Live2D.exe -exec pl2d -argv --host,127.0.0.1,--port,50026<br />不仅方便启动，而且可以自动启动参数 |
-</details>
 
 | step | annotation | memo |
 |:----:|:----------:|:----:|
@@ -31,12 +39,23 @@
 | 2 | 自定语句修改（非必要） | Live2D/static/message/目录下存放目录&文件对应删除cache即可 |
 | 3 | 配置变量（非必要） | Live2D/static/config/default文件（可不修改） |
 | 4 | 快捷启动 | Live2D/Live2D.exe添加快捷方式并编辑<br />Live2D.exe -exec pl2d -argv --conf -argv ./static/config/default<br />不仅方便启动，而且可以自动启动参数 |
+</details>
 
 目前存在的问题
 
+<details>
+<summary>作废</summary>
 | status | annotation | memo |
 |:------:|:----------:|:----:|
 | - | live2d交互单一 | 目前完全依赖原本源，可以加入AI语音等 |
 | - | 日志相关欠缺 | 如果出现意外情况，无法确认问题原因（live2d没加载出来，目前依赖浏览器debug）<br />使用python自带的或第三方log库存在bottle中的输出缺失，使用装饰器也不能满足完全的日志记录（寻找替代方案） |
 | - | 打包问题 | qt相关深dll未深拷贝 |
 | . | Channel问题 | qt与web交互容易造成卡死，如何异步处理 |
+</details>
+
+| status | annotation | memo |
+|:------:|:----------:|:----:|
+| + | live2d交互单一 | 目前完全依赖原本源，可以加入AI语音等 |
+| - | 日志相关欠缺 | 暂时采用标准重定向方式输出到文件 |
+| * | 打包问题 | pyinstaller==6.2.0版本解决了相关路径问题，只需手动调整static即可 |
+| - | Channel问题 | qt与web交互容易造成卡死，如何异步处理 |

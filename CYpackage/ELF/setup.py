@@ -60,9 +60,18 @@
 # ====  ==== ====  ==== 消息队列的方式，通过订阅并写文件，暂时先简写
 # ====  ==== 2023-12-21 将配置信息通过配置文件的方式进行设置，暂定采用json数据
 # ====  ==== ====  ==== 格式，修改发现设计存在问题，需要进行重构
+# ====  ==== 2024-01-11 添加无需参数默认启动方式，因GitHub无法clone需要重新构
+# ====  ==== ====  ==== 建环境，发现pyinstaller打包工具有问题，会报病毒可能与
+# ====  ==== ====  ==== 6.3.0版本有关>pip install pyinstaller==6.2.0重新
+# ====  ==== ====  ==== 安装后正常，但打包后的目录结构有变化，还需修改主函数
+# ====  ==== 2024-02-28 修改程序中对应配置信息既全局常量启动时的变量，相关处理修
+# ====  ==== ====  ==== 改，修改设计问题将这些常量集中起来，暂时先使用基本的类存
+# ====  ==== ====  ==== 储（可使用meta元类对其类变量进行访问等权限的修饰），再
+# ====  ==== ====  ==== 次修改程序中使用到的配置信息
 
 import sys
 from system.configuration.analysis import Analysis
+from system.service.sys_format_tool import op_print as hint
 # 通过引用，执行对应文件，动态注册对应函数  这里避免循环引用问题
 from system.pure2d import pure2d_run
 from system.instrument import instrument_run
@@ -80,17 +89,19 @@ def redirect(path, func):
 
 
 def run():
-    print("Hello World")
-    ana = Analysis()
+    hint("out", "Hello World")
+    ana = Analysis(sys.argv.__len__(), sys.argv)
+    ana.config_set()
     ana.start()
 
 
 if __name__ == "__main__":
-    if 1 != sys.argv.__len__() and sys.argv[1] == "-exec":
-        if sys.argv[2] == "pl2d":
-            redirect("./static/free/log.txt", run)
-        else:
-            redirect("./static/free/command.txt", run)
-    else:
-        run()
+    # if 1 != sys.argv.__len__() and sys.argv[1] == "-exec":
+    #     if sys.argv[2] == "pl2d":
+    #         redirect("./static/free/log.txt", run)
+    #     else:
+    #         redirect("./static/free/command.txt", run)
+    # else:
+    #     run()
+    redirect("./static/free/log.txt", run)
     pass

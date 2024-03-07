@@ -432,7 +432,7 @@ class Router(object):
             url = ''.join([f(query.pop(n)) if n else f for (n, f) in builder])
             return url if not query else url + '?' + urlencode(query)
         except KeyError as E:
-            raise RouteBuildError('Missing URL argument: %r' % E.args[0])
+            raise RouteBuildError('Missing URL arguments: %r' % E.args[0])
 
     def match(self, environ):
         """ Return a (target, url_args) tuple or raise HTTPError(400/404/405). """
@@ -560,7 +560,7 @@ class Route(object):
         return func
 
     def get_callback_args(self):
-        """ Return a list of argument names the callback (most likely) accepts
+        """ Return a list of arguments names the callback (most likely) accepts
             as keyword arguments. If the callback is a decorated function, try
             to recover the original function before inspection. """
         return getargspec(self.get_undecorated_callback())[0]
@@ -608,12 +608,12 @@ class Bottle(object):
         })
 
         if kwargs.get('catchall') is False:
-            depr(0, 13, "Bottle(catchall) keyword argument.",
+            depr(0, 13, "Bottle(catchall) keyword arguments.",
                         "The 'catchall' setting is now part of the app "
                         "configuration. Fix: `app.config['catchall'] = False`")
             self.config['catchall'] = False
         if kwargs.get('autojson') is False:
-            depr(0, 13, "Bottle(autojson) keyword argument.",
+            depr(0, 13, "Bottle(autojson) keyword arguments.",
                  "The 'autojson' setting is now part of the app "
                  "configuration. Fix: `app.config['json.enable'] = False`")
             self.config['json.disable'] = True
@@ -3074,7 +3074,7 @@ def cookie_decode(data, key, digestmod=None):
 
 
 def cookie_is_encoded(data):
-    """ Return True if the argument looks like a encoded cookie."""
+    """ Return True if the arguments looks like a encoded cookie."""
     depr(0, 13, "cookie_is_encoded() will be removed soon.",
                 "Do not use this API directly.")
     return bool(data.startswith(tob('!')) and tob('?') in data)
@@ -3496,7 +3496,7 @@ class BaseTemplate(object):
                  lookup=None,
                  encoding='utf8', **settings):
         """ Create a new template.
-        If the source parameter (str or buffer) is missing, the name argument
+        If the source parameter (str or buffer) is missing, the name arguments
         is used to guess a template filename. Subclasses can assume that
         self.source and/or self.filename are set. Both are strings.
         The lookup, encoding and settings parameters are stored as instance

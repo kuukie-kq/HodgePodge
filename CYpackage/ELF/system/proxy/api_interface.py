@@ -1,6 +1,7 @@
 import random
 from system.service.bottle import static_file, response, Bottle, request
 from system.service.proxy_tool import ModelList, ModelTextures, Hitokoto
+from system.service.sys_format_tool import op_print as hint
 
 
 class Server:
@@ -8,8 +9,6 @@ class Server:
     Live2D后端接口部分
     主要是因为由于网络环境的影响，容易出现加载不出来的情况，固将资源本地化
     """
-    _host = "127.0.0.1"
-    _port = 50025
 
     def __init__(self):
         self._bottle_server = Bottle()
@@ -136,17 +135,13 @@ class Server:
             return json
 
     def run(self):
-        if Server._host == "127.0.0.1":
-            self._bottle_server.run(host=self._host, port=self._port, debug=True)
+        from system.argument.situation import Args
+        if Args.get_after_api_host() == "127.0.0.1":
+            self._bottle_server.run(host=Args.get_after_api_host(), port=Args.get_after_api_port(), debug=True)
         else:
-            print("The address is not local address and do not listen to %s:%d" % (Server._host, Server._port))
+            hint("err", "The address is not local address and do not listen to %s:%d" % (Args.get_after_api_host(), Args.get_after_api_port()))
 
     pass
-
-
-def conf(host="127.0.0.1", port=50025):
-    Server._host = host
-    Server._port = port
 
 
 def interface_run():
